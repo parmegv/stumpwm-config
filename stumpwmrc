@@ -168,6 +168,9 @@
   (run-or-raise "x-terminal-emulator -t htop -e htop" '(:title "htop")))
 
 (defcommand x-terminal-emulator () ()
+  (run-or-raise "x-terminal-emulator -t default-terminal" '(:title "default-terminal")))
+
+(defcommand launch-new-terminal () ()
   (run-shell-command "x-terminal-emulator"))
 
 (defcommand goagent () ()
@@ -186,6 +189,7 @@
 
 (define-key *root-map* (kbd "a") "applications-suggest")
 (define-key *root-map* (kbd "c") "x-terminal-emulator")
+(define-key *root-map* (kbd "RET") "launch-new-terminal")
 (define-key *root-map* (kbd "q") "qq")
 
 (defvar *my-emacs-map*
