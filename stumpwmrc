@@ -147,8 +147,9 @@
   (run-or-raise "emacsclient --server-file=default -c -F '((name . \"emms\"))' --eval '(eh-emms)'"
 	       '(:instance "emms")))
 
+;; I store my stumpwm file to ~/project/stumpwm-config/stumpwmrc and link it to ~/.stumpwmrc
 (defcommand edit-stumpwmrc () ()
-  (run-or-raise "emacsclient --server-file=default -c -F '((name . \"edit-stumpwmrc\"))' --eval '(find-file \"~/.stumpwmrc\")'"
+  (run-or-raise "emacsclient --server-file=default -c -F '((name . \"edit-stumpwmrc\"))' --eval '(find-file \"~/project/stumpwm-config/stumpwmrc\")'"
 	       '(:instance "edit-stumpwmrc")))
 
 (defcommand org-capture-for-web-browser () ()
