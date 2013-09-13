@@ -31,6 +31,12 @@
 ;; See http://www.nongnu.org/stumpwm/manual/stumpwm.html
 (in-package :stumpwm)
 
+;; you can use bmpanel2 with this setting, if you use lightdm, you can add lines:
+;; bmpanel2&
+;; exec /your/path/stumpwm
+;; to ~/.xsession
+(resize-head 0 0 25 1366 740)
+
 (set-contrib-dir "/home/feng/project/stumpwm/contrib/")
 (setf my-swank-loader "~/project/slime/swank-loader.lisp")
 
@@ -101,18 +107,18 @@
 	    "Start nautilus"
 	    (run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
 
-(let ((lxpanel-running nil))
-  (defcommand lxpanel () ()
-	      "Start lxpanel"
-	      (if lxpanel-running
-		  (progn
-		    (run-shell-command "pkill -9 lxpanel")
-		    (setf lxpanel-running nil))
-		  (progn
-		    (run-shell-command "pkill -9 lxpanel; lxpanel")
-		    (setf lxpanel-running 1)))))
-;; lxpanel
-(define-key *root-map* (kbd "t") "lxpanel")
+;; (let ((lxpanel-running nil))
+;;   (defcommand lxpanel () ()
+;; 	      "Start lxpanel"
+;; 	      (if lxpanel-running
+;; 		  (progn
+;; 		    (run-shell-command "pkill -9 lxpanel")
+;; 		    (setf lxpanel-running nil))
+;; 		  (progn
+;; 		    (run-shell-command "pkill -9 lxpanel; lxpanel")
+;; 		    (setf lxpanel-running 1)))))
+;; ;; lxpanel
+;; (define-key *root-map* (kbd "t") "lxpanel")
 
 ;; (defcommand emacs-daemon-start () ()
 ;;   (if (equal (format nil "t~%")
@@ -534,8 +540,9 @@
        ;; date
        "^6*" '(:eval (current-date)) ; defined above
        " | %D | %c(%f,%t) | %M | %l | %I"
-       '(:eval (run-shell-command "echo" t))
-       "^2*" "[^B%n^b] %W"))
+       ;; '(:eval (run-shell-command "echo" t))
+       ;; "^2*" "[^B%n^b] %W"
+       ))
 
 ;; how many seconds elapse between each update of the modeline
 (setf *mode-line-timeout* 1) ; must be set *before* turning on the modeline
