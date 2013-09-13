@@ -33,19 +33,18 @@
 
 ;;*** Panel or Tray
 ;; If you want to use a panel or tray in your stumpwm desktop, you should do like this:
-;; 1. panel or tray must be posit on the top edge of desktop, buttom edge seemd doesn't work.
-;; 2. you should set panel window type as dock, if you disable this setting, stumpwm will throw the
+;; 1. you should set panel window type as dock, if you disable this setting, stumpwm will throw the
 ;;    panel or tray in the middle of desktop.
-;; 3. you must use function `resize-head' to cut an area for panel or tray. for example
-;;    (resize-head 0 0 25 1366 740)
-;;    this will cut an area which has 25 height.
+;; 2. you must use function `resize-head' to cut an area for panel or tray. for example
+;;    (resize-head 0 0 25 1366 740), you can cut an area in any edge of desktop by adjust
+;;    five numbers.
 ;; 3. you must launch your panel or tray before stumpwm, for example:
 ;;    you can add lines:
 ;;         # lxpanel &
 ;;         bmpanel2 --theme=noir &
 ;;         exec /your/path/stumpwm
 ;;    to ~/.xsession
-(resize-head 0 0 25 1366 740)
+(resize-head 0 0 0 1366 740)
 
 (set-contrib-dir "/home/feng/project/stumpwm/contrib/")
 (setf my-swank-loader "~/project/slime/swank-loader.lisp")
