@@ -681,6 +681,21 @@
 
 (replace-hook *key-press-hook* 'key-press-hook)
 
+(run-commands "gnewbg Goagent" "gnewbg Edit-Stumpwmrc" "gnewbg QQ" "gnewbg EMACS")
+
+(define-frame-preference "Goagent"
+  (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil))
+
+(define-frame-preference "Edit-Stumpwmrc"
+  (1 nil t :create nil  :class nil :instance "edit-stumpwmrc" :title nil :role nil))
+
+(define-frame-preference "QQ"
+  (1 nil t :create nil  :class nil :instance "w.qq.com" :title nil :role nil))
+
+(define-frame-preference "EMACS"
+  (1 nil t :create nil  :class nil :instance "org-agenda" :title nil :role nil)
+  (1 nil t :create nil  :class nil :instance "gnus" :title nil :role nil)
+  (1 nil t :create nil  :class nil :instance "emms" :title nil :role nil))
 
 ;;** Prefix Key
 
