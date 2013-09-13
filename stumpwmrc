@@ -101,16 +101,18 @@
 	    "Start nautilus"
 	    (run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
 
-(let ((trayer-running nil))
-  (defcommand trayer () ()
-	      "Start trayer"
-	      (if trayer-running
+(let ((lxpanel-running nil))
+  (defcommand lxpanel () ()
+	      "Start lxpanel"
+	      (if lxpanel-running
 		  (progn
-		    (run-shell-command "pkill -9 trayer")
-		    (setf trayer-running nil))
+		    (run-shell-command "pkill -9 lxpanel")
+		    (setf lxpanel-running nil))
 		  (progn
-		    (run-shell-command "pkill -9 trayer; trayer --SetDockType false --height 70")
-		    (setf trayer-running 1)))))
+		    (run-shell-command "pkill -9 lxpanel; lxpanel")
+		    (setf lxpanel-running 1)))))
+;; lxpanel
+(define-key *root-map* (kbd "t") "lxpanel")
 
 ;; (defcommand emacs-daemon-start () ()
 ;;   (if (equal (format nil "t~%")
@@ -189,6 +191,7 @@
   (run-with-timer 5 10000 'qq))
 
 (define-key *root-map* (kbd "a") "applications-suggest")
+(define-key *root-map* (kbd "v") "file-manager")
 (define-key *root-map* (kbd "c") "x-terminal-emulator")
 (define-key *root-map* (kbd "RET") "launch-new-terminal")
 (define-key *root-map* (kbd "q") "qq")
@@ -209,9 +212,6 @@
 
 ;; shutdown
 (define-key *root-map* (kbd "Delete") "exec gksudo halt")
-
-;; trayer
-(define-key *root-map* (kbd "t") "trayer")
 
 
 ;; lock screen
