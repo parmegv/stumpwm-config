@@ -169,9 +169,9 @@
   (run-or-raise "emacsclient --server-file=default -c -F '((name . \"edit-stumpwmrc\"))' --eval '(find-file \"~/project/stumpwm-config/stumpwmrc\")'"
 	       '(:instance "edit-stumpwmrc")))
 
-(defcommand org-capture-for-web-browser () ()
-  (run-or-raise "emacsclient --server-file=default -c -F '((name . \"org-capture-for-web-browser\"))'"
-		'(:instance "org-capture-for-web-browser")))
+(defcommand org-capture () ()
+  (run-or-raise "emacsclient --server-file=default -c -F '((name . \"org-capture\"))'"
+		'(:instance "org-capture")))
 
 (defcommand qq () ()
   (run-or-raise "chromium --app=http://w.qq.com/" '(:instance "w.qq.com")))
@@ -197,7 +197,7 @@
 (defcommand applications-suggest () ()
   (run-commands
    "goagent"
-   "org-capture-for-web-browser"
+   "org-capture"
    "firefox"
    "org-agenda"
    "emms"
@@ -218,7 +218,7 @@
     (stumpwm:define-key m (stumpwm:kbd "g") "gnus")
     (stumpwm:define-key m (stumpwm:kbd "a") "org-agenda")
     (stumpwm:define-key m (stumpwm:kbd "m") "emms")
-    (stumpwm:define-key m (stumpwm:kbd "c") "org-capture-for-web-browser")
+    (stumpwm:define-key m (stumpwm:kbd "c") "org-capture")
     (stumpwm:define-key m (stumpwm:kbd "R") "emacs-daemon-restart")
     (stumpwm:define-key m (stumpwm:kbd "K") "emacs-daemon-kill")
     m ; NOTE: this is important
