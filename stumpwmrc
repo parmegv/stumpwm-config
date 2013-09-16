@@ -44,6 +44,11 @@
 ;;         bmpanel2 --theme=noir &
 ;;         exec /your/path/stumpwm
 ;;    to ~/.xsession
+;;
+
+;; cut a top area
+; (resize-head 0 0 25 1366 740)
+;; cut a bottom area
 (resize-head 0 0 0 1366 740)
 
 (set-contrib-dir "/home/feng/project/stumpwm/contrib/")
@@ -164,6 +169,19 @@
   (run-or-raise "emacsclient --server-file=default -c -F '((name . \"emms\"))' --eval '(eh-emms)'"
 	       '(:instance "emms")))
 
+(defcommand emms-toggle () ()
+  (emms)
+  (run-shell-command "emacsclient --server-file=default --eval '(if emms-player-playing-p (emms-pause) (emms-start))'"))
+
+(defcommand emms-previous () ()
+  (emms)
+  (run-shell-command "emacsclient --server-file=default --eval '(emms-previous)'"))
+
+(defcommand emms-next () ()
+  (emms)
+  (run-shell-command "emacsclient --server-file=default --eval '(emms-next)'"))
+
+
 ;; I store my stumpwm file to ~/project/stumpwm-config/stumpwmrc and link it to ~/.stumpwmrc
 (defcommand edit-stumpwmrc () ()
   (run-or-raise "emacsclient --server-file=default -c -F '((name . \"edit-stumpwmrc\"))' --eval '(find-file \"~/project/stumpwm-config/stumpwmrc\")'"
@@ -262,6 +280,13 @@
 (define-key *root-map* (kbd "Delete") "repack-window-numbers")
 
 (define-key *root-map* (kbd "I") "show-window-properties")
+
+;; keybinding for Fn + F1...F12
+(define-key *top-map* (kbd "XF86Mail")   "gnus")
+(define-key *top-map* (kbd "XF86MyComputer")   "file-manager")
+(define-key *top-map* (kbd "XF86AudioNext")   "emms-next")
+(define-key *top-map* (kbd "XF86AudioPrev")   "emms-previous")
+(define-key *top-map* (kbd "XF86AudioPlay")   "emms-toggle")
 
 
 ;;**** Custom Shortcuts
@@ -524,7 +549,8 @@
 
 
 ;; load a few modules
-(mapcar #'load-module '("cpu"
+(mapcar #'load-module '("amixer"
+			"cpu"
                          "mem"
                          "battery-portable"
                          "net"
