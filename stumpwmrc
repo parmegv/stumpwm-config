@@ -121,6 +121,12 @@
 	    "Start nautilus"
 	    (run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
 
+(defcommand jabref () ()
+	    "Start jabref"
+	    (run-or-raise "java -jar ~/thesis/reference/JabRef-2.10b.jar" '(:class "net-sf-jabref-JabRefMain")))
+
+(define-key *root-map* (kbd "j") "jabref")
+
 ;; (let ((lxpanel-running nil))
 ;;   (defcommand lxpanel () ()
 ;; 	      "Start lxpanel"
