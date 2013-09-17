@@ -164,7 +164,7 @@
 	       '(:instance "emacs")))
 
 (defcommand org-agenda () ()
- (run-or-raise "emacsclient --server-file=default -c -F '((name . \"org-agenda\"))' --eval '(progn (org-agenda nil \"a\") (delete-other-windows))'"
+ (run-or-raise "emacsclient --server-file=default -c -F '((name . \"org-agenda\"))' --eval '(progn (org-agenda nil \"m\") (org-agenda nil \"l\") (delete-other-windows))'"
 	       '(:instance "org-agenda")))
 
 (defcommand gnus () ()
@@ -226,7 +226,9 @@
    "emms"
    ;; gnus 放在前面会有乱码
    "gnus")
-  (run-with-timer 5 10000 'qq))
+  (run-with-timer 5 100000 'qq)
+  (run-with-timer 1 (* 60 60) 'org-agenda)
+  (run-with-timer 2 (* 60 60) 'gnus))
 
 (define-key *root-map* (kbd "a") "applications-suggest")
 (define-key *root-map* (kbd "v") "file-manager")
