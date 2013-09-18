@@ -653,7 +653,7 @@
 (run-shell-command "nm-applet")
 (run-shell-command "volti")
 (run-shell-command "xmodmap -e 'keycode 135 = Super_R'")
-(run-commands "emacs-daemon-start")
+(run-commands "emacs-daemon-restart")
 
 ;; so i modified my keymap settings so that compaq keys2-4 are mapped to
 ;; function keys F13-F15 (i only have F1 to F12…)
