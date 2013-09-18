@@ -121,9 +121,13 @@
 	    "Start nautilus"
 	    (run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
 
+;; NOTE: If you want to show beautiful font
+;; you can add the below line:
+;; _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
+;; to /etc/environment
 (defcommand jabref () ()
 	    "Start jabref"
-	    (run-or-raise "java -jar ~/thesis/reference/JabRef-2.10b.jar" '(:class "net-sf-jabref-JabRefMain")))
+	    (run-or-raise "java -jar ~/bin/JabRef-2.10b.jar" '(:class "net-sf-jabref-JabRefMain")))
 
 (define-key *root-map* (kbd "j") "jabref")
 
