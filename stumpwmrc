@@ -127,7 +127,7 @@
 ;; to /etc/environment
 (defcommand jabref () ()
 	    "Start jabref"
-	    (run-or-raise "java -jar ~/bin/JabRef-2.10b.jar" '(:class "net-sf-jabref-JabRefMain")))
+	    (run-or-raise "java -jar ~/bin/JabRef-2.9.2.jar" '(:class "net-sf-jabref-JabRefMain")))
 
 (define-key *root-map* (kbd "j") "jabref")
 
