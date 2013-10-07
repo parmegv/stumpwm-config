@@ -40,16 +40,19 @@
 ;;    five numbers.
 ;; 3. you must launch your panel or tray before stumpwm, for example:
 ;;    you can add lines:
+
 ;;         # lxpanel &
-;;         bmpanel2 --theme=noir &
+;;         bmpanel2 &
 ;;         exec /your/path/stumpwm
 ;;    to ~/.xsession
 ;;
-
+;; 4. you can use many panel programs, such as bmpanel2, lxpanel, xfce-panel ...
+;;    but bmpanel2 works well with stumpwm.
+;; 
 ;; cut a top area
-; (resize-head 0 0 25 1366 740)
+(resize-head 0 0 25 1366 740)
 ;; cut a bottom area
-(resize-head 0 0 0 1366 740)
+;; (resize-head 0 0 0 1366 740)
 
 (set-contrib-dir "/home/feng/project/stumpwm/contrib/")
 (setf my-swank-loader "~/project/slime/swank-loader.lisp")
@@ -130,19 +133,6 @@
 	    (run-or-raise "java -jar ~/bin/JabRef-2.9.2.jar" '(:class "net-sf-jabref-JabRefMain")))
 
 (define-key *root-map* (kbd "j") "jabref")
-
-;; (let ((lxpanel-running nil))
-;;   (defcommand lxpanel () ()
-;; 	      "Start lxpanel"
-;; 	      (if lxpanel-running
-;; 		  (progn
-;; 		    (run-shell-command "pkill -9 lxpanel")
-;; 		    (setf lxpanel-running nil))
-;; 		  (progn
-;; 		    (run-shell-command "pkill -9 lxpanel; lxpanel")
-;; 		    (setf lxpanel-running 1)))))
-;; ;; lxpanel
-;; (define-key *root-map* (kbd "t") "lxpanel")
 
 ;; (defcommand emacs-daemon-start () ()
 ;;   (if (equal (format nil "t~%")
