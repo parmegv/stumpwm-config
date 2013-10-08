@@ -46,7 +46,7 @@
 ;;         exec /your/path/stumpwm
 ;;    to ~/.xsession
 ;;
-;; 4. you can use many panel programs, such as bmpanel2, lxpanel, xfce-panel ...
+;; 4. you can use many panel or tray programs, such as bmpanel2, lxpanel, xfce-panel, trayer, stalonetray...
 ;;    but bmpanel2 works well with stumpwm.
 ;; 
 ;; cut a top area
@@ -96,12 +96,6 @@
    (format nil "import -window root ~a" filename)))
 
 ;; Keyboard Shortcuts
-
-;;**** Sound
-
-;; mixer
-;; XXX `m' conflicts with `lastmsg'
-(define-key *root-map* (kbd "m") "exec x-terminal-emulator -e alsamixer")
 
 ;;**** Desktop
 
@@ -171,7 +165,7 @@
 
 (defcommand emms-toggle () ()
   (emms)
-  (run-shell-command "emacsclient --server-file=default --eval '(if emms-player-playing-p (emms-pause) (emms-start))'"))
+  (run-shell-command "emacsclient --server-file=default --eval '(if emms-player-playing-p (emms-pause) (emms-random))'"))
 
 (defcommand emms-previous () ()
   (emms)
@@ -289,14 +283,6 @@
 (define-key *top-map* (kbd "XF86AudioNext")   "emms-next")
 (define-key *top-map* (kbd "XF86AudioPrev")   "emms-previous")
 (define-key *top-map* (kbd "XF86AudioPlay")   "emms-toggle")
-
-
-;;**** Custom Shortcuts
-
-;; keyboard layout (toggling between "qwerty-gb" and "azwerty-fr" via
-;; `Caps_Lock')
-;; (run-shell-command "setxkbmap -model \"pc105\" -layout \"gb,fr\" -option \"grp:caps_toggle,grp_led:scroll\"")
-;; FIXME grp_led:caps??
 
 ;; aptitude
 (define-key *root-map* (kbd "&") "exec x-terminal-emulator -e aptitude")
@@ -419,30 +405,6 @@
   (check-type search string)
   (substitute #\+ #\Space search)
   (run-shell-command (cat "firefox http://www.google.com/search?q=" search)))
-
-;; courtesy of Peter Seibel
-(defmacro with-gensyms ((&rest names) &body body)
-  `(let ,(loop for n in names collect `(,n (gensym)))
-     ,@body))
-
-(defmacro program-with-layout (name &key (command (string-downcase (string name)))
-                                    (props `'(:class ,(string-capitalize command))))
-  (with-gensyms (s w h files-path layout rules)
-                `(defcommand ,name () ()
-                   (let* ((,s (current-screen))
-                          (,w (prin1-to-string (screen-width ,s)))
-                          (,h (prin1-to-string (screen-height ,s)))
-                          (,files-path "/home/sva/etc/stumpwm_files/")
-                          (,layout (concat ,files-path ,command "-layout-" ,w "x" ,h))
-                          (,rules (concat ,files-path ,command "-rules")))
-                     (gnew ,command)
-                     (restore-from-file ,layout)
-                     (restore-window-placement-rules ,rules)
-                     (run-or-raise ,command ,props)
-                     (place-existing-windows))))) ; needed if command was already run
-
-;; (program-with-layout gimp)
-
 
 ;;** 3 (info "(stumpwm)Message and Input Bar")
 
@@ -622,15 +584,6 @@
 ;; shell program used by `run-shell-command' (`sh' by default, which is *not*
 ;; `bash' nor `zsh')
 (setq *shell-program* (stumpwm::getenv "SHELL"))  ; `getenv' is not exported
-
-;; system tray
-
-;; ;; TODO Check if it exists
-;; (run-shell-command "which stalonetray && stalonetray")
-
-;; From http://archive.ubuntu.com/ubuntu/pool/universe/t/trayer/
-;; (run-shell-command "/usr/bin/trayer --SetDockType false --transparent true --expand false")
-;; (run-shell-command "/usr/bin/trayer")
 
 ;; 9menu
 ;; dmenu provides a simple popup menu for launching programs
