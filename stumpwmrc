@@ -712,7 +712,7 @@
 
 (define-frame-preference "Default"
   (2 nil t :create nil  :class nil :instance "org-capture" :title nil :role nil)
-  (1 nil t :create nil  :class nil :instance "Iceweasel" :title nil :role nil))
+  (1 nil t :create nil  :class "Iceweasel" :instance nil :title nil :role nil))
 
 (define-frame-preference "Others"
   (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil)
