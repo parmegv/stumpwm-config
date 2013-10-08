@@ -59,25 +59,25 @@
 
 (run-shell-command "rm .xsession-errors")
 
-;; load Swank so we can connect with SLIME
-(load my-swank-loader)
-(swank-loader:init)
-(defvar *swank-p* nil)
+;; ;; load Swank so we can connect with SLIME
+;; (load my-swank-loader)
+;; (swank-loader:init)
+;; (defvar *swank-p* nil)
 
-;; define swank command to start swank server on port 4005
-(defcommand swank () ()
-  "Starts a swank server on port 4005 and notifies the user."
-  (setf stumpwm:*top-level-error-action* :break)
-  (if *swank-p*
-      (message "Swank server already running.")
-    (progn
-      (swank:create-server :port 4005
-                           :style swank:*communication-style*
-                           :dont-close t)
-      (setf *swank-p* t)
-      (message "Starting swank on port 4005."))))
+;; ;; define swank command to start swank server on port 4005
+;; (defcommand swank () ()
+;;   "Starts a swank server on port 4005 and notifies the user."
+;;   (setf stumpwm:*top-level-error-action* :break)
+;;   (if *swank-p*
+;;       (message "Swank server already running.")
+;;     (progn
+;;       (swank:create-server :port 4005
+;;                            :style swank:*communication-style*
+;;                            :dont-close t)
+;;       (setf *swank-p* t)
+;;       (message "Starting swank on port 4005."))))
 
-(swank)
+;; (swank)
 
 ;;** 2 (info "(stumpwm)Key Bindings")
 
@@ -127,12 +127,6 @@
 	    (run-or-raise "java -jar ~/bin/JabRef-2.9.2.jar" '(:class "net-sf-jabref-JabRefMain")))
 
 (define-key *root-map* (kbd "j") "jabref")
-
-;; (defcommand emacs-daemon-start () ()
-;;   (if (equal (format nil "t~%")
-;; 	     (run-shell-command "emacsclient --server-file=default -e 't'" t))
-;;       (message "emacs daemon already running.")
-;;       (run-shell-command "x-terminal-emulator -T emacs-daemon-start -e emacs --daemon=default")))
 
 (defcommand emacs-daemon-start () ()
   (run-shell-command "x-terminal-emulator -T emacs-daemon-start -e emacs --daemon=default"))
@@ -243,7 +237,9 @@
 
 
 ;; lock screen
-(define-key *root-map* (kbd "L") "exec xscreensaver-command -lock")
+(defcommand lock-screen () ()
+  (run-shell-command "exec xscreensaver-command -lock"))
+(define-key *root-map* (kbd "L") lock-screen)
 
 ;; (define-key *root-map* (kbd "M-l") "exec xset dpms force off")
 
