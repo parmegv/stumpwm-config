@@ -332,7 +332,7 @@
 			   *start-menu*))))
       ;; If a function can be found, which name is "choice", run this function,
       ;; otherwise regard "choice" as shell command.
-      (if (functionp (read-from-string choice))
+      (if (find choice (all-commands) :test #'equal)
 	  (run-commands choice)
 	  (run-shell-command choice)))))
 
