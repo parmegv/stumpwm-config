@@ -60,34 +60,6 @@
 
 (run-shell-command "rm .xsession-errors")
 
-;; Debian menu
-;; 1. cp ./bin/menu-method/stumpwm /etc/menu-method/
-;; 2. edit /etc/menu-method/stumpwn as appropriate BEFORE using
-;; 3. sudo update-menus
-;; 4. setf debian-menu-file to rootprefix's value (for example: /usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu)
-(load-module "app-menu")
-;; load menu file context to *app-menu* varable.
-(load-menu-file debian-menu-file)
-
-(defcommand show-app-menu () ()
-  "Show the application menu"
-  (let ((stack (list
-		(car (remove-if-not #'(lambda (x)
-					(or (string= "应用程序" (car x))
-					    (string= "Applications" (car x))))
-				    (cdr (car *app-menu*)))))))
-    (loop
-       (let ((choice
-              (cdr (select-from-menu (current-screen)
-                                     (append (first stack)
-                                             (list (cons "Up a level" :up)))))))
-         (cond
-           ((not choice) (return))
-           ((eq choice :up) (pop stack) (unless stack (return)))
-           ((stringp choice) (run-shell-command choice) (return))
-           (t (push choice stack)))))))
-
-(define-key *root-map* (kbd "m") "show-app-menu")
 
 ;; load Swank so we can connect with SLIME
 (load my-swank-loader)
@@ -356,7 +328,7 @@
     ("GJ"     "关机"  "shutdown-commputer")
     ("---------------------------------------------------")))
 
-(defcommand menu () ()
+(defcommand show-start-menu () ()
   "docstring"
   (labels ((pick (options)
                  (let ((selection (stumpwm::select-from-menu
@@ -382,7 +354,38 @@
 	  (run-commands choice)
 	  (run-shell-command choice)))))
 
-(define-key *root-map* (kbd ".") "menu")
+(define-key *root-map* (kbd ".") "show-start-menu")
+
+
+;; Debian menu
+;; 1. cp ./bin/menu-method/stumpwm /etc/menu-method/
+;; 2. edit /etc/menu-method/stumpwn as appropriate BEFORE using
+;; 3. sudo update-menus
+;; 4. setf debian-menu-file to rootprefix's value (for example: /usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu)
+(load-module "app-menu")
+;; setf *app-menu* varable to debian-menu-file
+(load-menu-file debian-menu-file)
+
+(defcommand show-app-menu () ()
+  "Show the application menu"
+  (let ((stack (list
+		(cdr (car (remove-if-not #'(lambda (x)
+					     (or (string= "应用程序" (car x))
+					    (string= "Applications" (car x))))
+					 (cdr (car *app-menu*))))))))
+    (loop
+       (let ((choice
+              (cdr (select-from-menu (current-screen)
+                                     (append (first stack)
+                                             (list (cons "Up a level" :up)))))))
+         (cond
+           ((not choice) (return))
+           ((eq choice :up) (pop stack) (unless stack (return)))
+           ((stringp choice) (run-shell-command choice) (return))
+           (t (push choice stack)))))))
+
+(define-key *root-map* (kbd "m") "show-app-menu")
+
 
 (defcommand reinit () ()
   "docstring"
