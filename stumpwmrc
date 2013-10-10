@@ -31,6 +31,53 @@
 ;; See http://www.nongnu.org/stumpwm/manual/stumpwm.html
 (in-package :stumpwm)
 
+(run-shell-command "rm .xsession-errors")
+
+(set-contrib-dir "/home/feng/project/stumpwm/contrib/")
+(setf my-swank-loader "~/project/slime/swank-loader.lisp")
+
+;; debian menu
+;; 1. cp ./bin/menu-method/stumpwm /etc/menu-method/
+;; 2. edit /etc/menu-method/stumpwn as appropriate BEFORE using
+;; 3. sudo update-menus
+;; 4. setf debian-menu-file to rootprefix's value (for example: /usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu)
+(setf debian-menu-file "/usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu")
+
+;; I link stumpwmrc-file to ~/.stumpwmrc
+(setf stumpwmrc-file "~/project/stumpwm-config/stumpwmrc")
+
+;; load contrib modules
+(mapcar #'load-module 
+	'("amixer"
+	  "cpu"
+	  "mem"
+	  "battery-portable"
+	  "net"
+	  "wifi"
+	  "disk"
+	  "app-menu"
+	  ))
+
+;; load Swank so we can connect with SLIME
+(load my-swank-loader)
+(swank-loader:init)
+(defvar *swank-p* nil)
+
+;; define swank command to start swank server on port 4005
+(defcommand swank () ()
+  "Starts a swank server on port 4005 and notifies the user."
+  (setf stumpwm:*top-level-error-action* :break)
+  (if *swank-p*
+      (message "Swank server already running.")
+    (progn
+      (swank:create-server :port 4005
+                           :style swank:*communication-style*
+                           :dont-close t)
+      (setf *swank-p* t)
+      (message "Starting swank on port 4005."))))
+
+(swank)
+
 ;;*** Panel or Tray
 ;; If you want to use a panel or tray in your stumpwm desktop, you should do like this:
 ;; 1. you should set panel window type as dock, if you disable this setting, stumpwm will throw the
@@ -54,32 +101,7 @@
 ;; cut a bottom area
 ;; (resize-head 0 0 0 1366 740)
 
-(set-contrib-dir "/home/feng/project/stumpwm/contrib/")
-(setf my-swank-loader "~/project/slime/swank-loader.lisp")
-(setf debian-menu-file "/usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu")
 
-(run-shell-command "rm .xsession-errors")
-
-
-;; load Swank so we can connect with SLIME
-(load my-swank-loader)
-(swank-loader:init)
-(defvar *swank-p* nil)
-
-;; define swank command to start swank server on port 4005
-(defcommand swank () ()
-  "Starts a swank server on port 4005 and notifies the user."
-  (setf stumpwm:*top-level-error-action* :break)
-  (if *swank-p*
-      (message "Swank server already running.")
-    (progn
-      (swank:create-server :port 4005
-                           :style swank:*communication-style*
-                           :dont-close t)
-      (setf *swank-p* t)
-      (message "Starting swank on port 4005."))))
-
-(swank)
 ;;** 2 (info "(stumpwm)Key Bindings")
 
 ;; `*top-map*' is the top level key map. This is where you'll find the
@@ -171,10 +193,10 @@
   (run-shell-command "emacsclient --server-file=default --eval '(emms-next)'"))
 
 
-;; I store my stumpwm file to ~/project/stumpwm-config/stumpwmrc and link it to ~/.stumpwmrc
 (defcommand edit-stumpwmrc () ()
-  (run-or-raise "emacsclient --server-file=default -c -F '((name . \"edit-stumpwmrc\"))' --eval '(find-file \"~/project/stumpwm-config/stumpwmrc\")'"
-	       '(:instance "edit-stumpwmrc")))
+  (run-or-raise
+   (concat "emacsclient --server-file=default -c -F '((name . \"edit-stumpwmrc\"))' " stumpwmrc-file)
+   '(:instance "edit-stumpwmrc")))
 
 (defcommand org-capture () ()
   (run-or-raise "emacsclient --server-file=default -c -F '((name . \"org-capture\"))'"
@@ -359,34 +381,13 @@
 
 
 ;; Debian menu
-;; 1. cp ./bin/menu-method/stumpwm /etc/menu-method/
-;; 2. edit /etc/menu-method/stumpwn as appropriate BEFORE using
-;; 3. sudo update-menus
-;; 4. setf debian-menu-file to rootprefix's value (for example: /usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu)
-(load-module "app-menu")
-;; setf *app-menu* varable to debian-menu-file
-(load-menu-file debian-menu-file)
+(defcommand show-debian-menu () ()
+  "show debian menu"
+  (setf *app-menu* nil)
+  (load-menu-file debian-menu-file :strip 1)
+  (show-menu))
 
-(defcommand show-app-menu () ()
-  "Show the application menu"
-  (let ((stack (list
-		(cdr (car (remove-if-not #'(lambda (x)
-					     (or (string= "应用程序" (car x))
-						 (string= "Applications" (car x))))
-					 (cdr (car *app-menu*))))))))
-    (loop
-       (let ((choice
-              (cdr (select-from-menu (current-screen)
-                                     (append (first stack)
-                                             (list (cons "Up a level" :up)))))))
-         (cond
-           ((not choice) (return))
-           ((eq choice :up) (pop stack) (unless stack (return)))
-           ((stringp choice) (run-shell-command choice) (return))
-           (t (push choice stack)))))))
-
-(define-key *root-map* (kbd "m") "show-app-menu")
-
+(define-key *root-map* (kbd "m") "show-debian-menu")
 
 (defcommand reinit () ()
   "docstring"
@@ -540,16 +541,6 @@
 
 ;; modeline border color
 (setf *mode-line-border-color* "palegreen3")
-
-
-;; load a few modules
-(mapcar #'load-module '("amixer"
-			"cpu"
-                         "mem"
-                         "battery-portable"
-                         "net"
-                         "wifi"
-                         "disk"))
 
 (defconstant *day-names*
   '("Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"))
