@@ -68,9 +68,26 @@
 (load-module "app-menu")
 ;; load menu file context to *app-menu* varable.
 (load-menu-file debian-menu-file)
-;; filter *app-menu*
-(setf *app-menu* (cdr (car *app-menu*)))
-(define-key *root-map* (kbd "m") "show-menu")
+
+(defcommand show-app-menu () ()
+  "Show the application menu"
+  (let ((stack (list
+		(car (remove-if-not #'(lambda (x)
+					(or (string= "应用程序" (car x))
+					    (string= "Applications" (car x))))
+				    (cdr (car *app-menu*)))))))
+    (loop
+       (let ((choice
+              (cdr (select-from-menu (current-screen)
+                                     (append (first stack)
+                                             (list (cons "Up a level" :up)))))))
+         (cond
+           ((not choice) (return))
+           ((eq choice :up) (pop stack) (unless stack (return)))
+           ((stringp choice) (run-shell-command choice) (return))
+           (t (push choice stack)))))))
+
+(define-key *root-map* (kbd "m") "show-app-menu")
 
 ;; load Swank so we can connect with SLIME
 (load my-swank-loader)
