@@ -7,6 +7,31 @@
 ;; 2. 这个配置文件不是拿来就可以使用，你需要根据自己的需要做相应的调整。
 ;;    1. 你需要调整配置文件里面的变量定义。
 ;;    2. 你需要重新调整许多command的定义。
+;; 3. 使用之前需要做如下工作：
+;;    1.  在登陆管理器中显示stumpwm选项： 编辑 /usr/share/xsessions/stumpwm.desktop 文件：
+;;
+;;          [Desktop Entry]
+;;          Encoding=UTF-8
+;;          Name=stumpwm
+;;          Comment=This session logs you into StumpWM (a minimalistic window manager)
+;;          Exec=/path/to/stumpwm
+;;          Type=Application
+;;
+;;    2.  设置默认桌面管理器为stumpwm:
+;;        1. 如果使用gdm,lightdm等，添加下面代码到文件 ~/.xsession，
+;;        2. 如果使用startx命令登陆桌面，则添加下面代码到文件 ~/.xinitrc
+;;
+;;           # lxpanel &
+;;           bmpanel2 &
+;;           exec /your/path/stumpwm
+;;
+;;    3.  安装字体： xfont-unifont
+;;        这个字体是等宽字体，虽然中英文不能完全对齐，但显示效果很好，
+;;        类似winxp。
+;;
+;;    4.  安装 bmpanel2
+;;        这个任务栏软件和stumpwm配合比较好，值得试一试。
+;;
 ;;
 ;; [1] Feng Shu <(concat "tumashu" at-symbol "google.com")>
 ;; [2] Fabrice Niessen <(concat "fni" at-symbol "mygooglest.com")>
@@ -428,7 +453,6 @@
 ;;*** 3.1 (info "(stumpwm)Customizing The Bar")
 
 ;; Find a font of your choice in `xfontsel' and put it here.
-;; you should install package 'xfont-unifont'
 (set-font "*-unifont-medium-*-normal-*-16-*-*-*-*-*-*-*")
 
 
