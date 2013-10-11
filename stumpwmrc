@@ -32,6 +32,7 @@
 ;;    4.  安装 bmpanel2
 ;;        这个任务栏软件和stumpwm配合比较好，值得试一试。
 ;;
+;;    5.  安装 xfce4-power-manager, xscreensaver, volti
 ;;
 ;; [1] Feng Shu <(concat "tumashu" at-symbol "google.com")>
 ;; [2] Fabrice Niessen <(concat "fni" at-symbol "mygooglest.com")>
