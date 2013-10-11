@@ -1,32 +1,18 @@
-;; Hey, Emacs! This is a -*- lisp -*- file!
-;;; .stumpwmrc --- my StumpWM Init File
-
-;; Copyright (C) 2008-2010 Fabrice Niessen
-;; Time-stamp: <2010-06-21 Mon 14:30 sva on mundaneum>
-
-;; Author: Fabrice Niessen <(concat "fni" at-symbol "mygooglest.com")>
-;; Keywords: stumpwm, dotfile, config
-
-;; $Revision: 1933 $
-;; $Date: 2010-06-21 14:06:22 +0200 (Mon, 21 Jun 2010) $
+;; This is a -*- lisp -*- file!
+;;; stumpwmrc --- Feng Shu's StumpWM Init File
 
 ;;* Comment:
 
-;; This config is known to work with stumpwm 0.9.6, and should work with
-;; later versions as well.
-
-;; You should specify full path to contrib modules. (load "~/...") works on
-;; CLisp but doesn't work on SBCL...
-
-
-;;* TODO
-
-;; - Add googlers or wikiers functions?
+;; 1. 这个文件是 Feng Shu[1] 的 stumpwm 配置文件，源于 Fabrice Niessen[2] 的配置.
+;; 2. 这个配置文件不是拿来就可以使用，你需要根据自己的需要做相应的调整。
+;;    1. 你需要调整配置文件里面的变量定义。
+;;    2. 你需要重新调整许多command的定义。
+;;
+;; [1] Feng Shu <(concat "tumashu" at-symbol "google.com")>
+;; [2] Fabrice Niessen <(concat "fni" at-symbol "mygooglest.com")>
 
 
 ;;* Code:
-
-;; This file is only provided as an example. Customize it to your own taste!
 
 ;; See http://www.nongnu.org/stumpwm/manual/stumpwm.html
 (in-package :stumpwm)
@@ -722,4 +708,4 @@
 ;; ispell-local-dictionary: "en_US"
 ;; End:
 
-;;; .stumpwmrc ends here
+;;; stumpwmrc ends here
