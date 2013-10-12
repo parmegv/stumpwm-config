@@ -695,21 +695,41 @@
 
 (run-commands "gnewbg EMACS" "gnewbg QQ" "gnewbg Others" "gnewbg-float Float")
 
+(defvar *my-group-map*
+  (let ((m (stumpwm:make-sparse-keymap)))
+    (stumpwm:define-key m (stumpwm:kbd "C-e") "gmove EMACS")
+    (stumpwm:define-key m (stumpwm:kbd "C-q") "gmove QQ")
+    (stumpwm:define-key m (stumpwm:kbd "C-o") "gmove Others")
+    (stumpwm:define-key m (stumpwm:kbd "C-f") "gmove Float")
+    (stumpwm:define-key m (stumpwm:kbd "C-g") "gmove Default")
+    (stumpwm:define-key m (stumpwm:kbd "C-d") "gmove Default")
+    (stumpwm:define-key m (stumpwm:kbd "e") "gselect EMACS")
+    (stumpwm:define-key m (stumpwm:kbd "q") "gselect QQ")
+    (stumpwm:define-key m (stumpwm:kbd "o") "gselect Others")
+    (stumpwm:define-key m (stumpwm:kbd "f") "gselect Float")
+    (stumpwm:define-key m (stumpwm:kbd "g") "gselect Default")
+    (stumpwm:define-key m (stumpwm:kbd "d") "gselect Default")
+    m ; NOTE: this is important
+    ))
+
+(stumpwm:define-key stumpwm:*top-map* (stumpwm:kbd "C-g") '*my-group-map*)
+
+
 (define-frame-preference "Default"
-  (2 nil t :create nil  :class nil :instance "org-capture" :title nil :role nil)
-  (1 nil t :create nil  :class "Iceweasel" :instance nil :title nil :role nil))
+  (2 t t :create nil  :class nil :instance "org-capture" :title nil :role nil)
+  (1 t t :create nil  :class "Iceweasel" :instance nil :title nil :role nil))
 
 (define-frame-preference "Others"
   (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil)
-  (1 nil t :create nil  :class nil :instance "edit-stumpwmrc" :title nil :role nil))
+  (1 t t :create nil  :class nil :instance "edit-stumpwmrc" :title nil :role nil))
 
 (define-frame-preference "QQ"
-  (1 nil t :create nil  :class nil :instance "w.qq.com" :title nil :role nil))
+  (1 t t :create nil  :class nil :instance "w.qq.com" :title nil :role nil))
 
 (define-frame-preference "EMACS"
-  (1 nil t :create nil  :class nil :instance "org-agenda" :title nil :role nil)
-  (1 nil t :create nil  :class nil :instance "gnus" :title nil :role nil)
-  (1 nil t :create nil  :class nil :instance "emms" :title nil :role nil))
+  (1 t t :create nil  :class nil :instance "org-agenda" :title nil :role nil)
+  (1 t t :create nil  :class nil :instance "gnus" :title nil :role nil)
+  (1 t t :create nil  :class nil :instance "emms" :title nil :role nil))
 
 ;;** Prefix Key
 
