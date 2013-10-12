@@ -29,10 +29,11 @@
 ;;        这个字体是等宽字体，虽然中英文不能完全对齐，但显示效果很好，
 ;;        类似winxp。
 ;;
-;;    4.  安装 bmpanel2
-;;        这个任务栏软件和stumpwm配合比较好，值得试一试。
-;;
-;;    5.  安装 xfce4-power-manager, xscreensaver, volti
+;;    4.  安装其他程序
+;;        1. bmpanel2              这个任务栏软件和stumpwm配合比较好，值得试一试。
+;;        2. xfce4-power-manager   xfce电源管理软件
+;;        3. xscreensaver          屏幕保护程序
+;;        4. volti                 一个小巧的音量调节器
 ;;
 ;; [1] Feng Shu <(concat "tumashu" at-symbol "google.com")>
 ;; [2] Fabrice Niessen <(concat "fni" at-symbol "mygooglest.com")>
