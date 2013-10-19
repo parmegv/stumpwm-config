@@ -712,9 +712,7 @@
     (stumpwm:define-key m (stumpwm:kbd "d") "gselect Default")
     m ; NOTE: this is important
     ))
-
-(stumpwm:define-key stumpwm:*top-map* (stumpwm:kbd "C-g") '*my-group-map*)
-
+(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "g") '*my-group-map*)
 
 (define-frame-preference "Default"
   (2 t t :create nil  :class nil :instance "org-capture" :title nil :role nil)
