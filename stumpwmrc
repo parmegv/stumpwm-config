@@ -712,6 +712,7 @@
     (stumpwm:define-key m (stumpwm:kbd "d") "gselect Default")
     m ; NOTE: this is important
     ))
+(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "G") '*groups-map*)
 (stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "g") '*my-group-map*)
 
 (define-frame-preference "Default"
