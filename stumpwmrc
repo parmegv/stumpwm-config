@@ -215,6 +215,27 @@
   (run-or-raise "emacsclient --server-file=default -c -F '((name . \"org-capture\"))'"
 		'(:instance "org-capture")))
 
+(defcommand org-capture-notes () ()
+  (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"w\")'"))
+
+(defcommand org-capture-study-notes () ()
+  (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"x\")'"))
+
+(defcommand org-capture-todo () ()
+  (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"t\")'"))
+
+(defcommand org-capture-account () ()
+  (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"m\")'"))
+
+(defcommand org-capture-journal () ()
+  (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"j\")'"))
+
+(defcommand org-capture-schedule () ()
+  (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"s\")'"))
+
+(defcommand org-capture-contacts () ()
+  (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"c\")'"))
+
 (defcommand qq () ()
   (run-or-raise "chromium --app=http://w.qq.com/" '(:instance "w.qq.com")))
 
@@ -247,6 +268,14 @@
   (run-with-timer 5 100000 'qq)
   (run-with-timer 1 (* 60 60) 'org-agenda)
   (run-with-timer 2 (* 60 60) 'gnus))
+
+(define-key *top-map* (kbd "s-w") "org-capture-notes")
+(define-key *top-map* (kbd "s-x") "org-capture-study-notes")
+(define-key *top-map* (kbd "s-t") "org-capture-todo")
+(define-key *top-map* (kbd "s-m") "org-capture-account")
+(define-key *top-map* (kbd "s-j") "org-capture-journal")
+(define-key *top-map* (kbd "s-s") "org-capture-schedule")
+(define-key *top-map* (kbd "s-c") "org-capture-contacts")
 
 (define-key *root-map* (kbd "a") "applications-suggest")
 (define-key *root-map* (kbd "v") "file-manager")
