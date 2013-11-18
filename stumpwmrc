@@ -144,7 +144,6 @@
 (defcommand shutdown-commputer () ()
 	    (run-shell-command "dbus-send --print-reply --system --dest=\"org.freedesktop.ConsoleKit\" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop"))
 
-
 (defcommand firefox () ()
   "Start Firefox or switch to it, if it is already running."
   (run-or-raise "iceweasel" '(:class "Iceweasel")))
@@ -154,6 +153,10 @@
 	    "Start nautilus"
 	    (run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
 
+(defcommand winxp () ()
+  "Start winxp with virtualbox"
+  (run-or-raise "VBoxManage startvm winxp &" '(:class "VirtualBox")))
+
 ;; NOTE: If you want to show beautiful font
 ;; you can add the below line:
 ;; _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
@@ -161,8 +164,6 @@
 (defcommand jabref () ()
 	    "Start jabref"
 	    (run-or-raise "java -jar ~/bin/JabRef-2.9.2.jar" '(:class "net-sf-jabref-JabRefMain")))
-
-(define-key *root-map* (kbd "j") "jabref")
 
 (defcommand emacs-daemon-start () ()
   (run-shell-command "x-terminal-emulator -T emacs-daemon-start -e emacs --daemon=default"))
@@ -204,7 +205,6 @@
 (defcommand emms-next () ()
   (emms)
   (run-shell-command "emacsclient --server-file=default --eval '(emms-next)'"))
-
 
 (defcommand edit-stumpwmrc () ()
   (run-or-raise
@@ -273,11 +273,12 @@
 (define-key *top-map* (kbd "s-c") "org-capture-contacts")
 (define-key *top-map* (kbd "s-a") "org-capture-account")
 (define-key *top-map* (kbd "s-j") "org-capture-journal")
-
 (define-key *root-map* (kbd "d") "org-capture-study-notes")
 (define-key *root-map* (kbd "t") "org-capture-todo")
 (define-key *root-map* (kbd "s") "org-capture-schedule")
 (define-key *root-map* (kbd "a") "applications-suggest")
+(define-key *root-map* (kbd "j") "jabref")
+(define-key *root-map* (kbd "w") "winxp")
 (define-key *root-map* (kbd "v") "file-manager")
 (define-key *root-map* (kbd "c") "x-terminal-emulator")
 (define-key *root-map* (kbd "RET") "launch-new-terminal")
