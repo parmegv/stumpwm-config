@@ -270,14 +270,13 @@
   (run-with-timer 2 (* 60 60) 'gnus))
 
 (define-key *top-map* (kbd "s-d") "org-capture-notes")
-(define-key *top-map* (kbd "s-e") "org-capture-study-notes")
-(define-key *top-map* (kbd "s-t") "org-capture-todo")
-(define-key *top-map* (kbd "s-m") "org-capture-account")
-(define-key *top-map* (kbd "s-j") "org-capture-journal")
-(define-key *top-map* (kbd "s-s") "org-capture-schedule")
 (define-key *top-map* (kbd "s-c") "org-capture-contacts")
-
-(define-key *root-map* (kbd "a") "applications-suggest")
+(define-key *root-map* (kbd "d") "org-capture-study-notes")
+(define-key *root-map* (kbd "t") "org-capture-todo")
+(define-key *root-map* (kbd "z") "org-capture-journal")
+(define-key *root-map* (kbd "s") "org-capture-schedule")
+(define-key *root-map* (kbd "a") "org-capture-account")
+(define-key *root-map* (kbd "b") "applications-suggest")
 (define-key *root-map* (kbd "v") "file-manager")
 (define-key *root-map* (kbd "c") "x-terminal-emulator")
 (define-key *root-map* (kbd "RET") "launch-new-terminal")
@@ -322,9 +321,9 @@
 
 
 ;;**** split frame
-(define-key *root-map* (kbd "S") "vsplit")
-(define-key *root-map* (kbd "s") "hsplit")
-
+(define-key *root-map* (kbd "1") "hsplit")
+(define-key *root-map* (kbd "2") "vsplit")
+(define-key *root-map* (kbd "0") "only")
 
 ;;**** Window Management
 
@@ -461,7 +460,7 @@
 
 ;; (make-web-jump "ggoogle" "firefox http://www.google.com/search?q=")
 
-(define-key *root-map* (kbd "z") "google")
+;; (define-key *root-map* (kbd "z") "google")
 
 ;; ask the user for a search string and search for it in Wikipedia
 (defcommand wikipedia (search)
