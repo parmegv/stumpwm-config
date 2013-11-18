@@ -271,12 +271,13 @@
 
 (define-key *top-map* (kbd "s-d") "org-capture-notes")
 (define-key *top-map* (kbd "s-c") "org-capture-contacts")
+(define-key *top-map* (kbd "s-a") "org-capture-account")
+(define-key *top-map* (kbd "s-j") "org-capture-journal")
+
 (define-key *root-map* (kbd "d") "org-capture-study-notes")
 (define-key *root-map* (kbd "t") "org-capture-todo")
-(define-key *root-map* (kbd "z") "org-capture-journal")
 (define-key *root-map* (kbd "s") "org-capture-schedule")
-(define-key *root-map* (kbd "a") "org-capture-account")
-(define-key *root-map* (kbd "b") "applications-suggest")
+(define-key *root-map* (kbd "a") "applications-suggest")
 (define-key *root-map* (kbd "v") "file-manager")
 (define-key *root-map* (kbd "c") "x-terminal-emulator")
 (define-key *root-map* (kbd "RET") "launch-new-terminal")
