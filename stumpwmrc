@@ -34,6 +34,7 @@
 ;;        2. xfce4-power-manager   xfce电源管理软件
 ;;        3. xscreensaver          屏幕保护程序
 ;;        4. volti                 一个小巧的音量调节器
+;;        5. xdotool               linux下面的按键精灵，我用这个软件自动拷贝文本
 ;;
 ;; [1] Feng Shu <(concat "tumashu" at-symbol "google.com")>
 ;; [2] Fabrice Niessen <(concat "fni" at-symbol "mygooglest.com")>
@@ -218,8 +219,43 @@
 (defcommand org-capture-notes () ()
   (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"w\")'"))
 
+(defun xdotool-command (x1 y1 x2 y2 other-commands)
+  (cond
+    ((and (not x1) (not y1) x2 y2)
+     (concat "xdotool mousemove --sync 720 384;"
+	     "xdotool click 3;"
+	     "sleep 0.2;"
+	     "xdotool mousemove_relative --sync" " " x2 " " y2 ";"
+	     "sleep 0.2;"
+	     "xdotool click 1;"
+	     other-commands
+	     ";"))
+    ((and x1 y1 x2 y2)
+     (concat "xdotool mousemove --sync" " " x1 " " y1 ";"
+	     "xdotool click 1;"
+	     "sleep 0.2;"
+	     "xdotool mousemove_relative --sync" " " x2 " " y2 ";"
+	     "sleep 0.2;"
+	     "xdotool click 1;"
+	     other-commands
+	     ";"))
+    ((and (not x1) (not y1) (not x2) (not y2))
+     (concat "xdotool key ctrl+c;"
+	     other-commands
+	     ";"))))
+
 (defcommand org-capture-study-notes () ()
-  (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"x\")'"))
+  (let ((window-class-string (window-class (current-window)))
+	(window-instance-string (window-res (current-window)))
+	(org-capture-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"x\")'"))
+    (when (not (search "Emacs" window-class-string))
+      (cond
+	((search "CAJViewer" window-instance-string)
+	 (run-shell-command (xdotool-command nil nil "40" "10" org-capture-command)))
+	((search "wp" window-instance-string)
+	 (run-shell-command (xdotool-command "110" "50" "40" "100" org-capture-command)))
+	(t
+	 (run-shell-command (xdotool-command nil nil nil nil  org-capture-command)))))))
 
 (defcommand org-capture-todo () ()
   (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"t\")'"))
