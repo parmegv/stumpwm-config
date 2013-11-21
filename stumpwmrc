@@ -227,29 +227,18 @@
   (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"w\")'"))
 
 (defun xdotool-command (x1 y1 x2 y2 other-commands)
-  (cond
-    ((and (not x1) (not y1) x2 y2)
-     (concat "xdotool mousemove --sync 720 384;"
-	     "xdotool click 3;"
-	     "sleep 0.2;"
-	     "xdotool mousemove_relative --sync" " " x2 " " y2 ";"
-	     "sleep 0.2;"
-	     "xdotool click 1;"
-	     other-commands
-	     ";"))
-    ((and x1 y1 x2 y2)
-     (concat "xdotool mousemove --sync" " " x1 " " y1 ";"
-	     "xdotool click 1;"
-	     "sleep 0.2;"
-	     "xdotool mousemove_relative --sync" " " x2 " " y2 ";"
-	     "sleep 0.2;"
-	     "xdotool click 1;"
-	     other-commands
-	     ";"))
-    ((and (not x1) (not y1) (not x2) (not y2))
-     (concat "xdotool key ctrl+c;"
-	     other-commands
-	     ";"))))
+  (if (and x1 y1 x2 y2)
+      (concat "xdotool mousemove --sync" " " x1 " " y1 ";"
+	      "xdotool click 1;"
+	      "sleep 0.5;"
+	      "xdotool mousemove_relative --sync" " " x2 " " y2 ";"
+	      "sleep 0.5;"
+	      "xdotool click 1;"
+	      other-commands
+	      ";")
+      (concat "xdotool key ctrl+c;"
+	      other-commands
+	      ";")))
 
 (defcommand org-capture-study-notes () ()
   (let ((window-class-string (window-class (current-window)))
@@ -258,11 +247,10 @@
     (when (not (search "Emacs" window-class-string))
       (cond
 	((search "CAJViewer" window-instance-string)
-	 (run-shell-command (xdotool-command nil nil "40" "10" org-capture-command)))
+	 (run-shell-command (xdotool-command "110" "50" "40" "25" org-capture-command)))
 	((search "wp" window-instance-string)
 	 (run-shell-command (xdotool-command "110" "50" "40" "100" org-capture-command)))
-	(t
-	 (run-shell-command (xdotool-command nil nil nil nil  org-capture-command)))))))
+	(t (run-shell-command (xdotool-command nil nil nil nil  org-capture-command)))))))
 
 (defcommand org-capture-todo () ()
   (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"t\")'"))
