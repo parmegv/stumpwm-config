@@ -191,6 +191,13 @@
   (run-or-raise "emacsclient --server-file=default -c -F '((name . \"gnus\"))' --eval '(gnus)'"
 	       '(:instance "gnus")))
 
+(defcommand org-contacts (search)
+  ((:string "Search Contacts: "))
+  "docstring"
+  (check-type search string)
+  (substitute #\+ #\Space search)
+  (run-shell-command (cat "emacsclient --server-file=default -c -F '((name . \"org-contacts\"))' --eval '(progn (org-contacts \"" search "\")(delete-other-windows))'")))
+
 (defcommand emms () ()
   (run-or-raise "emacsclient --server-file=default -c -F '((name . \"emms\"))' --eval '(eh-emms)'"
 	       '(:instance "emms")))
@@ -319,6 +326,7 @@
 (define-key *root-map* (kbd "c") "x-terminal-emulator")
 (define-key *root-map* (kbd "RET") "launch-new-terminal")
 (define-key *root-map* (kbd "q") "qq")
+(define-key *root-map* (kbd "z") "org-contacts")
 
 (defvar *my-emacs-map*
   (let ((m (stumpwm:make-sparse-keymap)))
