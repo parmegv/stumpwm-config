@@ -35,6 +35,7 @@
 ;;        3. xscreensaver          屏幕保护程序
 ;;        4. volti                 一个小巧的音量调节器
 ;;        5. xdotool               linux下面的按键精灵，我用这个软件自动拷贝文本
+;;        6. xsel                  命令行程序，用来管理剪切板的内容
 ;;
 ;; [1] Feng Shu <(concat "tumashu" at-symbol "google.com")>
 ;; [2] Fabrice Niessen <(concat "fni" at-symbol "mygooglest.com")>
