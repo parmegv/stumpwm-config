@@ -228,17 +228,18 @@
 
 (defun xdotool-command (x1 y1 x2 y2 other-commands)
   (if (and x1 y1 x2 y2)
-      (concat "xdotool mousemove --sync" " " x1 " " y1 ";"
+      (concat "xsel -b -c;"
+	      "xdotool mousemove --sync" " " x1 " " y1 ";"
 	      "xdotool click 1;"
 	      "sleep 0.5;"
 	      "xdotool mousemove_relative --sync" " " x2 " " y2 ";"
 	      "sleep 0.5;"
 	      "xdotool click 1;"
-	      other-commands
-	      ";")
-      (concat "xdotool key ctrl+c;"
-	      other-commands
-	      ";")))
+	      "sleep 0.5;"
+	      "[ -z \"$(xsel -b)\" ] || " other-commands ";")
+      (concat "xsel -b -c;"
+	      "xdotool key ctrl+c;"
+	      "[ -z \"$(xsel -b)\" ] || " other-commands ";")))
 
 (defcommand org-capture-study-notes () ()
   (let ((window-class-string (window-class (current-window)))
