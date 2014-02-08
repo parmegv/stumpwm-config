@@ -71,6 +71,7 @@
 	  "wifi"
 	  "disk"
 	  "app-menu"
+	  "stumptray"
 	  ))
 
 ;; load Swank so we can connect with SLIME
@@ -112,7 +113,7 @@
 ;;    but bmpanel2 works well with stumpwm.
 ;; 
 ;; cut a top area
-(resize-head 0 0 25 1366 740)
+;; (resize-head 0 0 25 1366 740)
 ;; cut a bottom area
 ;; (resize-head 0 0 0 1366 740)
 
@@ -312,6 +313,7 @@
 (define-key *root-map* (kbd "RET") "launch-new-terminal")
 (define-key *root-map* (kbd "q") "qq")
 (define-key *root-map* (kbd "z") "org-contacts")
+(define-key *root-map* (kbd "a") "org-agenda")
 
 (defvar *applications-map*
   (let ((m (stumpwm:make-sparse-keymap)))
@@ -377,9 +379,9 @@
 
 
 ;;**** split frame
-(define-key *root-map* (kbd "1") "hsplit")
-(define-key *root-map* (kbd "2") "vsplit")
-(define-key *root-map* (kbd "0") "only")
+(define-key *root-map* (kbd "C-1") "hsplit")
+(define-key *root-map* (kbd "C-2") "vsplit")
+(define-key *root-map* (kbd "C-0") "only")
 
 ;;**** Window Management
 
@@ -541,7 +543,6 @@
 ;; Find a font of your choice in `xfontsel' and put it here.
 (set-font "*-unifont-medium-*-normal-*-16-*-*-*-*-*-*-*")
 
-
 ;;** 4 (info "(stumpwm)Windows")
 
 ;; how to format the window list
@@ -650,13 +651,14 @@
             year month date (nth day-of-week *day-names*)
             hour minute second)))
 
+(setf *group-format* "%t")
 (setf *screen-mode-line-format*
       (list
        ;; date
        "^6*" '(:eval (current-date)) ; defined above
-       " | %D | %c(%f,%t) | %M | %l | %I"
-       ;; '(:eval (run-shell-command "echo" t))
-       ;; "^2*" "[^B%n^b] %W"
+       " | %D | %c(%f,%t) | %M | %l"
+       '(:eval (run-shell-command "echo" t))
+       "^2*" "[ %g ] %W"
        ))
 
 ;; how many seconds elapse between each update of the modeline
@@ -707,6 +709,7 @@
 (define-key *root-map* (kbd "x")
   "exec dmenu_run -i -b -fn '10x20' -p \"shell cmd:\"") ; simple $PATH to run commands
 
+(run-commands "stumptray")
 (run-shell-command "xset b off")
 (run-shell-command "xfce4-power-manager")
 (run-shell-command "xscreensaver -no-splash")
