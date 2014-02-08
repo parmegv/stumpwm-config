@@ -651,14 +651,14 @@
             year month date (nth day-of-week *day-names*)
             hour minute second)))
 
-(setf *group-format* "%t")
+(setf *group-format* ":%t:")
 (setf *screen-mode-line-format*
       (list
        ;; date
        "^6*" '(:eval (current-date)) ; defined above
        " | %D | %c(%f,%t) | %M | %l"
        '(:eval (run-shell-command "echo" t))
-       "^2*" "[ %g ] %W"
+       "^2*" "[^B%n^b] %W"
        ))
 
 ;; how many seconds elapse between each update of the modeline
