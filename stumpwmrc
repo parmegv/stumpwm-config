@@ -272,8 +272,8 @@
 (defcommand org-capture-contacts () ()
   (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"contacts\")'"))
 
-(defcommand qq () ()
-  (run-or-raise "chromium --app=http://w.qq.com/" '(:instance "w.qq.com")))
+(defcommand pidgin () ()
+  (run-shell-command "pidgin"))
 
 (defcommand mplayer () ()
   (run-or-raise "smplayer" '(:class "Smplayer")))
@@ -304,14 +304,13 @@
    "emms"
    ;; gnus 放在前面会有乱码
    "gnus")
-  (run-with-timer 5 100000 'qq)
+  (run-with-timer 5 100000 'pidgin)
   (run-with-timer 1 (* 60 60) 'org-agenda)
   (run-with-timer 2 (* 60 60) 'gnus))
 
 (define-key *root-map* (kbd "v") "file-manager")
-(define-key *root-map* (kbd "c") "x-terminal-emulator")
-(define-key *root-map* (kbd "RET") "launch-new-terminal")
-(define-key *root-map* (kbd "q") "qq")
+(define-key *root-map* (kbd "c") "pidgin")
+(define-key *root-map* (kbd "RET") "x-terminal-emulator")
 (define-key *root-map* (kbd "z") "org-contacts")
 (define-key *root-map* (kbd "a") "org-agenda")
 
@@ -319,6 +318,7 @@
   (let ((m (stumpwm:make-sparse-keymap)))
     (stumpwm:define-key m (stumpwm:kbd "g") "goagent")
     (stumpwm:define-key m (stumpwm:kbd "f") "firefox")
+    (stumpwm:define-key m (stumpwm:kbd "t") "launch-new-terminal")
     (stumpwm:define-key m (stumpwm:kbd "j") "jabref")
     (stumpwm:define-key m (stumpwm:kbd "c") "cajviewer")
     (stumpwm:define-key m (stumpwm:kbd "p") "pdfreader")
@@ -416,7 +416,7 @@
     ("SW"     "上网" "firefox")
     ("chrome" "谷歌浏览器"  "chromium")
     ("DZYJ"   "邮件" "gnus")
-    ("LT"     "聊天" "qq")
+    ("pidgin" "聊天" "pidgin")
     ("YY"     "音乐" "emms")
     ("DYSP"   "视频" "mplayer")
     ("PDF"    "PDF查看器" "pdfreader")
@@ -716,7 +716,9 @@
 (run-shell-command "nm-applet")
 (run-shell-command "volti")
 (run-shell-command "xmodmap -e 'keycode 135 = Super_R'")
+(run-commands "pidgin")
 (run-commands "emacs-daemon-restart")
+
 
 ;; so i modified my keymap settings so that compaq keys2-4 are mapped to
 ;; function keys F13-F15 (i only have F1 to F12…)
@@ -781,18 +783,18 @@
 
 (replace-hook *key-press-hook* 'key-press-hook)
 
-(run-commands "gnewbg EMACS" "gnewbg QQ" "gnewbg Others" "gnewbg-float Float")
+(run-commands "gnewbg EMACS"  "gnewbg Others" "gnewbg-float Float")
 
 (defvar *my-group-map*
   (let ((m (stumpwm:make-sparse-keymap)))
     (stumpwm:define-key m (stumpwm:kbd "C-e") "gmove EMACS")
-    (stumpwm:define-key m (stumpwm:kbd "C-q") "gmove QQ")
+    (stumpwm:define-key m (stumpwm:kbd "C-c") "gmove Char")
     (stumpwm:define-key m (stumpwm:kbd "C-o") "gmove Others")
     (stumpwm:define-key m (stumpwm:kbd "C-f") "gmove Float")
     (stumpwm:define-key m (stumpwm:kbd "C-g") "gmove Default")
     (stumpwm:define-key m (stumpwm:kbd "C-d") "gmove Default")
     (stumpwm:define-key m (stumpwm:kbd "e") "gselect EMACS")
-    (stumpwm:define-key m (stumpwm:kbd "q") "gselect QQ")
+    (stumpwm:define-key m (stumpwm:kbd "c") "gselect Char")
     (stumpwm:define-key m (stumpwm:kbd "o") "gselect Others")
     (stumpwm:define-key m (stumpwm:kbd "f") "gselect Float")
     (stumpwm:define-key m (stumpwm:kbd "g") "gselect Default")
@@ -808,9 +810,6 @@
 (define-frame-preference "Others"
   (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil)
   (1 t t :create nil  :class nil :instance "edit-stumpwmrc" :title nil :role nil))
-
-(define-frame-preference "QQ"
-  (1 t t :create nil  :class nil :instance "w.qq.com" :title nil :role nil))
 
 (define-frame-preference "EMACS"
   (1 t t :create nil  :class nil :instance "org-agenda" :title nil :role nil)
