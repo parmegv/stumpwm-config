@@ -296,18 +296,6 @@
 (defcommand goagent () ()
   (run-or-raise "python ~/project/goagent/local/goagent-gtk.py" '(:title "goagent-gtk.py")))
 
-(defcommand applications-suggest () ()
-  (run-commands
-   "goagent"
-   "firefox"
-   "org-agenda"
-   "emms"
-   ;; gnus 放在前面会有乱码
-   "gnus")
-  (run-with-timer 5 100000 'pidgin)
-  (run-with-timer 1 (* 60 60) 'org-agenda)
-  (run-with-timer 2 (* 60 60) 'gnus))
-
 (define-key *root-map* (kbd "v") "file-manager")
 (define-key *root-map* (kbd "c") "pidgin")
 (define-key *root-map* (kbd "RET") "x-terminal-emulator")
@@ -718,7 +706,6 @@
 (run-shell-command "xmodmap -e 'keycode 135 = Super_R'")
 (run-commands "pidgin")
 (run-commands "emacs-daemon-restart")
-
 
 ;; so i modified my keymap settings so that compaq keys2-4 are mapped to
 ;; function keys F13-F15 (i only have F1 to F12…)
