@@ -1,14 +1,14 @@
-;; This is a -*- lisp -*- file!
-;;; stumpwmrc --- Feng Shu's StumpWM Init File
+;;; stumpwmrc --- Tumashu's stumpwm configure file
 
-;;* Comment:
+;; Author: Feng Shu <tumashu@gmail.com>, Fabrice Niessen
+;; Keywords: stumpwm, common lisp
+;; Homepage: https://github.com/tumashu/stumpwm-config
+;; Git-Url: git@github.com:tumashu/stumpwm-config.git
+;; Version: 0.01
 
-;; 1. 这个文件是 Feng Shu[1] 的 stumpwm 配置文件，源于 Fabrice Niessen[2] 的配置.
-;; 2. 这个配置文件不是拿来就可以使用，你需要根据自己的需要做相应的调整。
-;;    1. 你需要调整配置文件里面的变量定义。
-;;    2. 你需要重新调整许多command的定义。
-;; 3. 使用之前需要做如下工作：
-;;    1.  在登陆管理器中显示stumpwm选项： 编辑 /usr/share/xsessions/stumpwm.desktop 文件：
+;;; Stumpwm Tips:
+;;
+;; 1.  在登陆管理器中显示stumpwm选项： 编辑 /usr/share/xsessions/stumpwm.desktop 文件：
 ;;
 ;;          [Desktop Entry]
 ;;          Encoding=UTF-8
@@ -17,49 +17,51 @@
 ;;          Exec=/path/to/stumpwm
 ;;          Type=Application
 ;;
-;;    2.  设置默认桌面管理器为stumpwm:
-;;        1. 如果使用gdm,lightdm等，添加下面代码到文件 ~/.xsession，
-;;        2. 如果使用startx命令登陆桌面，则添加下面代码到文件 ~/.xinitrc
+;; 2.  设置默认桌面管理器为stumpwm:
+;;     1. 如果使用gdm,lightdm等，添加下面代码到文件 ~/.xsession，
+;;     2. 如果使用startx命令登陆桌面，则添加下面代码到文件 ~/.xinitrc
 ;;
 ;;           # lxpanel &
-;;           bmpanel2 &
+;;           # bmpanel2 &
 ;;           exec /your/path/stumpwm
 ;;
-;;    3.  安装字体： xfont-unifont
-;;        这个字体是等宽字体，虽然中英文不能完全对齐，但显示效果很好，
-;;        类似winxp。
+;; 3.  安装字体： xfont-unifont
+;;     这个字体是等宽字体，虽然中英文不能完全对齐，但显示效果很好，
+;;     类似winxp。
 ;;
-;;    4.  安装其他程序
-;;        1. bmpanel2              这个任务栏软件和stumpwm配合比较好，值得试一试。
-;;        2. xfce4-power-manager   xfce电源管理软件
-;;        3. xscreensaver          屏幕保护程序
-;;        4. volti                 一个小巧的音量调节器
-;;        5. xdotool               linux下面的按键精灵，我用这个软件自动拷贝文本
-;;        6. xsel                  命令行程序，用来管理剪切板的内容
+;; 4.  安装其他程序
+;;     1. bmpanel2(这个任务栏软件和stumpwm配合比较好，值得一试)
+;;        1. bmpanel2 should set panel window type as dock.
+;;        2. bmpanel2 should launch before stumpwm
+;;        3. You need use function resize-head to cut a area for bmpanel2
+;;           for example: (resize-head 0 0  25 1366 740)
+;;     2. xfce4-power-manager(xfce电源管理软件)
+;;     3. xscreensaver(屏幕保护程序)
+;;     4. volti(一个小巧的音量调节器)
+;;     5. xdotool(linux下面的按键精灵，我用这个软件自动拷贝文本)
+;;     6. xsel(命令行程序，用来管理剪切板的内容)
+;; 5.  设置debian menu
+;;     1. cp ./bin/menu-method/stumpwm /etc/menu-method/
+;;     2. edit /etc/menu-method/stumpwn as appropriate BEFORE using
+;;     3. sudo update-menus
+;;     4. setf debian-menu-file to rootprefix's value
+;;        (for example: /usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu)
+;; 6.  美化Java程序的字体：
+;;     在/etc/environment文件中添加一行：
 ;;
-;; [1] Feng Shu <(concat "tumashu" at-symbol "google.com")>
-;; [2] Fabrice Niessen <(concat "fni" at-symbol "mygooglest.com")>
+;;        _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
+;;
 
-
-;;* Code:
-
-;; See http://www.nongnu.org/stumpwm/manual/stumpwm.html
+;;; Code:
 (in-package :stumpwm)
-
 (run-shell-command "rm .xsession-errors")
-
-(set-contrib-dir "/home/feng/project/stumpwm/contrib/")
-(setf my-swank-loader "~/project/slime/swank-loader.lisp")
-
-;; debian menu
-;; 1. cp ./bin/menu-method/stumpwm /etc/menu-method/
-;; 2. edit /etc/menu-method/stumpwn as appropriate BEFORE using
-;; 3. sudo update-menus
-;; 4. setf debian-menu-file to rootprefix's value (for example: /usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu)
-(setf debian-menu-file "/usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu")
-
 ;; I link stumpwmrc-file to ~/.stumpwmrc
 (setf stumpwmrc-file "~/project/stumpwm-config/stumpwmrc")
+(set-contrib-dir "/home/feng/project/stumpwm/contrib/")
+(setf my-swank-loader "~/project/slime/swank-loader.lisp")
+(setf debian-menu-file "/usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu")
+;; shell program used by `run-shell-command'
+(setq *shell-program* (stumpwm::getenv "SHELL"))
 
 ;; load contrib modules
 (mapcar #'load-module 
@@ -91,81 +93,72 @@
                            :dont-close t)
       (setf *swank-p* t)
       (message "Starting swank on port 4005."))))
-
 (swank)
 
-;;*** Panel or Tray
-;; If you want to use a panel or tray in your stumpwm desktop, you should do like this:
-;; 1. you should set panel window type as dock, if you disable this setting, stumpwm will throw the
-;;    panel or tray in the middle of desktop.
-;; 2. you must use function `resize-head' to cut an area for panel or tray. for example
-;;    (resize-head 0 0 25 1366 740), you can cut an area in any edge of desktop by adjust
-;;    five numbers.
-;; 3. you must launch your panel or tray before stumpwm, for example:
-;;    you can add lines:
+;; Add Groups
+(run-commands "gnewbg EMACS"  "gnewbg Others" "gnewbg-float Float")
 
-;;         # lxpanel &
-;;         bmpanel2 &
-;;         exec /your/path/stumpwm
-;;    to ~/.xsession
-;;
-;; 4. you can use many panel or tray programs, such as bmpanel2, lxpanel, xfce-panel, trayer, stalonetray...
-;;    but bmpanel2 works well with stumpwm.
-;; 
-;; cut a top area
-;; (resize-head 0 0 25 1366 740)
-;; cut a bottom area
-;; (resize-head 0 0 0 1366 740)
+;; Frame preference setting
+(define-frame-preference "Default"
+  (1 t t :create nil  :class "Iceweasel" :instance nil :title nil :role nil))
 
+(define-frame-preference "Others"
+  (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil)
+  (1 t t :create nil  :class nil :instance "edit-stumpwmrc" :title nil :role nil))
 
-;;** 2 (info "(stumpwm)Key Bindings")
+(define-frame-preference "EMACS"
+  (1 t t :create nil  :class nil :instance "org-agenda" :title nil :role nil)
+  (1 t t :create nil  :class nil :instance "gnus" :title nil :role nil)
+  (1 t t :create nil  :class nil :instance "emms" :title nil :role nil))
 
-;; `*top-map*' is the top level key map. This is where you'll find the
-;; binding for the prefix map.
-;;
-;; `*root-map*' is the keymap by default bound to `C-t'. It is known as the
-;; prefix map.
-
-
-;;*** --2.2 (info "(stumpwm)Binding Keys")
-
-;; screenshot-to-file
-(defcommand screenshot-to-file (filename) ((:rest "Filename: "))
-  (run-shell-command
-   (format nil "import -window root ~a" filename)))
-
-;; Keyboard Shortcuts
-
-;;**** Desktop
-
+;; Stumpwm commands
 (defcommand suspend-computer () ()
-	    (run-shell-command "dbus-send --print-reply --system --dest=\"org.freedesktop.UPower\" /org/freedesktop/UPower org.freedesktop.UPower.Suspend"))
+  (run-shell-command
+   (concat  "dbus-send --print-reply --system  "
+	    "--dest=\"org.freedesktop.UPower\"  "
+	    "/org/freedesktop/UPower  "
+	    "org.freedesktop.UPower.Suspend")))
+
 (defcommand hibernate-computer () ()
-	    (run-shell-command "dbus-send --print-reply --system --dest=\"org.freedesktop.UPower\" /org/freedesktop/UPower org.freedesktop.UPower.Hibernate"))
+  (run-shell-command
+   (concat "dbus-send --print-reply --system  "
+	   "--dest=\"org.freedesktop.UPower\"  "
+	   "/org/freedesktop/UPower  "
+	   "org.freedesktop.UPower.Hibernate")))
+
 (defcommand restart-computer () ()
-	    (run-shell-command "dbus-send --print-reply --system --dest=\"org.freedesktop.ConsoleKit\" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart"))
+  (run-shell-command
+   (concat "dbus-send --print-reply --system "
+	   "--dest=\"org.freedesktop.ConsoleKit\" "
+	   "/org/freedesktop/ConsoleKit/Manager "
+	   "org.freedesktop.ConsoleKit.Manager.Restart")))
+
 (defcommand shutdown-commputer () ()
-	    (run-shell-command "dbus-send --print-reply --system --dest=\"org.freedesktop.ConsoleKit\" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop"))
+  (run-shell-command
+   (concat "dbus-send --print-reply --system  "
+	   "--dest=\"org.freedesktop.ConsoleKit\"  "
+	   "/org/freedesktop/ConsoleKit/Manager "
+	   "org.freedesktop.ConsoleKit.Manager.Stop")))
 
 (defcommand firefox () ()
   "Start Firefox or switch to it, if it is already running."
   (run-or-raise "iceweasel" '(:class "Iceweasel")))
 
 (defcommand file-manager () ()
-	    "Start nautilus"
-	    (run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
+  "Start nautilus"
+  (run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
 
 (defcommand winxp () ()
   "Start winxp with virtualbox"
-  (run-or-raise "VBoxManage startvm winxp &" '(:class "VirtualBox")))
+  (run-or-raise
+   "VBoxManage startvm winxp &"
+   '(:class "VirtualBox")))
 
-;; NOTE: If you want to show beautiful font
-;; you can add the below line:
-;; _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
-;; to /etc/environment
 (defcommand jabref () ()
-	    "Start jabref"
-	    (run-or-raise "java -jar ~/bin/JabRef-2.9.2.jar" '(:class "net-sf-jabref-JabRefMain")))
+  "Start jabref"
+  (run-or-raise
+   "java -jar ~/bin/JabRef-2.9.2.jar"
+   '(:class "net-sf-jabref-JabRefMain")))
 
 (defcommand emacs-daemon-start () ()
   (run-shell-command "x-terminal-emulator -T emacs-daemon-start -e emacs --daemon=default"))
@@ -182,15 +175,15 @@
 
 (defcommand emacs () ()
   (run-or-raise "emacsclient --server-file=default -c -F '((name . \"emacs\"))' "
-	       '(:instance "emacs")))
+		'(:instance "emacs")))
 
 (defcommand org-agenda () ()
- (run-or-raise "emacsclient --server-file=default -c -F '((name . \"org-agenda\"))' --eval '(progn (org-agenda nil \"m\") (org-agenda nil \"l\") (delete-other-windows))'"
-	       '(:instance "org-agenda")))
+  (run-or-raise "emacsclient --server-file=default -c -F '((name . \"org-agenda\"))' --eval '(progn (org-agenda nil \"m\") (org-agenda nil \"l\") (delete-other-windows))'"
+		'(:instance "org-agenda")))
 
 (defcommand gnus () ()
   (run-or-raise "emacsclient --server-file=default -c -F '((name . \"gnus\"))' --eval '(gnus)'"
-	       '(:instance "gnus")))
+		'(:instance "gnus")))
 
 (defcommand org-contacts (search)
   ((:string "Search Contacts: "))
@@ -288,112 +281,31 @@
   (run-or-raise "x-terminal-emulator -t htop -e htop" '(:title "htop")))
 
 (defcommand x-terminal-emulator () ()
-  (run-or-raise "x-terminal-emulator -t default-terminal" '(:title "default-terminal")))
+  (run-or-raise "x-terminal-emulator -t default-terminal"
+		'(:title "default-terminal")))
 
 (defcommand launch-new-terminal () ()
   (run-shell-command "x-terminal-emulator"))
 
+(defcommand power-manager () ()
+  (run-shell-command "xfce4-power-manager-settings"))
+
 (defcommand goagent () ()
-  (run-or-raise "python ~/project/goagent/local/goagent-gtk.py" '(:title "goagent-gtk.py")))
+  (run-or-raise "python ~/project/goagent/local/goagent-gtk.py"
+		'(:title "goagent-gtk.py")))
 
-(define-key *root-map* (kbd "v") "file-manager")
-(define-key *root-map* (kbd "c") "pidgin")
-(define-key *root-map* (kbd "RET") "x-terminal-emulator")
-(define-key *root-map* (kbd "z") "org-contacts")
-(define-key *root-map* (kbd "a") "org-agenda")
-
-(defvar *applications-map*
-  (let ((m (stumpwm:make-sparse-keymap)))
-    (stumpwm:define-key m (stumpwm:kbd "g") "goagent")
-    (stumpwm:define-key m (stumpwm:kbd "f") "firefox")
-    (stumpwm:define-key m (stumpwm:kbd "t") "launch-new-terminal")
-    (stumpwm:define-key m (stumpwm:kbd "j") "jabref")
-    (stumpwm:define-key m (stumpwm:kbd "c") "cajviewer")
-    (stumpwm:define-key m (stumpwm:kbd "p") "pdfreader")
-    (stumpwm:define-key m (stumpwm:kbd "w") "winxp")
-    m ; NOTE: this is important
-    ))
-(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "f") '*applications-map*)
-
-(defvar *emacs-map*
-  (let ((m (stumpwm:make-sparse-keymap)))
-    (stumpwm:define-key m (stumpwm:kbd "e") "emacs")
-    (stumpwm:define-key m (stumpwm:kbd "s") "edit-stumpwmrc")
-    (stumpwm:define-key m (stumpwm:kbd "g") "gnus")
-    (stumpwm:define-key m (stumpwm:kbd "a") "org-agenda")
-    (stumpwm:define-key m (stumpwm:kbd "m") "emms")
-    (stumpwm:define-key m (stumpwm:kbd "c") "org-capture")
-    (stumpwm:define-key m (stumpwm:kbd "R") "emacs-daemon-restart")
-    (stumpwm:define-key m (stumpwm:kbd "K") "emacs-daemon-kill")
-    m ; NOTE: this is important
-    ))
-(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "e") '*emacs-map*)
-
-(defvar *org-capture-map*
-  (let ((m (stumpwm:make-sparse-keymap)))
-    (stumpwm:define-key m (stumpwm:kbd "d") "org-capture-notes-x-selection")
-    (stumpwm:define-key m (stumpwm:kbd "e") "org-capture-notes")
-    (stumpwm:define-key m (stumpwm:kbd "c") "org-capture-contacts")
-    (stumpwm:define-key m (stumpwm:kbd "a") "org-capture-account")
-    (stumpwm:define-key m (stumpwm:kbd "j") "org-capture-journal")
-    (stumpwm:define-key m (stumpwm:kbd "t") "org-capture-todo")
-    (stumpwm:define-key m (stumpwm:kbd "s") "org-capture-schedule")
-    m ; NOTE: this is important
-    ))
-(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "d") '*org-capture-map*)
-
-;; shutdown
-(define-key *root-map* (kbd "Delete") "exec gksudo halt")
-
-
-;; lock screen
 (defcommand lock-screen () ()
   (run-shell-command "exec xscreensaver-command -lock"))
-(define-key *root-map* (kbd "L") "lock-screen")
 
-;; (define-key *root-map* (kbd "M-l") "exec xset dpms force off")
+(defcommand reinit () ()
+  "docstring"
+  (run-commands "reload" "loadrc"))
 
-;; take a screenshot of the screen (using PrtSc)
-;; TODO Install `imagemagick' (for getting the `import' command)
-;; (define-key *root-map* (kbd "Print")
-;;  "exec import -window root png:$HOME/Desktop/screenshot_$(date +%F_%H-%M-%S).png")
-
-;; take a screenshot of a window (using Alt-PrtSc)
-;; TODO Install `scrot'
-(defcommand part-screenshot () ()
-  "Take a screenshot of only the active window."
-  (run-shell-command "scrot -s"))
-(define-key *top-map* (kbd "M-Print") "part-screenshot")
-
-
-;;**** split frame
-(define-key *root-map* (kbd "C-1") "hsplit")
-(define-key *root-map* (kbd "C-2") "vsplit")
-(define-key *root-map* (kbd "C-0") "only")
-
-;;**** Window Management
-
-;; push the window in the adjacent frame
-(define-key *root-map* (kbd "C-Up") "move-window up")
-(define-key *root-map* (kbd "C-Left") "move-window left")
-(define-key *root-map* (kbd "C-Down") "move-window down")
-(define-key *root-map* (kbd "C-Right") "move-window right")
-
-(define-key *root-map* (kbd "Delete") "repack-window-numbers")
-
-(define-key *root-map* (kbd "I") "show-window-properties")
-
-;; keybinding for Fn + F1...F12
-(define-key *top-map* (kbd "XF86Mail")   "gnus")
-(define-key *top-map* (kbd "XF86MyComputer")   "file-manager")
-(define-key *top-map* (kbd "XF86AudioNext")   "emms-next")
-(define-key *top-map* (kbd "XF86AudioPrev")   "emms-previous")
-(define-key *top-map* (kbd "XF86AudioPlay")   "emms-toggle")
-
-;; aptitude
-(define-key *root-map* (kbd "&") "exec x-terminal-emulator -e aptitude")
-
-;;** Commands
+(defcommand show-debian-menu () ()
+  "show debian menu"
+  (setf *app-menu* nil)
+  (load-menu-file debian-menu-file :strip 1)
+  (show-menu))
 
 (defparameter *start-menu*
   '(("---------------------------------------------------")
@@ -439,7 +351,7 @@
     ("---------------------------------------------------")))
 
 (defcommand show-start-menu () ()
-  "docstring"
+  "show-start-menu"
   (labels ((pick (options)
                  (let ((selection (stumpwm::select-from-menu
                                    (current-screen) options "")))
@@ -464,124 +376,6 @@
 	  (run-commands choice)
 	  (run-shell-command choice)))))
 
-(define-key *root-map* (kbd ".") "show-start-menu")
-
-
-;; Debian menu
-(defcommand show-debian-menu () ()
-  "show debian menu"
-  (setf *app-menu* nil)
-  (load-menu-file debian-menu-file :strip 1)
-  (show-menu))
-
-(define-key *root-map* (kbd "m") "show-debian-menu")
-
-(defcommand reinit () ()
-  "docstring"
-  (run-commands "reload" "loadrc"))
-
-;; from http://en.wikipedia.org/wiki/User:Gwern/.stumpwmrc
-(defun cat (&rest strings) "A shortcut for (concatenate 'string foo bar)."
-  (apply 'concatenate 'string strings))
-
-;; Web browsing commands
-;; Get the X selection and order the GUI browser to open it. Presumably it
-;; is a HTTP address.
-(defcommand open-selection-browser () ()
-  "docstring"
-  (run-shell-command (cat "exec firefox " (get-x-selection))))
-
-
-;; Ask user for a search string and search Wikipedia for it.
-;; (defcommand wikipedia ((search-string :string "wikipedia " :string)) ()
-;;   (check-type search-string string)
-;; (run-shell-command (cat "exec firefox wikipedia " search-string)))
-
-
-;; Web jump (works for Google)
-(defmacro make-web-jump (name prefix)
-  `(defcommand ,name (search) ((search :rest ,(concatenate 'string name " search: ")))
-     (substitute #\+ #\Space search)
-     (run-shell-command (concatenate 'string ,prefix search))))
-
-;; (make-web-jump "ggoogle" "firefox http://www.google.com/search?q=")
-
-;; (define-key *root-map* (kbd "z") "google")
-
-;; ask the user for a search string and search for it in Wikipedia
-(defcommand wikipedia (search)
-  ((:string "Search in Wikipedia for: "))
-  "docstring"
-  (check-type search string)
-  (substitute #\+ #\Space search)
-  (run-shell-command (cat "firefox http://www.wikipedia.org/wiki/" search)))
-
-;; ask the user for a search string and search for it in Google
-(defcommand google (search)
-  ((:string "Search in Google for: "))
-  "docstring"
-  (check-type search string)
-  (substitute #\+ #\Space search)
-  (run-shell-command (cat "firefox http://www.google.com/search?q=" search)))
-
-;;** 3 (info "(stumpwm)Message and Input Bar")
-
-;;*** 3.1 (info "(stumpwm)Customizing The Bar")
-
-;; Find a font of your choice in `xfontsel' and put it here.
-(set-font "*-unifont-medium-*-normal-*-16-*-*-*-*-*-*-*")
-
-;;** 4 (info "(stumpwm)Windows")
-
-;; how to format the window list
-(setf *window-format* "^B%m%n:^b %40t  ")
-
-
-;;*** 4.2 (info "(stumpwm)Customizing Window Appearance")
-
-;; width in pixels given to the borders of windows with maxsize or ratio
-;; hints
-(setf *maxsize-border-width* 1)
-
-;; width in pixels given to the borders of transient or pop-up windows
-(setf *transient-border-width* 1)
-
-;; width in pixels given to the borders of regular windows
-(setf *normal-border-width* 1)
-
-;; TODO Install `xloadimage' (for getting the `xsetbg' command)
-;; (run-shell-command "which xsetbg && xsetbg -fullscreen /usr/share/backgrounds/GrassinA.jpg")
-
-;; set the border color for focused windows
-(set-focus-color "orange")  ; `white' by default
-
-(set-unfocus-color "palegreen3")
-
-
-;; input focus is transferred to the window you click on
-(setf *mouse-focus-policy* :click)
-
-;; (defun banish-mouse (from-frame to-frame)
-;;   (run-commands "banish"))
-;; (add-hook *focus-window-hook* 'banish-mouse)
-
-;; Set the message box pad
-(setf *message-window-padding* 50)
-
-;;Set the message and input box to the bottom right. This way it overlaps with mode-line.
-(setf *message-window-gravity* :bottom-right)
-(setf *input-window-gravity* :bottom-right)
-
-
-;;** 5 (info "(stumpwm)Frames")
-
-;; make frames 1-indexed
-;; See http://lists.gnu.org/archive/html/stumpwm-devel/2006-08/msg00002.html
-(setf *frame-number-map* "1234567890")
-;; FIXME Does not work
-
-
-;; from simias
 (defun shift-windows-forward (frames win)
   (when frames
           (let ((frame (car frames)))
@@ -591,16 +385,13 @@
                          (pull-window win frame)))))
 
 (defcommand rotate-windows () ()
+  "swap 2 windows"
   (let* ((frames (group-frames (current-group)))
            (win (frame-window (car (last frames)))))
           (shift-windows-forward frames win)))
 
-;; swap 2 windows
-(define-key *root-map* (kbd "~") "rotate-windows")
-
-
-;; from simias
 (defcommand toggle-split () ()
+  "toggle between vertical split and horizontal split"
   (let* ((group (current-group))
          (cur-frame (tile-group-current-frame group))
          (frames (group-frames group)))
@@ -615,11 +406,144 @@
                    (hsplit))))
       (message "Works only with 2 frames"))))
 
-;; toggle between vertical split and horizontal split
+;; keybindings for split frame
+(define-key *root-map* (kbd "C-1") "hsplit")
+(define-key *root-map* (kbd "C-2") "vsplit")
+(define-key *root-map* (kbd "C-0") "only")
+
+;; push the window in the adjacent frame
+(define-key *root-map* (kbd "C-Up") "move-window up")
+(define-key *root-map* (kbd "C-Left") "move-window left")
+(define-key *root-map* (kbd "C-Down") "move-window down")
+(define-key *root-map* (kbd "C-Right") "move-window right")
+(define-key *root-map* (kbd "Delete") "repack-window-numbers")
+(define-key *root-map* (kbd "I") "show-window-properties")
+(define-key *root-map* (kbd "~") "rotate-windows")
 (define-key *root-map* (kbd "|") "toggle-split")
 
+;; keybinding for Fn + F1...F12
+(define-key *top-map* (kbd "XF86Mail")   "gnus")
+(define-key *top-map* (kbd "XF86MyComputer") "file-manager")
+(define-key *top-map* (kbd "XF86AudioNext")  "emms-next")
+(define-key *top-map* (kbd "XF86AudioPrev")  "emms-previous")
+(define-key *top-map* (kbd "XF86AudioPlay")  "emms-toggle")
 
-;;** 6 The (info "(stumpwm)Mode-line")
+;; Menu
+(define-key *root-map* (kbd "m") "show-debian-menu")
+(define-key *root-map* (kbd ".") "show-start-menu")
+
+;; Applications launched frequentily
+(define-key *root-map* (kbd "v") "file-manager")
+(define-key *root-map* (kbd "c") "pidgin")
+(define-key *root-map* (kbd "RET") "x-terminal-emulator")
+(define-key *root-map* (kbd "z") "org-contacts")
+(define-key *root-map* (kbd "a") "org-agenda")
+(define-key *root-map* (kbd "Delete") "exec gksudo halt")
+(define-key *root-map* (kbd "L") "lock-screen")
+(define-key *root-map* (kbd "&") "exec x-terminal-emulator -e aptitude")
+(define-key *root-map* (kbd "x") "exec dmenu_run -i -b -fn '10x20' -p \"shell cmd:\"")
+
+(defvar *applications-map*
+  (let ((m (stumpwm:make-sparse-keymap)))
+    (stumpwm:define-key m (stumpwm:kbd "g") "goagent")
+    (stumpwm:define-key m (stumpwm:kbd "f") "firefox")
+    (stumpwm:define-key m (stumpwm:kbd "t") "launch-new-terminal")
+    (stumpwm:define-key m (stumpwm:kbd "j") "jabref")
+    (stumpwm:define-key m (stumpwm:kbd "c") "cajviewer")
+    (stumpwm:define-key m (stumpwm:kbd "p") "pdfreader")
+    (stumpwm:define-key m (stumpwm:kbd "w") "winxp")
+    m ; NOTE: this is important
+    ))
+
+(defvar *emacs-map*
+  (let ((m (stumpwm:make-sparse-keymap)))
+    (stumpwm:define-key m (stumpwm:kbd "e") "emacs")
+    (stumpwm:define-key m (stumpwm:kbd "s") "edit-stumpwmrc")
+    (stumpwm:define-key m (stumpwm:kbd "g") "gnus")
+    (stumpwm:define-key m (stumpwm:kbd "a") "org-agenda")
+    (stumpwm:define-key m (stumpwm:kbd "m") "emms")
+    (stumpwm:define-key m (stumpwm:kbd "c") "org-capture")
+    (stumpwm:define-key m (stumpwm:kbd "R") "emacs-daemon-restart")
+    (stumpwm:define-key m (stumpwm:kbd "K") "emacs-daemon-kill")
+    m ; NOTE: this is important
+    ))
+
+(defvar *org-capture-map*
+  (let ((m (stumpwm:make-sparse-keymap)))
+    (stumpwm:define-key m (stumpwm:kbd "d") "org-capture-notes-x-selection")
+    (stumpwm:define-key m (stumpwm:kbd "e") "org-capture-notes")
+    (stumpwm:define-key m (stumpwm:kbd "c") "org-capture-contacts")
+    (stumpwm:define-key m (stumpwm:kbd "a") "org-capture-account")
+    (stumpwm:define-key m (stumpwm:kbd "j") "org-capture-journal")
+    (stumpwm:define-key m (stumpwm:kbd "t") "org-capture-todo")
+    (stumpwm:define-key m (stumpwm:kbd "s") "org-capture-schedule")
+    m ; NOTE: this is important
+    ))
+
+(defvar *my-group-map*
+  (let ((m (stumpwm:make-sparse-keymap)))
+    (stumpwm:define-key m (stumpwm:kbd "C-e") "gmove EMACS")
+    (stumpwm:define-key m (stumpwm:kbd "C-c") "gmove Char")
+    (stumpwm:define-key m (stumpwm:kbd "C-o") "gmove Others")
+    (stumpwm:define-key m (stumpwm:kbd "C-f") "gmove Float")
+    (stumpwm:define-key m (stumpwm:kbd "C-g") "gmove Default")
+    (stumpwm:define-key m (stumpwm:kbd "C-d") "gmove Default")
+    (stumpwm:define-key m (stumpwm:kbd "e") "gselect EMACS")
+    (stumpwm:define-key m (stumpwm:kbd "c") "gselect Char")
+    (stumpwm:define-key m (stumpwm:kbd "o") "gselect Others")
+    (stumpwm:define-key m (stumpwm:kbd "f") "gselect Float")
+    (stumpwm:define-key m (stumpwm:kbd "g") "gselect Default")
+    (stumpwm:define-key m (stumpwm:kbd "d") "gselect Default")
+    m ; NOTE: this is important
+    ))
+
+(setf *help-map*
+      (let ((m (make-sparse-keymap)))
+        (define-key m (kbd "m") "man")
+        (define-key m (kbd "i") "info")
+        (define-key m (kbd "v") "describe-variable")
+        (define-key m (kbd "f") "describe-function")
+        (define-key m (kbd "k") "describe-key")
+        (define-key m (kbd "w") "where-is")
+        m))
+
+(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "f") '*applications-map*)
+(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "e") '*emacs-map*)
+(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "d") '*org-capture-map*)
+(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "G") '*groups-map*)
+(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "g") '*my-group-map*)
+
+;; Find a font of your choice in `xfontsel' and put it here.
+(set-font "*-unifont-medium-*-normal-*-16-*-*-*-*-*-*-*")
+
+;; how to format the window list
+(setf *window-format* "^B%m%n:^b %40t  ")
+
+;; width in pixels given to the borders of windows with maxsize or ratio hints
+(setf *maxsize-border-width* 1)
+
+;; width in pixels given to the borders of transient or pop-up windows
+(setf *transient-border-width* 1)
+
+;; width in pixels given to the borders of regular windows
+(setf *normal-border-width* 1)
+
+;; set the border color for focused windows
+(set-focus-color "orange")  ; `white' by default
+(set-unfocus-color "palegreen3")
+
+;; input focus is transferred to the window you click on
+(setf *mouse-focus-policy* :click)
+
+;; Set the message box pad
+(setf *message-window-padding* 50)
+
+;;Set the message and input box to the bottom right. This way it overlaps with mode-line.
+(setf *message-window-gravity* :bottom-right)
+(setf *input-window-gravity* :bottom-right)
+
+;; make frames 1-indexed
+(setf *frame-number-map* "1234567890")
 
 ;; modeline foreground color
 (setf *mode-line-foreground-color* "palegreen3")
@@ -628,10 +552,10 @@
 (setf *mode-line-border-color* "palegreen3")
 
 (defconstant *day-names*
-  '("Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"))
+  '("一" "二" "三" "四" "五" "六" "日"))
 
 (defun current-date ()
-  "Returns the date formatted as `2009-11-16 Mon 11:34:03'."
+  "Returns the date formatted as `2009-11-16 一 11:34:03'."
   (multiple-value-bind
       (second minute hour date month year day-of-week dst-p tz)
       (get-decoded-time)
@@ -652,6 +576,13 @@
 ;; how many seconds elapse between each update of the modeline
 (setf *mode-line-timeout* 1) ; must be set *before* turning on the modeline
 
+;; number of padding pixels between the modeline text and the top/bottom of
+;; the modeline
+(setf *mode-line-pad-y* 0)
+
+;; modeline background color
+;; (setf *mode-line-background-color* "black")
+
 ;; turn on the modeline
 (if (not (head-mode-line (current-head)))
     (toggle-mode-line (current-screen) (current-head)))
@@ -660,99 +591,9 @@
     ; 1 screen and many heads. When not using xinerama each screen is a
     ; physical monitor so you have many screens with only one head on them.
 
-;; number of padding pixels between the modeline text and the top/bottom of
-;; the modeline
-(setf *mode-line-pad-y* 0)
-
-;; modeline background color
-(setf *mode-line-background-color* "black")
-
-;; TODO add hook so I get notified when people say my name on IRC or IM me
-(defun echo-urgent-window (target)
-  (message-no-timeout "~a has an message for you." (window-title target)))
-(add-hook *urgent-window-hook* 'echo-urgent-window)
-
-
-;;** 7 (info "(stumpwm)Groups")
-
-;; Super_L-F1..F9 to change workspace
-
-;; Is there a way to share windows between several groups?
-;; Try using tags. A window can have arbitrary set of tags, and there is a
-;; command to pull all windows which have any of the specified tags to current
-;; group. Bind some tags to F1-F10 instead of groups, and you are done.
-
-;; create the other groups
-;; (run-commands "gnewbg Other")
-
-
-;;** 9 (info "(stumpwm)Interacting With Unix")
-
-;; shell program used by `run-shell-command' (`sh' by default, which is *not*
-;; `bash' nor `zsh')
-(setq *shell-program* (stumpwm::getenv "SHELL"))  ; `getenv' is not exported
-
-;; 9menu
-;; dmenu provides a simple popup menu for launching programs
-(define-key *root-map* (kbd "x")
-  "exec dmenu_run -i -b -fn '10x20' -p \"shell cmd:\"") ; simple $PATH to run commands
-
-(run-commands "stumptray")
-(run-shell-command "xset b off")
-(run-shell-command "xfce4-power-manager")
-(run-shell-command "xscreensaver -no-splash")
-(run-shell-command "nm-applet")
-(run-shell-command "volti")
-(run-shell-command "xmodmap -e 'keycode 135 = Super_R'")
-(run-commands "pidgin")
-(run-commands "emacs-daemon-restart")
-
-;; so i modified my keymap settings so that compaq keys2-4 are mapped to
-;; function keys F13-F15 (i only have F1 to F12…)
-;;
-;; -- .Xmodmap --
-;; keycode 160 = F13
-;; keycode 174 = F14
-;; keycode 176 = F15
-;;
-;; and my corresponding .fluxbox/keys file
-;;
-;; -- snip --
-;;
-;; # laptop keymap
-;; F13 :ExecCommand /bin/bash ~/.mykbd
-;; F14 :ExecCommand /usr/bin/amixer sset PCM 5%-
-;; F15 :ExecCommand /usr/bin/amixer sset PCM 5%+
-
-
-;;** 11 (info "(stumpwm)Miscellaneous Commands")
-
-;; This forces the user to set the focus into the screen before being able to
-;; use the prefix key for the first time!
-;; ;; get rid of cursor initially
-;; (banish-pointer)
-
-
-;;*** 11.2 (info "(stumpwm)Debugging StumpWM")
-
 ;; turn on debugging (look at `.xsession-errors')
-(setf stumpwm::*debug-level* 10)  ; get rid of debug by setting level to 0
-
-
-;;*** 11.4 (info "(stumpwm)Getting Help")
-
-(setf *help-map*
-      (let ((m (make-sparse-keymap)))
-        (define-key m (kbd "m") "man")
-        (define-key m (kbd "i") "info")
-        (define-key m (kbd "v") "describe-variable")
-        (define-key m (kbd "f") "describe-function")
-        (define-key m (kbd "k") "describe-key")
-        (define-key m (kbd "w") "where-is")
-        m))
-
-
-;;** 12 (info "(stumpwm)Hooks")
+;; get rid of debug by setting level to 0
+(setf stumpwm::*debug-level* 10)
 
 ;; display the key sequence in progress
 (defun key-press-hook (key key-seq cmd)
@@ -770,59 +611,19 @@
 
 (replace-hook *key-press-hook* 'key-press-hook)
 
-(run-commands "gnewbg EMACS"  "gnewbg Others" "gnewbg-float Float")
+(run-commands "stumptray")
+(run-shell-command "xset b off")
+(run-shell-command "xfce4-power-manager")
+(run-shell-command "xscreensaver -no-splash")
+(run-shell-command "nm-applet")
+(run-shell-command "volti")
+(run-shell-command "xmodmap -e 'keycode 135 = Super_R'")
+(run-commands "pidgin")
+(run-commands "emacs-daemon-restart")
 
-(defvar *my-group-map*
-  (let ((m (stumpwm:make-sparse-keymap)))
-    (stumpwm:define-key m (stumpwm:kbd "C-e") "gmove EMACS")
-    (stumpwm:define-key m (stumpwm:kbd "C-c") "gmove Char")
-    (stumpwm:define-key m (stumpwm:kbd "C-o") "gmove Others")
-    (stumpwm:define-key m (stumpwm:kbd "C-f") "gmove Float")
-    (stumpwm:define-key m (stumpwm:kbd "C-g") "gmove Default")
-    (stumpwm:define-key m (stumpwm:kbd "C-d") "gmove Default")
-    (stumpwm:define-key m (stumpwm:kbd "e") "gselect EMACS")
-    (stumpwm:define-key m (stumpwm:kbd "c") "gselect Char")
-    (stumpwm:define-key m (stumpwm:kbd "o") "gselect Others")
-    (stumpwm:define-key m (stumpwm:kbd "f") "gselect Float")
-    (stumpwm:define-key m (stumpwm:kbd "g") "gselect Default")
-    (stumpwm:define-key m (stumpwm:kbd "d") "gselect Default")
-    m ; NOTE: this is important
-    ))
-(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "G") '*groups-map*)
-(stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "g") '*my-group-map*)
-
-(define-frame-preference "Default"
-  (1 t t :create nil  :class "Iceweasel" :instance nil :title nil :role nil))
-
-(define-frame-preference "Others"
-  (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil)
-  (1 t t :create nil  :class nil :instance "edit-stumpwmrc" :title nil :role nil))
-
-(define-frame-preference "EMACS"
-  (1 t t :create nil  :class nil :instance "org-agenda" :title nil :role nil)
-  (1 t t :create nil  :class nil :instance "gnus" :title nil :role nil)
-  (1 t t :create nil  :class nil :instance "emms" :title nil :role nil))
-
-;;** Prefix Key
-
-;; I tend to place "system-wide" window manager shortcut keys consistently
-;; on Super-<something> rather than the horrible defaults that can get in
-;; the way of Emacs' use (various Control and Alt bindings).
-
-;; same as `keycode 133 = F20' in `~/.Xmodmap', `133' (TO BE CHECKED WITH
-;; `xev') being the left "Windows" key, aka `Super_L'
-;; (run-shell-command "xmodmap -e 'keycode 133 = F20'" t)
-
-;; change the prefix key
-;; (set-prefix-key (kbd "ISO_Level3_Shift"))  ;; `Alt Gr'
-
-
-;; This is for the sake of Emacs.
 ;; Local Variables:
 ;; coding: utf-8
-;; mode: slime
-;; mode: outline-minor
-;; ispell-local-dictionary: "en_US"
+;; mode: lisp
 ;; End:
 
 ;;; stumpwmrc ends here
