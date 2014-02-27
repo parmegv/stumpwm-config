@@ -173,28 +173,29 @@
   (emacs-daemon-kill)
   (emacs-daemon-start))
 
-(defun escape-instance-char (char)
-  (case char
-    (t  "_")))
-
-(defun escape-instance-string (in to-escape)
-  (flet ((needs-escape-p (char) (find char to-escape)))
-    (with-output-to-string (out)
-      (loop for start = 0 then (1+ pos)
-	 for pos = (position-if #'needs-escape-p in :start start)
-	 do (write-sequence in out :start start :end pos)
-	 when pos do (write-sequence (escape-instance-char (char in pos)) out)
-	 while pos))))
+(defun escape-instance-name (str)
+  (let (buf)
+    (map nil #'(lambda (ch)
+		 (if (or (char= ch #\()
+			 (char= ch #\))
+			 (char= ch #\")
+			 (char= ch #\ ))
+		     (push #\_ buf)
+		     (push ch buf)))
+	 str)
+    (coerce (reverse buf) 'string)))
 
 (defun emacsclient-eval (&optional expression create-frame frame-name file)
   (let ((name (or frame-name
-		  (escape-instance-string expression "()\" "))))
+		  (escape-instance-name expression))))
     (run-or-raise
      (concat "emacsclient --server-file=default "
 	     (when create-frame (concat "-c -F '((name . \"" name "\"))' "))
 	     (when expression (concat " --eval '" expression "'"))
 	     file)
      (list :instance name))))
+
+(member #\( '(#\())
 
 (defcommand emacs () ()
   (emacsclient-eval nil t "emacs"))
