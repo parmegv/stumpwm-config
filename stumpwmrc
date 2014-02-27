@@ -195,8 +195,6 @@
 	     file)
      (list :instance name))))
 
-(member #\( '(#\())
-
 (defcommand emacs () ()
   (emacsclient-eval nil t "emacs"))
 
