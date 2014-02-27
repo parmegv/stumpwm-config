@@ -201,7 +201,7 @@
   (emacsclient-eval nil t "emacs"))
 
 (defcommand org-agenda () ()
-  (emacsclient-eval "(progn (org-agenda nil \"m\") (org-agenda nil \"l\") (delete-other-windows))") t)
+  (emacsclient-eval "(progn (org-agenda nil \"m\") (org-agenda nil \"l\") (delete-other-windows))" t))
 
 (defcommand org-contacts (search)
   ((:string "Search Contacts: "))
