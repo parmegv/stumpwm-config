@@ -54,7 +54,7 @@
 
 ;;; Code:
 (in-package :stumpwm)
-(run-shell-command "rm .xsession-errors")
+;; (run-shell-command "rm .xsession-errors")
 ;; I link stumpwmrc-file to ~/.stumpwmrc
 (setf stumpwmrc-file "~/project/stumpwm-config/stumpwmrc")
 (set-contrib-dir "/home/feng/project/stumpwm/contrib/")
@@ -165,7 +165,7 @@
 
 (defcommand emacs-daemon-kill () ()
   (run-shell-command "pkill -9 emacsclient")
-  (run-shell-command "emacsclient --server-file=default -e \"(progn (setq kill-emacs-hook 'nil) (kill-emacs))\"")
+  (emacsclient-eval "(progn (setq kill-emacs-hook 'nil) (kill-emacs))" t)
   (run-shell-command "pkill -9 emacsclient")
   (run-shell-command "pkill -9 emacs"))
 
@@ -173,97 +173,82 @@
   (emacs-daemon-kill)
   (emacs-daemon-start))
 
+(defun escape-instance-char (char)
+  (case char
+    (t  "_")))
+
+(defun escape-instance-string (in to-escape)
+  (flet ((needs-escape-p (char) (find char to-escape)))
+    (with-output-to-string (out)
+      (loop for start = 0 then (1+ pos)
+	 for pos = (position-if #'needs-escape-p in :start start)
+	 do (write-sequence in out :start start :end pos)
+	 when pos do (write-sequence (escape-instance-char (char in pos)) out)
+	 while pos))))
+
+(defun emacsclient-eval (&optional expression create-frame frame-name file)
+  (let ((name (or frame-name
+		  (escape-instance-string expression "()\" "))))
+    (run-or-raise
+     (concat "emacsclient --server-file=default "
+	     (when create-frame (concat "-c -F '((name . \"" name "\"))' "))
+	     (when expression (concat " --eval '" expression "'"))
+	     file)
+     (list :instance name))))
+
 (defcommand emacs () ()
-  (run-or-raise "emacsclient --server-file=default -c -F '((name . \"emacs\"))' "
-		'(:instance "emacs")))
+  (emacsclient-eval nil t "emacs"))
 
 (defcommand org-agenda () ()
-  (run-or-raise "emacsclient --server-file=default -c -F '((name . \"org-agenda\"))' --eval '(progn (org-agenda nil \"m\") (org-agenda nil \"l\") (delete-other-windows))'"
-		'(:instance "org-agenda")))
-
-(defcommand gnus () ()
-  (run-or-raise "emacsclient --server-file=default -c -F '((name . \"gnus\"))' --eval '(gnus)'"
-		'(:instance "gnus")))
+  (emacsclient-eval "(progn (org-agenda nil \"m\") (org-agenda nil \"l\") (delete-other-windows))") t)
 
 (defcommand org-contacts (search)
   ((:string "Search Contacts: "))
-  "docstring"
   (check-type search string)
   (substitute #\+ #\Space search)
-  (run-shell-command (cat "emacsclient --server-file=default -c -F '((name . \"org-contacts\"))' --eval '(progn (org-contacts \"" search "\")(delete-other-windows))'")))
+  (emacsclient-eval (concat "(progn (org-contacts \"" search "\")(delete-other-windows))") t))
+
+(defcommand gnus () ()
+  (emacsclient-eval "(gnus)" t))
 
 (defcommand emms () ()
-  (run-or-raise "emacsclient --server-file=default -c -F '((name . \"emms\"))' --eval '(eh-emms)'"
-	       '(:instance "emms")))
+  (emacsclient-eval "(eh-emms)" t))
 
 (defcommand emms-toggle () ()
-  (emms)
-  (run-shell-command "emacsclient --server-file=default --eval '(if emms-player-playing-p (emms-pause) (emms-random))'"))
+  (emacsclient-eval "(if emms-player-playing-p (emms-pause) (emms-random))"))
 
 (defcommand emms-previous () ()
-  (emms)
-  (run-shell-command "emacsclient --server-file=default --eval '(emms-previous)'"))
+  (emacsclient-eval "(emms-previous)"))
+
+(defcommand emms-random () ()
+  (emacsclient-eval "(emms-random)"))
 
 (defcommand emms-next () ()
-  (emms)
-  (run-shell-command "emacsclient --server-file=default --eval '(emms-next)'"))
+  (emacsclient-eval "(emms-next)"))
 
 (defcommand edit-stumpwmrc () ()
-  (run-or-raise
-   (concat "emacsclient --server-file=default -c -F '((name . \"edit-stumpwmrc\"))' " stumpwmrc-file)
-   '(:instance "edit-stumpwmrc")))
-
-(defcommand org-capture () ()
-  (run-or-raise "emacsclient --server-file=default -c -F '((name . \"org-capture\"))'"
-		'(:instance "org-capture")))
-
-(defun xdotool-command (x1 y1 x2 y2 other-commands)
-  (if (and x1 y1 x2 y2)
-      (concat "echo | xsel -b -i;"
-	      "xdotool mousemove --sync" " " x1 " " y1 ";"
-	      "xdotool click 1;"
-	      "sleep 0.5;"
-	      "xdotool mousemove_relative --sync" " " x2 " " y2 ";"
-	      "sleep 0.5;"
-	      "xdotool click 1;"
-	      "sleep 0.5;"
-	      other-commands
-	      ";")
-      (concat "echo "" | xsel -b -i;"
-	      "xdotool key ctrl+c;"
-	      other-commands
-	      ";")))
-
-(defcommand org-capture-notes-x-selection () ()
-  (let ((window-class-string (if (current-window) (window-class (current-window)) ""))
-	(window-instance-string (if (current-window) (window-res (current-window)) ""))
-	(org-capture-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"notes-x-selection\")'"))
-    (if (not (search "Emacs" window-class-string))
-      (cond
-	((search "CAJViewer" window-instance-string)
-	 (run-shell-command (xdotool-command "110" "50" "40" "25" org-capture-command)))
-	((search "wp" window-instance-string)
-	 (run-shell-command (xdotool-command "110" "50" "40" "100" org-capture-command)))
-	(t (run-shell-command (xdotool-command nil nil nil nil  org-capture-command))))
-      (run-shell-command org-capture-command))))
+  (emacsclient-eval nil t "edit-stumpwmrc"  stumpwmrc-file))
 
 (defcommand org-capture-notes () ()
-  (run-shell-command "emacsclient --server-file=default  --eval '(progn (kill-new \"\") (eh-org-capture nil \"notes\"))'"))
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"notes\"))"))
+
+(defcommand org-capture-simple () ()
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"simple\"))"))
 
 (defcommand org-capture-todo () ()
-  (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"todo\")'"))
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"todo\"))"))
 
 (defcommand org-capture-account () ()
-  (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"account\")'"))
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"account\"))"))
 
 (defcommand org-capture-journal () ()
-  (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"journal\")'"))
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"journal\"))"))
 
 (defcommand org-capture-schedule () ()
-  (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"schedule\")'"))
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"schedule\"))"))
 
 (defcommand org-capture-contacts () ()
-  (run-shell-command "emacsclient --server-file=default  --eval '(eh-org-capture nil \"contacts\")'"))
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"contacts\"))"))
 
 (defcommand pidgin () ()
   (run-shell-command "pidgin"))
@@ -458,11 +443,10 @@
 (defvar *emacs-map*
   (let ((m (stumpwm:make-sparse-keymap)))
     (stumpwm:define-key m (stumpwm:kbd "e") "emacs")
-    (stumpwm:define-key m (stumpwm:kbd "s") "edit-stumpwmrc")
+    (stumpwm:define-key m (stumpwm:kbd "c") "edit-stumpwmrc")
     (stumpwm:define-key m (stumpwm:kbd "g") "gnus")
     (stumpwm:define-key m (stumpwm:kbd "a") "org-agenda")
     (stumpwm:define-key m (stumpwm:kbd "m") "emms")
-    (stumpwm:define-key m (stumpwm:kbd "c") "org-capture")
     (stumpwm:define-key m (stumpwm:kbd "R") "emacs-daemon-restart")
     (stumpwm:define-key m (stumpwm:kbd "K") "emacs-daemon-kill")
     m ; NOTE: this is important
@@ -470,8 +454,8 @@
 
 (defvar *org-capture-map*
   (let ((m (stumpwm:make-sparse-keymap)))
-    (stumpwm:define-key m (stumpwm:kbd "d") "org-capture-notes-x-selection")
-    (stumpwm:define-key m (stumpwm:kbd "e") "org-capture-notes")
+    (stumpwm:define-key m (stumpwm:kbd "d") "org-capture-notes")
+    (stumpwm:define-key m (stumpwm:kbd "e") "org-capture-simple")
     (stumpwm:define-key m (stumpwm:kbd "c") "org-capture-contacts")
     (stumpwm:define-key m (stumpwm:kbd "a") "org-capture-account")
     (stumpwm:define-key m (stumpwm:kbd "j") "org-capture-journal")
