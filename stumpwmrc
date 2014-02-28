@@ -427,7 +427,7 @@
 (define-key *root-map* (kbd "&") "exec x-terminal-emulator -e aptitude")
 (define-key *root-map* (kbd "x") "exec dmenu_run -i -b -fn '10x20' -p \"shell cmd:\"")
 
-(defvar *applications-map*
+(setf *applications-map*
   (let ((m (stumpwm:make-sparse-keymap)))
     (stumpwm:define-key m (stumpwm:kbd "g") "goagent")
     (stumpwm:define-key m (stumpwm:kbd "f") "firefox")
@@ -439,7 +439,7 @@
     m ; NOTE: this is important
     ))
 
-(defvar *emacs-map*
+(setf *emacs-map*
   (let ((m (stumpwm:make-sparse-keymap)))
     (stumpwm:define-key m (stumpwm:kbd "e") "emacs")
     (stumpwm:define-key m (stumpwm:kbd "c") "edit-stumpwmrc")
@@ -451,7 +451,7 @@
     m ; NOTE: this is important
     ))
 
-(defvar *org-capture-map*
+(setf *org-capture-map*
   (let ((m (stumpwm:make-sparse-keymap)))
     (stumpwm:define-key m (stumpwm:kbd "d") "org-capture-notes")
     (stumpwm:define-key m (stumpwm:kbd "e") "org-capture-simple")
@@ -463,19 +463,18 @@
     m ; NOTE: this is important
     ))
 
-(defvar *my-group-map*
+(setf *my-group-map*
   (let ((m (stumpwm:make-sparse-keymap)))
     (stumpwm:define-key m (stumpwm:kbd "C-e") "gmove EMACS")
     (stumpwm:define-key m (stumpwm:kbd "C-c") "gmove Char")
     (stumpwm:define-key m (stumpwm:kbd "C-o") "gmove Others")
     (stumpwm:define-key m (stumpwm:kbd "C-f") "gmove Float")
-    (stumpwm:define-key m (stumpwm:kbd "C-g") "gmove Default")
     (stumpwm:define-key m (stumpwm:kbd "C-d") "gmove Default")
     (stumpwm:define-key m (stumpwm:kbd "e") "gselect EMACS")
     (stumpwm:define-key m (stumpwm:kbd "c") "gselect Char")
     (stumpwm:define-key m (stumpwm:kbd "o") "gselect Others")
     (stumpwm:define-key m (stumpwm:kbd "f") "gselect Float")
-    (stumpwm:define-key m (stumpwm:kbd "g") "gselect Default")
+    (stumpwm:define-key m (stumpwm:kbd "l") "grouplist")
     (stumpwm:define-key m (stumpwm:kbd "d") "gselect Default")
     m ; NOTE: this is important
     ))
