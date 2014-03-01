@@ -389,18 +389,18 @@
                    (hsplit))))
 	(message "Works only with 2 frames"))))
 
-(defcommand group-move (&optional (fmt *group-format*)) (:rest)
-  (let ((current-window (current-window))
-	(group
-	 (second (select-from-menu
-		  (current-screen)
-		  (mapcar (lambda (g)
-			    (list (format-expand *group-formatters* fmt g) g))
-			  (screen-groups (current-screen)))))))
+(defcommand group-move () ()
+  (let* ((group-format "MOVE TO:     [%n] %t                ")
+	 (current-window (current-window))
+	 (group
+	  (second (select-from-menu
+		   (current-screen)
+		   (mapcar (lambda (g)
+			     (list (format-expand *group-formatters* group-format g) g))
+			   (screen-groups (current-screen)))))))
     (when (and group current-window)
       (move-window-to-group current-window group)
-      (message "Successful move {~a} to {~a} ..."
-	       (window-name current-window) (group-name group)))))
+      (message "Move successful ...."))))
 
 ;; keybindings for split frame
 (define-key *root-map* (kbd "C-1") "hsplit")
@@ -427,7 +427,7 @@
 ;; Menu
 (define-key *root-map* (kbd "g") "grouplist")
 (define-key *root-map* (kbd "G") '*groups-map*)
-(define-key *root-map* (kbd "C-g") "group-move")
+(define-key *root-map* (kbd "z") "group-move")
 (define-key *root-map* (kbd "m") "show-debian-menu")
 (define-key *root-map* (kbd ".") "show-start-menu")
 
