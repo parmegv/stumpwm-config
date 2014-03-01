@@ -93,7 +93,6 @@
                            :dont-close t)
       (setf *swank-p* t)
       (message "Starting swank on port 4005."))))
-(swank)
 
 ;; Add Groups
 (run-commands "gnewbg EMACS"  "gnewbg Others" "gnewbg-float Float")
@@ -608,6 +607,7 @@
 (run-shell-command "volti")
 (run-shell-command "xmodmap -e 'keycode 135 = Super_R'")
 (run-commands "pidgin")
+(run-commands "swank")
 (run-commands "emacs-daemon-restart")
 
 ;; Local Variables:
