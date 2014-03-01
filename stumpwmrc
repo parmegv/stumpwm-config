@@ -518,8 +518,14 @@
 ;; input focus is transferred to the window you click on
 (setf *mouse-focus-policy* :click)
 
+;; Set the input box and message box color
+(set-fg-color "white")
+(set-bg-color "black")
+(set-border-color "black")
+(set-msg-border-width 5)
+
 ;; Set the message box pad
-(setf *message-window-padding* 200)
+(setf *message-window-padding* 50)
 
 ;;Set the message and input box to the bottom right. This way it overlaps with mode-line.
 (setf *message-window-gravity* :bottom-right)
@@ -546,7 +552,7 @@
             year month date (nth day-of-week *day-names*)
             hour minute second)))
 
-(setf *group-format* "%s   [%n] %t")
+(setf *group-format* "%s   [%n] %t                        ")
 (setf *screen-mode-line-format*
       (list
        ;; date
