@@ -388,7 +388,7 @@
                  (progn
                    (only)
                    (hsplit))))
-      (message "Works only with 2 frames"))))
+	(message "Works only with 2 frames"))))
 
 ;; keybindings for split frame
 (define-key *root-map* (kbd "C-1") "hsplit")
@@ -413,14 +413,14 @@
 (define-key *top-map* (kbd "XF86AudioPlay")  "emms-toggle")
 
 ;; Menu
+(define-key *root-map* (kbd "z") "grouplist")
 (define-key *root-map* (kbd "m") "show-debian-menu")
 (define-key *root-map* (kbd ".") "show-start-menu")
 
 ;; Applications launched frequentily
 (define-key *root-map* (kbd "v") "file-manager")
-(define-key *root-map* (kbd "c") "pidgin")
 (define-key *root-map* (kbd "RET") "x-terminal-emulator")
-(define-key *root-map* (kbd "z") "org-contacts")
+(define-key *root-map* (kbd "c") "org-contacts")
 (define-key *root-map* (kbd "a") "org-agenda")
 (define-key *root-map* (kbd "Delete") "exec gksudo halt")
 (define-key *root-map* (kbd "L") "lock-screen")
@@ -519,7 +519,7 @@
 (setf *mouse-focus-policy* :click)
 
 ;; Set the message box pad
-(setf *message-window-padding* 50)
+(setf *message-window-padding* 200)
 
 ;;Set the message and input box to the bottom right. This way it overlaps with mode-line.
 (setf *message-window-gravity* :bottom-right)
@@ -546,7 +546,7 @@
             year month date (nth day-of-week *day-names*)
             hour minute second)))
 
-(setf *group-format* ":%t:")
+(setf *group-format* "%s   [%n] %t")
 (setf *screen-mode-line-format*
       (list
        ;; date
