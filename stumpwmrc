@@ -521,10 +521,10 @@
 (set-fg-color "white")
 (set-bg-color "black")
 (set-border-color "black")
-(set-msg-border-width 5)
+(set-msg-border-width 2)
 
 ;; Set the message box pad
-(setf *message-window-padding* 50)
+(setf *message-window-padding* 100)
 
 ;;Set the message and input box to the bottom right. This way it overlaps with mode-line.
 (setf *message-window-gravity* :bottom-right)
