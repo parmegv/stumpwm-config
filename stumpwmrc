@@ -390,15 +390,17 @@
 	(message "Works only with 2 frames"))))
 
 (defcommand group-move (&optional (fmt *group-format*)) (:rest)
-  (let ((group
+  (let ((current-window (current-window))
+	(group
 	 (second (select-from-menu
 		  (current-screen)
 		  (mapcar (lambda (g)
 			    (list (format-expand *group-formatters* fmt g) g))
 			  (screen-groups (current-screen)))))))
-    (when (and group
-	       (current-window))
-      (move-window-to-group (current-window) group))))
+    (when (and group current-window)
+      (move-window-to-group current-window group)
+      (message "Successful move {~a} to {~a} ..."
+	       (window-name current-window) (group-name group)))))
 
 ;; keybindings for split frame
 (define-key *root-map* (kbd "C-1") "hsplit")
