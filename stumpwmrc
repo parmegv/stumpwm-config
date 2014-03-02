@@ -58,8 +58,8 @@
 ;; I link stumpwmrc-file to ~/.stumpwmrc
 (setf stumpwmrc-file "~/project/stumpwm-config/stumpwmrc")
 (set-contrib-dir "/home/feng/project/stumpwm/contrib/")
-(setf my-stumpish-path "/home/feng/project/stumpwm/contrib/stumpish")
-(setf my-swank-loader "~/project/slime/swank-loader.lisp")
+(setf stumpwm-shell-program "/home/feng/project/stumpwm/contrib/stumpish")
+(setf stumpwm-mode-file "/home/feng/project/stumpwm/contrib/stumpwm-mode.el")
 (setf debian-menu-file "/usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu")
 ;; shell program used by `run-shell-command'
 (setq *shell-program* (stumpwm::getenv "SHELL"))
@@ -76,24 +76,6 @@
 	  "app-menu"
 	  "stumptray"
 	  ))
-
-;; load Swank so we can connect with SLIME
-(load my-swank-loader)
-(swank-loader:init)
-(defvar *swank-p* nil)
-
-;; define swank command to start swank server on port 4005
-(defcommand swank () ()
-  "Starts a swank server on port 4005 and notifies the user."
-  (setf stumpwm:*top-level-error-action* :break)
-  (if *swank-p*
-      (message "Swank server already running.")
-    (progn
-      (swank:create-server :port 4005
-                           :style swank:*communication-style*
-                           :dont-close t)
-      (setf *swank-p* t)
-      (message "Starting swank on port 4005."))))
 
 ;; Add Groups
 (run-commands "gnewbg EMACS"  "gnewbg Others" "gnewbg-float Float")
@@ -228,9 +210,8 @@
 (defcommand edit-stumpwmrc () ()
   (emacsclient-eval
    (concat
-    "(progn (shell-command \"" my-stumpish-path " swank\")"
-    "       (slime-connect \"127.0.0.1\" \"4005\")"
-    "       (find-file  \"" stumpwmrc-file "\"))")
+    "(progn (load-file \"" stumpwm-mode-file "\")"
+    "       (find-file \"" stumpwmrc-file    "\"))")
    t "edit-stumpwmrc"))
 
 (defcommand org-capture-notes () ()
@@ -614,6 +595,7 @@
 ;; Local Variables:
 ;; coding: utf-8
 ;; mode: lisp
+;; eval: (stumpwm-mode)
 ;; End:
 
 ;;; stumpwmrc ends here
