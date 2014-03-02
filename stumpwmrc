@@ -167,7 +167,7 @@
 	 str)
     (coerce (reverse buf) 'string)))
 
-(defun emacsclient-eval (&optional expression create-frame frame-name file)
+(defcommand emacsclient-eval (&optional expression create-frame frame-name file) ()
   (let ((name (or frame-name
 		  (escape-instance-name expression))))
     (run-or-raise
