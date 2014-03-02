@@ -523,7 +523,7 @@
 (set-fg-color "white")
 (set-bg-color "black")
 (set-border-color "green")
-(set-msg-border-width 3)
+(set-msg-border-width 2)
 
 ;; Set the message box pad
 (setf *message-window-padding* 100)
