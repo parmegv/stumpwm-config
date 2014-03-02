@@ -522,8 +522,8 @@
 ;; Set the input box and message box color
 (set-fg-color "white")
 (set-bg-color "black")
-(set-border-color "black")
-(set-msg-border-width 2)
+(set-border-color "green")
+(set-msg-border-width 3)
 
 ;; Set the message box pad
 (setf *message-window-padding* 100)
