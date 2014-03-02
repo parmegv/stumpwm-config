@@ -236,7 +236,7 @@
   (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"contacts\"))"))
 
 (defcommand pidgin () ()
-  (run-shell-command "pidgin"))
+  (run-shell-command "pkill pidgin; pidgin"))
 
 (defcommand mplayer () ()
   (run-or-raise "smplayer" '(:class "Smplayer")))
