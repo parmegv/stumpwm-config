@@ -514,15 +514,15 @@
 
 ;; set the border color for focused windows
 (set-focus-color "orange")  ; `white' by default
-(set-unfocus-color "palegreen3")
+(set-unfocus-color "skyblue")
 
 ;; input focus is transferred to the window you click on
 (setf *mouse-focus-policy* :click)
 
 ;; Set the input box and message box color
-(set-fg-color "white")
+(set-fg-color "yellow")
 (set-bg-color "black")
-(set-border-color "green")
+(set-border-color "blue3")
 (set-msg-border-width 2)
 
 ;; Set the message box pad
