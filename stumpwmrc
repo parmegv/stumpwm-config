@@ -520,7 +520,7 @@
 (setf *mouse-focus-policy* :click)
 
 ;; Set the input box and message box color
-(set-fg-color "yellow")
+(set-fg-color "white")
 (set-bg-color "black")
 (set-border-color "blue3")
 (set-msg-border-width 2)
