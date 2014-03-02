@@ -541,7 +541,7 @@
 ;; modeline border color
 (setf *mode-line-border-color* "palegreen3")
 
-(defconstant *day-names*
+(setf *chinese-day-names*
   '("一" "二" "三" "四" "五" "六" "日"))
 
 (defun current-date ()
@@ -550,7 +550,7 @@
       (second minute hour date month year day-of-week dst-p tz)
       (get-decoded-time)
     (format nil "~d-~2,'0d-~2,'0d ~a ^B~2,'0d:~2,'0d:~2,'0d^b"
-            year month date (nth day-of-week *day-names*)
+            year month date (nth day-of-week *chinese-day-names*)
             hour minute second)))
 
 (setf *group-format* "%s   [%n] %t                        ")
