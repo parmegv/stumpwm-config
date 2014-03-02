@@ -440,7 +440,7 @@
 ;; Applications launched frequentily
 (define-key *root-map* (kbd "v") "file-manager")
 (define-key *root-map* (kbd "RET") "x-terminal-emulator")
-(define-key *root-map* (kbd "c") "org-contacts")
+(define-key *root-map* (kbd "c") "edit-stumpwmrc")
 (define-key *root-map* (kbd "a") "org-agenda")
 (define-key *root-map* (kbd "Delete") "exec gksudo halt")
 (define-key *root-map* (kbd "L") "lock-screen")
@@ -462,7 +462,7 @@
 (setf *emacs-map*
   (let ((m (stumpwm:make-sparse-keymap)))
     (stumpwm:define-key m (stumpwm:kbd "e") "emacs")
-    (stumpwm:define-key m (stumpwm:kbd "c") "edit-stumpwmrc")
+    (stumpwm:define-key m (stumpwm:kbd "c") "org-contacts")
     (stumpwm:define-key m (stumpwm:kbd "g") "gnus")
     (stumpwm:define-key m (stumpwm:kbd "a") "org-agenda")
     (stumpwm:define-key m (stumpwm:kbd "m") "emms")
