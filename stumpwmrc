@@ -58,6 +58,7 @@
 ;; I link stumpwmrc-file to ~/.stumpwmrc
 (setf stumpwmrc-file "~/project/stumpwm-config/stumpwmrc")
 (set-contrib-dir "/home/feng/project/stumpwm/contrib/")
+(setf my-stumpish-path "/home/feng/project/stumpwm/contrib/stumpish")
 (setf my-swank-loader "~/project/slime/swank-loader.lisp")
 (setf debian-menu-file "/usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu")
 ;; shell program used by `run-shell-command'
@@ -225,7 +226,12 @@
   (emacsclient-eval "(emms-next)"))
 
 (defcommand edit-stumpwmrc () ()
-  (emacsclient-eval nil t "edit-stumpwmrc"  stumpwmrc-file))
+  (emacsclient-eval
+   (concat
+    "(progn (shell-command \"" my-stumpish-path " swank\")"
+    "       (slime-connect \"127.0.0.1\" \"4005\")"
+    "       (find-file  \"" stumpwmrc-file "\"))")
+   t "edit-stumpwmrc"))
 
 (defcommand org-capture-notes () ()
   (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"notes\"))"))
@@ -603,7 +609,6 @@
 (run-shell-command "volti")
 (run-shell-command "xmodmap -e 'keycode 135 = Super_R'")
 (run-commands "pidgin")
-(run-commands "swank")
 (run-commands "emacs-daemon-restart")
 
 ;; Local Variables:
