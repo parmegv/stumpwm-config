@@ -63,6 +63,7 @@
 (setf debian-menu-file "/usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu")
 ;; shell program used by `run-shell-command'
 (setq *shell-program* (stumpwm::getenv "SHELL"))
+(setq *ignore-wm-inc-hints* t)
 
 ;; load contrib modules
 (mapcar #'load-module 
