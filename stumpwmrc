@@ -57,6 +57,7 @@
 ;; (run-shell-command "rm .xsession-errors")
 ;; I link stumpwmrc-file to ~/.stumpwmrc
 (setf stumpwmrc-file "~/project/stumpwm-config/stumpwmrc")
+(setf sbcl-swank-file "~/project/stumpwm-config/sbcl-swank.lisp")
 (set-contrib-dir "/home/feng/project/stumpwm/contrib/")
 (setf stumpwm-shell-program "/home/feng/project/stumpwm/contrib/stumpish")
 (setf stumpwm-mode-file "/home/feng/project/stumpwm/contrib/stumpwm-mode.el")
@@ -95,6 +96,17 @@
   (1 t t :create nil  :class nil :instance "emms" :title nil :role nil))
 
 ;; Stumpwm commands
+(defcommand swank () ()
+  "Turn on the swank server the first time.
+Load a file that re-defines swank and then calls it."
+  ;; Be careful with the quotes!
+  (run-shell-command
+   (concat stumpwm-shell-program
+	   "   'eval (load \"" sbcl-swank-file "\")'"))
+  (echo-string
+   (current-screen)
+   "Starting swank. M-x slime-connect RET RET, then (in-package stumpwm)."))
+
 (defcommand suspend-computer () ()
   (run-shell-command
    (concat  "dbus-send --print-reply --system  "
@@ -211,8 +223,7 @@
 (defcommand edit-stumpwmrc () ()
   (emacsclient-eval
    (concat
-    "(progn (load-file \"" stumpwm-mode-file "\")"
-    "       (find-file \"" stumpwmrc-file    "\"))")
+    "(find-file \"" stumpwmrc-file    "\")")
    t "edit-stumpwmrc"))
 
 (defcommand org-capture-notes () ()
@@ -422,12 +433,13 @@
 ;; Applications launched frequentily
 (define-key *root-map* (kbd "v") "file-manager")
 (define-key *root-map* (kbd "RET") "x-terminal-emulator")
-(define-key *root-map* (kbd "c") "edit-stumpwmrc")
 (define-key *root-map* (kbd "a") "org-agenda")
 (define-key *root-map* (kbd "Delete") "exec gksudo halt")
 (define-key *root-map* (kbd "L") "lock-screen")
 (define-key *root-map* (kbd "&") "exec x-terminal-emulator -e aptitude")
 (define-key *root-map* (kbd "x") "exec dmenu_run -i -b -fn '10x20' -p \"shell cmd:\"")
+(define-key *root-map* (kbd "c") *exchange-window-map*)
+(define-key *root-map* (kbd "C-c") "edit-stumpwmrc")
 
 (setf *applications-map*
   (let ((m (stumpwm:make-sparse-keymap)))
@@ -584,6 +596,7 @@
 (replace-hook *key-press-hook* 'key-press-hook)
 
 (run-commands "stumptray")
+(run-commands "swank")
 (run-shell-command "xset b off")
 (run-shell-command "xfce4-power-manager")
 (run-shell-command "xscreensaver -no-splash")
@@ -596,7 +609,6 @@
 ;; Local Variables:
 ;; coding: utf-8
 ;; mode: lisp
-;; eval: (stumpwm-mode)
 ;; End:
 
 ;;; stumpwmrc ends here
