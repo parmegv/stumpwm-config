@@ -158,14 +158,17 @@ Load a file that re-defines swank and then calls it."
 (defcommand emacs-daemon-start () ()
   (run-shell-command "x-terminal-emulator -T emacs-daemon-start -e emacs --daemon=default"))
 
-(defcommand emacs-daemon-kill () ()
+(defcommand emacs-daemon-kill-soft () ()
+  (emacsclient-eval "(eh-shutdown-emacs-server)" t))
+
+(defcommand emacs-daemon-kill-hard () ()
   (run-shell-command "pkill -9 emacsclient")
   (emacsclient-eval "(progn (setq kill-emacs-hook 'nil) (kill-emacs))" t)
   (run-shell-command "pkill -9 emacsclient")
   (run-shell-command "pkill -9 emacs"))
 
 (defcommand emacs-daemon-restart () ()
-  (emacs-daemon-kill)
+  (emacs-daemon-kill-soft)
   (emacs-daemon-start))
 
 (defun escape-instance-name (str)
