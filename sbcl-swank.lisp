@@ -2,7 +2,7 @@
 (in-package :stumpwm)
 
 ;; Load swank
-(load "/home/feng/project/slime/swank-loader.lisp")
+(load "/home/feng/project/emacs-packages/slime/swank-loader.lisp")
 (swank-loader:init)
 
 (let ((server-running nil)
