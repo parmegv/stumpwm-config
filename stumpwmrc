@@ -155,20 +155,26 @@ Load a file that re-defines swank and then calls it."
    "java -jar ~/bin/JabRef-2.9.2.jar"
    '(:class "net-sf-jabref-JabRefMain")))
 
+(setf emacs-daemon-start-command "x-terminal-emulator -T emacs-daemon-start -e emacs --daemon=default")
+(setf emacs-daemon-kill-command "emacsclient --server-file=default --eval '(eh-shutdown-emacs-server)'")
+
 (defcommand emacs-daemon-start () ()
-  (run-shell-command "x-terminal-emulator -T emacs-daemon-start -e emacs --daemon=default"))
+  (run-shell-command emacs-daemon-start-command))
 
 (defcommand emacs-daemon-kill-soft () ()
-  (emacsclient-eval "(eh-shutdown-emacs-server)" t))
+  (run-shell-command emacs-daemon-kill-command))
 
 (defcommand emacs-daemon-kill-hard () ()
-  (run-shell-command "pkill -9 emacsclient")
-  (emacsclient-eval "(progn (setq kill-emacs-hook 'nil) (kill-emacs))" t)
-  (run-shell-command "pkill -9 emacsclient")
-  (run-shell-command "pkill -9 emacs"))
+  (run-shell-command "pkill -9 emacsclient; pkill -9 emacs"))
 
-(defcommand emacs-daemon-restart () ()
-  (emacs-daemon-kill-soft)
+(defcommand emacs-daemon-restart-soft () ()
+  (run-shell-command
+   (concat emacs-daemon-kill-command
+	   "; "
+	   emacs-daemon-start-command)))
+
+(defcommand emacs-daemon-restart-hard () ()
+  (emacs-daemon-kill-hard)
   (emacs-daemon-start))
 
 (defun escape-instance-name (str)
@@ -463,8 +469,8 @@ Load a file that re-defines swank and then calls it."
     (stumpwm:define-key m (stumpwm:kbd "g") "gnus")
     (stumpwm:define-key m (stumpwm:kbd "a") "org-agenda")
     (stumpwm:define-key m (stumpwm:kbd "m") "emms")
-    (stumpwm:define-key m (stumpwm:kbd "R") "emacs-daemon-restart")
-    (stumpwm:define-key m (stumpwm:kbd "K") "emacs-daemon-kill")
+    (stumpwm:define-key m (stumpwm:kbd "R") "emacs-daemon-restart-soft")
+    (stumpwm:define-key m (stumpwm:kbd "K") "emacs-daemon-kill-soft")
     m ; NOTE: this is important
     ))
 
@@ -607,7 +613,7 @@ Load a file that re-defines swank and then calls it."
 (run-shell-command "volti")
 (run-shell-command "xmodmap -e 'keycode 135 = Super_R'")
 (run-commands "pidgin")
-(run-commands "emacs-daemon-restart")
+(run-commands "emacs-daemon-restart-hard")
 
 ;; Local Variables:
 ;; coding: utf-8
