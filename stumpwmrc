@@ -80,20 +80,14 @@
 	  ))
 
 ;; Add Groups
-(run-commands "gnewbg EMACS"  "gnewbg Others" "gnewbg-float Float")
+(run-commands "gnewbg Others" "gnewbg-float Float")
 
 ;; Frame preference setting
 (define-frame-preference "Default"
   (1 t t :create nil  :class "Iceweasel" :instance nil :title nil :role nil))
 
 (define-frame-preference "Others"
-  (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil)
-  (1 t t :create nil  :class nil :instance "edit-stumpwmrc" :title nil :role nil))
-
-(define-frame-preference "EMACS"
-  (1 t t :create nil  :class nil :instance "org-agenda" :title nil :role nil)
-  (1 t t :create nil  :class nil :instance "gnus" :title nil :role nil)
-  (1 t t :create nil  :class nil :instance "emms" :title nil :role nil))
+  (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil))
 
 ;; Stumpwm commands
 (defcommand swank () ()
