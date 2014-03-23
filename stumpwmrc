@@ -196,6 +196,9 @@ Load a file that re-defines swank and then calls it."
 (defcommand emacs () ()
   (emacsclient-eval nil t "emacs"))
 
+(defcommand emacspeak () ()
+  (run-shell-command "emacs --eval '(load-emacspeak)'"))
+
 (defcommand org-agenda () ()
   (emacsclient-eval "(progn (org-agenda nil \"m\") (org-agenda nil \"l\") (delete-other-windows))" t))
 
