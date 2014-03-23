@@ -441,14 +441,13 @@ Load a file that re-defines swank and then calls it."
 (define-key *root-map* (kbd "L") "lock-screen")
 (define-key *root-map* (kbd "&") "exec x-terminal-emulator -e aptitude")
 (define-key *root-map* (kbd "x") "exec dmenu_run -i -b -fn '10x20' -p \"shell cmd:\"")
-(define-key *root-map* (kbd "c") '*exchange-window-map*)
+(define-key *root-map* (kbd "c") "launch-new-terminal")
 (define-key *root-map* (kbd "C-c") "edit-stumpwmrc")
  
 (setf *applications-map*
   (let ((m (stumpwm:make-sparse-keymap)))
     (stumpwm:define-key m (stumpwm:kbd "g") "goagent")
     (stumpwm:define-key m (stumpwm:kbd "f") "firefox")
-    (stumpwm:define-key m (stumpwm:kbd "t") "launch-new-terminal")
     (stumpwm:define-key m (stumpwm:kbd "j") "jabref")
     (stumpwm:define-key m (stumpwm:kbd "c") "cajviewer")
     (stumpwm:define-key m (stumpwm:kbd "p") "pdfreader")
