@@ -431,6 +431,7 @@ Load a file that re-defines swank and then calls it."
 
 ;; Menu
 (define-key *root-map* (kbd "g") "grouplist")
+(define-key *root-map* (kbd "w") "windowlist")
 (define-key *root-map* (kbd "G") '*groups-map*)
 (define-key *root-map* (kbd "z") "group-move")
 (define-key *root-map* (kbd "m") "show-debian-menu")
