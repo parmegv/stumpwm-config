@@ -194,7 +194,7 @@ Load a file that re-defines swank and then calls it."
      (list :instance name))))
 
 (defcommand emacs () ()
-  (emacsclient-eval nil t "emacs"))
+  (emacsclient-eval "(recentf-open-files)" t "emacs"))
 
 (defcommand emacspeak () ()
   (run-shell-command "emacs --eval '(load-emacspeak)'"))
