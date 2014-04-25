@@ -58,7 +58,7 @@
 ;; I link stumpwmrc-file to ~/.stumpwmrc
 (setf stumpwmrc-file "~/project/stumpwm-config/stumpwmrc")
 (setf sbcl-swank-file "~/project/stumpwm-config/sbcl-swank.lisp")
-(set-contrib-dir "/home/feng/project/stumpwm/contrib/")
+(set-contrib-dir "/home/feng/project/stumpwm-contrib/")
 (setf stumpwm-shell-program "/home/feng/project/stumpwm/contrib/stumpish")
 (setf stumpwm-mode-file "/home/feng/project/stumpwm/contrib/stumpwm-mode.el")
 (setf debian-menu-file "/usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu")
@@ -74,9 +74,10 @@
 	  "battery-portable"
 	  "net"
 	  "wifi"
-	  "disk"
+	  ;;"disk"
 	  "app-menu"
 	  "stumptray"
+	  ;;"ttf-fonts"
 	  ))
 
 ;; Add Groups
