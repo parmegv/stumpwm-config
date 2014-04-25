@@ -85,10 +85,10 @@
 
 ;; Frame preference setting
 (define-frame-preference "Default"
-  (1 t t :create nil  :class "Iceweasel" :instance nil :title nil :role nil))
+    (1 t t :create nil  :class "Iceweasel" :instance nil :title nil :role nil))
 
 (define-frame-preference "Others"
-  (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil))
+    (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil))
 
 ;; Stumpwm commands
 (defcommand swank () ()
@@ -204,7 +204,7 @@ Load a file that re-defines swank and then calls it."
   (emacsclient-eval "(progn (org-agenda nil \"m\") (org-agenda nil \"l\") (delete-other-windows))" t))
 
 (defcommand org-contacts (search)
-  ((:string "Search Contacts: "))
+    ((:string "Search Contacts: "))
   (check-type search string)
   (substitute #\+ #\Space search)
   (emacsclient-eval (concat "(progn (org-contacts \"" search "\")(delete-other-windows))") t))
@@ -342,15 +342,15 @@ Load a file that re-defines swank and then calls it."
 (defcommand show-start-menu () ()
   "show-start-menu"
   (labels ((pick (options)
-                 (let ((selection (stumpwm::select-from-menu
-                                   (current-screen) options "")))
-                   (cond
-                    ((null selection)
-                     (throw 'stumpwm::error "Abort."))
-                    ((stringp (second selection))
-                     (second selection))
-                    (t
-                     (pick (cdr selection)))))))
+	     (let ((selection (stumpwm::select-from-menu
+			       (current-screen) options "")))
+	       (cond
+		 ((null selection)
+		  (throw 'stumpwm::error "Abort."))
+		 ((stringp (second selection))
+		  (second selection))
+		 (t
+		  (pick (cdr selection)))))))
     (let ((choice (pick
 		   (mapcar #'(lambda (x)
 			       (list
@@ -367,17 +367,17 @@ Load a file that re-defines swank and then calls it."
 
 (defun shift-windows-forward (frames win)
   (when frames
-          (let ((frame (car frames)))
-                 (shift-windows-forward (cdr frames)
-                                        (frame-window frame))
-                 (when win
-                         (pull-window win frame)))))
+    (let ((frame (car frames)))
+      (shift-windows-forward (cdr frames)
+			     (frame-window frame))
+      (when win
+	(pull-window win frame)))))
 
 (defcommand rotate-windows () ()
   "swap 2 windows"
   (let* ((frames (group-frames (current-group)))
-           (win (frame-window (car (last frames)))))
-          (shift-windows-forward frames win)))
+	 (win (frame-window (car (last frames)))))
+    (shift-windows-forward frames win)))
 
 (defcommand toggle-split () ()
   "toggle between vertical split and horizontal split"
@@ -390,9 +390,9 @@ Load a file that re-defines swank and then calls it."
                    (progn
                      (only)
                      (vsplit))
-                 (progn
-                   (only)
-                   (hsplit))))
+		   (progn
+		     (only)
+		     (hsplit))))
 	(message "Works only with 2 frames"))))
 
 (defcommand group-move () ()
@@ -448,41 +448,41 @@ Load a file that re-defines swank and then calls it."
 (define-key *root-map* (kbd "x") "exec dmenu_run -i -b -fn '10x20' -p \"shell cmd:\"")
 (define-key *root-map* (kbd "c") "launch-new-terminal")
 (define-key *root-map* (kbd "C-c") "edit-stumpwmrc")
- 
+
 (setf *applications-map*
-  (let ((m (stumpwm:make-sparse-keymap)))
-    (stumpwm:define-key m (stumpwm:kbd "g") "goagent")
-    (stumpwm:define-key m (stumpwm:kbd "f") "firefox")
-    (stumpwm:define-key m (stumpwm:kbd "j") "jabref")
-    (stumpwm:define-key m (stumpwm:kbd "c") "cajviewer")
-    (stumpwm:define-key m (stumpwm:kbd "p") "pdfreader")
-    (stumpwm:define-key m (stumpwm:kbd "w") "winxp")
-    m ; NOTE: this is important
-    ))
+      (let ((m (stumpwm:make-sparse-keymap)))
+	(stumpwm:define-key m (stumpwm:kbd "g") "goagent")
+	(stumpwm:define-key m (stumpwm:kbd "f") "firefox")
+	(stumpwm:define-key m (stumpwm:kbd "j") "jabref")
+	(stumpwm:define-key m (stumpwm:kbd "c") "cajviewer")
+	(stumpwm:define-key m (stumpwm:kbd "p") "pdfreader")
+	(stumpwm:define-key m (stumpwm:kbd "w") "winxp")
+	m ; NOTE: this is important
+	))
 
 (setf *emacs-map*
-  (let ((m (stumpwm:make-sparse-keymap)))
-    (stumpwm:define-key m (stumpwm:kbd "e") "emacs")
-    (stumpwm:define-key m (stumpwm:kbd "c") "org-contacts")
-    (stumpwm:define-key m (stumpwm:kbd "g") "gnus")
-    (stumpwm:define-key m (stumpwm:kbd "a") "org-agenda")
-    (stumpwm:define-key m (stumpwm:kbd "m") "emms")
-    (stumpwm:define-key m (stumpwm:kbd "R") "emacs-daemon-restart-soft")
-    (stumpwm:define-key m (stumpwm:kbd "K") "emacs-daemon-kill-soft")
-    m ; NOTE: this is important
-    ))
+      (let ((m (stumpwm:make-sparse-keymap)))
+	(stumpwm:define-key m (stumpwm:kbd "e") "emacs")
+	(stumpwm:define-key m (stumpwm:kbd "c") "org-contacts")
+	(stumpwm:define-key m (stumpwm:kbd "g") "gnus")
+	(stumpwm:define-key m (stumpwm:kbd "a") "org-agenda")
+	(stumpwm:define-key m (stumpwm:kbd "m") "emms")
+	(stumpwm:define-key m (stumpwm:kbd "R") "emacs-daemon-restart-soft")
+	(stumpwm:define-key m (stumpwm:kbd "K") "emacs-daemon-kill-soft")
+	m ; NOTE: this is important
+	))
 
 (setf *org-capture-map*
-  (let ((m (stumpwm:make-sparse-keymap)))
-    (stumpwm:define-key m (stumpwm:kbd "d") "org-capture-notes")
-    (stumpwm:define-key m (stumpwm:kbd "e") "org-capture-simple")
-    (stumpwm:define-key m (stumpwm:kbd "c") "org-capture-contacts")
-    (stumpwm:define-key m (stumpwm:kbd "a") "org-capture-account")
-    (stumpwm:define-key m (stumpwm:kbd "j") "org-capture-journal")
-    (stumpwm:define-key m (stumpwm:kbd "t") "org-capture-todo")
-    (stumpwm:define-key m (stumpwm:kbd "s") "org-capture-schedule")
-    m ; NOTE: this is important
-    ))
+      (let ((m (stumpwm:make-sparse-keymap)))
+	(stumpwm:define-key m (stumpwm:kbd "d") "org-capture-notes")
+	(stumpwm:define-key m (stumpwm:kbd "e") "org-capture-simple")
+	(stumpwm:define-key m (stumpwm:kbd "c") "org-capture-contacts")
+	(stumpwm:define-key m (stumpwm:kbd "a") "org-capture-account")
+	(stumpwm:define-key m (stumpwm:kbd "j") "org-capture-journal")
+	(stumpwm:define-key m (stumpwm:kbd "t") "org-capture-todo")
+	(stumpwm:define-key m (stumpwm:kbd "s") "org-capture-schedule")
+	m ; NOTE: this is important
+	))
 
 (setf *help-map*
       (let ((m (make-sparse-keymap)))
@@ -543,12 +543,12 @@ Load a file that re-defines swank and then calls it."
 (setf *mode-line-border-color* "palegreen3")
 
 (setf *chinese-day-names*
-  '("一" "二" "三" "四" "五" "六" "日"))
+      '("一" "二" "三" "四" "五" "六" "日"))
 
 (defun current-date ()
   "Returns the date formatted as `2009-11-16 一 11:34:03'."
   (multiple-value-bind
-      (second minute hour date month year day-of-week dst-p tz)
+	(second minute hour date month year day-of-week dst-p tz)
       (get-decoded-time)
     (format nil "~d-~2,'0d-~2,'0d ~a ^B~2,'0d:~2,'0d:~2,'0d^b"
             year month date (nth day-of-week *chinese-day-names*)
@@ -577,10 +577,10 @@ Load a file that re-defines swank and then calls it."
 ;; turn on the modeline
 (if (not (head-mode-line (current-head)))
     (toggle-mode-line (current-screen) (current-head)))
-    ; A head is a physical monitor. A screen is a section of video memory
-    ; that heads are mapped on to. When using xinerama you generally have
-    ; 1 screen and many heads. When not using xinerama each screen is a
-    ; physical monitor so you have many screens with only one head on them.
+;; A head is a physical monitor. A screen is a section of video memory
+;; that heads are mapped on to. When using xinerama you generally have
+;; 1 screen and many heads. When not using xinerama each screen is a
+;; physical monitor so you have many screens with only one head on them.
 
 ;; turn on debugging (look at `.xsession-errors')
 ;; get rid of debug by setting level to 0
