@@ -57,7 +57,6 @@
 ;; (run-shell-command "rm .xsession-errors")
 ;; I link stumpwmrc-file to ~/.stumpwmrc
 (setf stumpwmrc-file "~/project/stumpwm-config/stumpwmrc")
-(setf sbcl-swank-file "~/project/stumpwm-config/sbcl-swank.lisp")
 (set-contrib-dir "/home/feng/project/stumpwm-contrib/")
 (setf stumpwm-shell-program "/home/feng/project/stumpwm/contrib/stumpish")
 (setf stumpwm-mode-file "/home/feng/project/stumpwm/contrib/stumpwm-mode.el")
@@ -89,18 +88,6 @@
 
 (define-frame-preference "Others"
     (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil))
-
-;; Stumpwm commands
-(defcommand swank () ()
-  "Turn on the swank server the first time.
-Load a file that re-defines swank and then calls it."
-  ;; Be careful with the quotes!
-  (run-shell-command
-   (concat stumpwm-shell-program
-	   "   'eval (load \"" sbcl-swank-file "\")'"))
-  (echo-string
-   (current-screen)
-   "Starting swank. M-x slime-connect RET RET, then (in-package stumpwm)."))
 
 (defcommand suspend-computer () ()
   (run-shell-command
@@ -603,7 +590,6 @@ Load a file that re-defines swank and then calls it."
 (replace-hook *key-press-hook* 'key-press-hook)
 
 (run-commands "stumptray")
-(run-commands "swank")
 (run-shell-command "xset b off")
 (run-shell-command "xfce4-power-manager")
 (run-shell-command "xscreensaver -no-splash")
