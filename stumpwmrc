@@ -58,6 +58,7 @@
 ;; I link stumpwmrc-file to ~/.stumpwmrc
 (setf stumpwmrc-file "~/project/stumpwm-config/stumpwmrc")
 (set-contrib-dir "/home/feng/project/stumpwm-contrib/")
+(setf swank-loader-file "/home/feng/project/emacs-packages/slime/swank-loader.lisp")
 (setf stumpwm-shell-program "/home/feng/project/stumpwm/contrib/stumpish")
 (setf stumpwm-mode-file "/home/feng/project/stumpwm/contrib/stumpwm-mode.el")
 (setf debian-menu-file "/usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu")
@@ -88,6 +89,24 @@
 
 (define-frame-preference "Others"
     (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil))
+
+;; ;; load Swank so we can connect with SLIME
+;; (load swank-loader-file)
+;; (swank-loader:init)
+;; (defvar *swank-p* nil)
+;;
+;; ;; define swank command to start swank server on port 4005
+;; (defcommand swank () ()
+;;   "Starts a swank server on port 4005 and notifies the user."
+;;   (setf stumpwm:*top-level-error-action* :break)
+;;   (if *swank-p*
+;;       (message "Swank server already running.")
+;;     (progn
+;;       (swank:create-server :port 4005
+;;                            :style swank:*communication-style*
+;;                            :dont-close t)
+;;       (setf *swank-p* t)
+;;       (message "Starting swank on port 4005."))))
 
 (defcommand suspend-computer () ()
   (run-shell-command
