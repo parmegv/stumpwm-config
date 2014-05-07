@@ -240,25 +240,25 @@
    t "edit-stumpwmrc"))
 
 (defcommand org-capture-notes () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"notes\"))"))
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"n\"))"))
 
 (defcommand org-capture-simple () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"simple\"))"))
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"s\"))"))
 
 (defcommand org-capture-todo () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"todo\"))"))
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"t\"))"))
 
 (defcommand org-capture-account () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"account\"))"))
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"a\"))"))
 
 (defcommand org-capture-journal () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"journal\"))"))
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"j\"))"))
 
 (defcommand org-capture-schedule () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"schedule\"))"))
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"s\"))"))
 
 (defcommand org-capture-contacts () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"contacts\"))"))
+  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"c\"))"))
 
 (defcommand pidgin () ()
   (run-shell-command "pkill pidgin; pidgin"))
