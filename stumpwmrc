@@ -430,6 +430,8 @@
 (define-key *root-map* (kbd "|") "toggle-split")
 
 ;; keybinding for Fn + F1...F12
+(define-key *top-map* (kbd "F1")  "pull-hidden-next")
+(define-key *top-map* (kbd "F2")  "pull-hidden-previous")
 (define-key *top-map* (kbd "XF86Mail")   "gnus")
 (define-key *top-map* (kbd "XF86MyComputer") "file-manager")
 (define-key *top-map* (kbd "XF86AudioNext")  "emms-next")
@@ -599,8 +601,7 @@
     (let ((*message-window-gravity* :bottom-right))
       (message "Key sequence: ~a" (print-key-seq (reverse key-seq))))
     (when (stringp cmd)
-      ;; give 'em time to read it
-      (sleep 0.5))))
+      (sleep 0.1))))
 
 (defmacro replace-hook (hook fn)
   `(remove-hook ,hook ,fn)
