@@ -109,74 +109,74 @@
 ;;       (message "Starting swank on port 4005."))))
 
 (defcommand suspend-computer () ()
-  (run-shell-command
-   (concat  "dbus-send --print-reply --system  "
-	    "--dest=\"org.freedesktop.UPower\"  "
-	    "/org/freedesktop/UPower  "
-	    "org.freedesktop.UPower.Suspend")))
+	    (run-shell-command
+	     (concat  "dbus-send --print-reply --system  "
+		      "--dest=\"org.freedesktop.UPower\"  "
+		      "/org/freedesktop/UPower  "
+		      "org.freedesktop.UPower.Suspend")))
 
 (defcommand hibernate-computer () ()
-  (run-shell-command
-   (concat "dbus-send --print-reply --system  "
-	   "--dest=\"org.freedesktop.UPower\"  "
-	   "/org/freedesktop/UPower  "
-	   "org.freedesktop.UPower.Hibernate")))
+	    (run-shell-command
+	     (concat "dbus-send --print-reply --system  "
+		     "--dest=\"org.freedesktop.UPower\"  "
+		     "/org/freedesktop/UPower  "
+		     "org.freedesktop.UPower.Hibernate")))
 
 (defcommand restart-computer () ()
-  (run-shell-command
-   (concat "dbus-send --print-reply --system "
-	   "--dest=\"org.freedesktop.ConsoleKit\" "
-	   "/org/freedesktop/ConsoleKit/Manager "
-	   "org.freedesktop.ConsoleKit.Manager.Restart")))
+	    (run-shell-command
+	     (concat "dbus-send --print-reply --system "
+		     "--dest=\"org.freedesktop.ConsoleKit\" "
+		     "/org/freedesktop/ConsoleKit/Manager "
+		     "org.freedesktop.ConsoleKit.Manager.Restart")))
 
 (defcommand shutdown-commputer () ()
-  (run-shell-command
-   (concat "dbus-send --print-reply --system  "
-	   "--dest=\"org.freedesktop.ConsoleKit\"  "
-	   "/org/freedesktop/ConsoleKit/Manager "
-	   "org.freedesktop.ConsoleKit.Manager.Stop")))
+	    (run-shell-command
+	     (concat "dbus-send --print-reply --system  "
+		     "--dest=\"org.freedesktop.ConsoleKit\"  "
+		     "/org/freedesktop/ConsoleKit/Manager "
+		     "org.freedesktop.ConsoleKit.Manager.Stop")))
 
 (defcommand firefox () ()
-  "Start Firefox or switch to it, if it is already running."
-  (run-or-raise "iceweasel" '(:class "Iceweasel")))
+	    "Start Firefox or switch to it, if it is already running."
+	    (run-or-raise "iceweasel" '(:class "Iceweasel")))
 
 (defcommand file-manager () ()
-  "Start nautilus"
-  (run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
+	    "Start nautilus"
+	    (run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
 
 (defcommand winxp () ()
-  "Start winxp with virtualbox"
-  (run-or-raise
-   "VBoxManage startvm winxp &"
-   '(:class "VirtualBox")))
+	    "Start winxp with virtualbox"
+	    (run-or-raise
+	     "VBoxManage startvm winxp &"
+	     '(:class "VirtualBox")))
 
 (defcommand jabref () ()
-  "Start jabref"
-  (run-or-raise
-   "java -jar ~/bin/JabRef-2.9.2.jar"
-   '(:class "net-sf-jabref-JabRefMain")))
+	    "Start jabref"
+	    (run-or-raise
+	     "java -jar ~/bin/JabRef-2.9.2.jar"
+	     '(:class "net-sf-jabref-JabRefMain")))
 
 (setf emacs-daemon-start-command "x-terminal-emulator -T emacs-daemon-start -e emacs --daemon=default")
 (setf emacs-daemon-kill-command "emacsclient --server-file=default --eval '(eh-shutdown-emacs-server)'")
 
 (defcommand emacs-daemon-start () ()
-  (run-shell-command emacs-daemon-start-command))
+	    (run-shell-command emacs-daemon-start-command))
 
 (defcommand emacs-daemon-kill-soft () ()
-  (run-shell-command emacs-daemon-kill-command))
+	    (run-shell-command emacs-daemon-kill-command))
 
 (defcommand emacs-daemon-kill-hard () ()
-  (run-shell-command "pkill -9 emacsclient; pkill -9 emacs"))
+	    (run-shell-command "pkill -9 emacsclient; pkill -9 emacs"))
 
 (defcommand emacs-daemon-restart-soft () ()
-  (run-shell-command
-   (concat emacs-daemon-kill-command
-	   "; "
-	   emacs-daemon-start-command)))
+	    (run-shell-command
+	     (concat emacs-daemon-kill-command
+		     "; "
+		     emacs-daemon-start-command)))
 
 (defcommand emacs-daemon-restart-hard () ()
-  (emacs-daemon-kill-hard)
-  (emacs-daemon-start))
+	    (emacs-daemon-kill-hard)
+	    (emacs-daemon-start))
 
 (defun escape-instance-name (str)
   (let (buf)
@@ -201,106 +201,106 @@
      (list :instance name))))
 
 (defcommand emacs () ()
-  (emacsclient-eval "(recentf-open-files)" t "emacs"))
+	    (emacsclient-eval "(recentf-open-files)" t "emacs"))
 
 (defcommand emacspeak () ()
-  (run-shell-command "emacs --eval '(load-emacspeak)'"))
+	    (run-shell-command "emacs --eval '(load-emacspeak)'"))
 
 (defcommand org-agenda () ()
-  (emacsclient-eval "(progn (org-agenda nil \"l\") (delete-other-windows))" t))
+	    (emacsclient-eval "(progn (org-agenda nil \"l\") (delete-other-windows))" t))
 
 (defcommand org-contacts (search)
-    ((:string "Search Contacts: "))
+  ((:string "Search Contacts: "))
   (check-type search string)
   (substitute #\+ #\Space search)
   (emacsclient-eval (concat "(progn (org-contacts \"" search "\")(delete-other-windows))") t))
 
 (defcommand gnus () ()
-  (emacsclient-eval "(gnus)" t))
+	    (emacsclient-eval "(gnus)" t))
 
 (defcommand emms () ()
-  (emacsclient-eval "(eh-emms)" t))
+	    (emacsclient-eval "(eh-emms)" t))
 
 (defcommand emms-toggle () ()
-  (emacsclient-eval "(if emms-player-playing-p (emms-pause) (emms-random))"))
+	    (emacsclient-eval "(if emms-player-playing-p (emms-pause) (emms-random))"))
 
 (defcommand emms-previous () ()
-  (emacsclient-eval "(emms-previous)"))
+	    (emacsclient-eval "(emms-previous)"))
 
 (defcommand emms-random () ()
-  (emacsclient-eval "(emms-random)"))
+	    (emacsclient-eval "(emms-random)"))
 
 (defcommand emms-next () ()
-  (emacsclient-eval "(emms-next)"))
+	    (emacsclient-eval "(emms-next)"))
 
 (defcommand edit-stumpwmrc () ()
-  (emacsclient-eval
-   (concat
-    "(find-file \"" stumpwmrc-file    "\")")
-   t "edit-stumpwmrc"))
+	    (emacsclient-eval
+	     (concat
+	      "(find-file \"" stumpwmrc-file    "\")")
+	     t "edit-stumpwmrc"))
 
 (defcommand org-capture-notes () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"n\"))"))
+	    (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"n\"))"))
 
 (defcommand org-capture-simple () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"s\"))"))
+	    (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"s\"))"))
 
 (defcommand org-capture-todo () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"t\"))"))
+	    (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"t\"))"))
 
 (defcommand org-capture-account () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"a\"))"))
+	    (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"a\"))"))
 
 (defcommand org-capture-journal () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"j\"))"))
+	    (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"j\"))"))
 
 (defcommand org-capture-schedule () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"s\"))"))
+	    (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"s\"))"))
 
 (defcommand org-capture-contacts () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"c\"))"))
+	    (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"c\"))"))
 
 (defcommand pidgin () ()
-  (run-shell-command "pkill pidgin; pidgin"))
+	    (run-shell-command "pkill pidgin; pidgin"))
 
 (defcommand mplayer () ()
-  (run-or-raise "smplayer" '(:class "Smplayer")))
+	    (run-or-raise "smplayer" '(:class "Smplayer")))
 
 (defcommand pdfreader () ()
-  (run-or-raise "acroread" '(:class "Acroread")))
+	    (run-or-raise "acroread" '(:class "Acroread")))
 
 (defcommand cajviewer () ()
-  (run-or-raise "" '(:instance "CAJVieweru.exe")))
+	    (run-or-raise "" '(:instance "CAJVieweru.exe")))
 
 (defcommand top () ()
-  (run-or-raise "x-terminal-emulator -t htop -e htop" '(:title "htop")))
+	    (run-or-raise "x-terminal-emulator -t htop -e htop" '(:title "htop")))
 
 (defcommand x-terminal-emulator () ()
-  (run-or-raise "x-terminal-emulator -t default-terminal"
-		'(:title "default-terminal")))
+	    (run-or-raise "x-terminal-emulator -t default-terminal"
+			  '(:title "default-terminal")))
 
 (defcommand launch-new-terminal () ()
-  (run-shell-command "x-terminal-emulator"))
+	    (run-shell-command "x-terminal-emulator"))
 
 (defcommand power-manager () ()
-  (run-shell-command "xfce4-power-manager-settings"))
+	    (run-shell-command "xfce4-power-manager-settings"))
 
 (defcommand goagent () ()
-  (run-or-raise "python ~/project/goagent/local/goagent-gtk.py"
-		'(:title "goagent-gtk.py")))
+	    (run-or-raise "python ~/project/goagent/local/goagent-gtk.py"
+			  '(:title "goagent-gtk.py")))
 
 (defcommand lock-screen () ()
-  (run-shell-command "exec xscreensaver-command -lock"))
+	    (run-shell-command "exec xscreensaver-command -lock"))
 
 (defcommand reinit () ()
-  "docstring"
-  (run-commands "reload" "loadrc"))
+	    "docstring"
+	    (run-commands "reload" "loadrc"))
 
 (defcommand show-debian-menu () ()
-  "show debian menu"
-  (setf *app-menu* nil)
-  (load-menu-file debian-menu-file :strip 1)
-  (show-menu))
+	    "show debian menu"
+	    (setf *app-menu* nil)
+	    (load-menu-file debian-menu-file :strip 1)
+	    (show-menu))
 
 (defparameter *start-menu*
   '(("---------------------------------------------------")
@@ -346,30 +346,30 @@
     ("---------------------------------------------------")))
 
 (defcommand show-start-menu () ()
-  "show-start-menu"
-  (labels ((pick (options)
-	     (let ((selection (stumpwm::select-from-menu
-			       (current-screen) options "")))
-	       (cond
-		 ((null selection)
-		  (throw 'stumpwm::error "Abort."))
-		 ((stringp (second selection))
-		  (second selection))
-		 (t
-		  (pick (cdr selection)))))))
-    (let ((choice (pick
-		   (mapcar #'(lambda (x)
-			       (list
-				(if (car (cdr x))
-				    (format nil "~10A | ~30A" (nth 0 x) (concat (nth 1 x) "(" (nth 2 x) ")"))
-				    (make-string 60 :initial-element #\-))
-				(nth 2 x)))
-			   *start-menu*))))
-      ;; If a function can be found, which name is "choice", run this function,
-      ;; otherwise regard "choice" as shell command.
-      (if (find choice (all-commands) :test #'equal)
-	  (run-commands choice)
-	  (run-shell-command choice)))))
+	    "show-start-menu"
+	    (labels ((pick (options)
+		       (let ((selection (stumpwm::select-from-menu
+					 (current-screen) options "")))
+			 (cond
+			   ((null selection)
+			    (throw 'stumpwm::error "Abort."))
+			   ((stringp (second selection))
+			    (second selection))
+			   (t
+			    (pick (cdr selection)))))))
+	      (let ((choice (pick
+			     (mapcar #'(lambda (x)
+					 (list
+					  (if (car (cdr x))
+					      (format nil "~10A | ~30A" (nth 0 x) (concat (nth 1 x) "(" (nth 2 x) ")"))
+					      (make-string 60 :initial-element #\-))
+					  (nth 2 x)))
+				     *start-menu*))))
+		;; If a function can be found, which name is "choice", run this function,
+		;; otherwise regard "choice" as shell command.
+		(if (find choice (all-commands) :test #'equal)
+		    (run-commands choice)
+		    (run-shell-command choice)))))
 
 (defun shift-windows-forward (frames win)
   (when frames
@@ -380,66 +380,77 @@
 	(pull-window win frame)))))
 
 (defcommand rotate-windows () ()
-  "swap 2 windows"
-  (let* ((frames (group-frames (current-group)))
-	 (win (frame-window (car (last frames)))))
-    (shift-windows-forward frames win)))
+	    "swap 2 windows"
+	    (let* ((frames (group-frames (current-group)))
+		   (win (frame-window (car (last frames)))))
+	      (shift-windows-forward frames win)))
 
 (defcommand toggle-split () ()
-  "toggle between vertical split and horizontal split"
-  (let* ((group (current-group))
-         (cur-frame (tile-group-current-frame group))
-         (frames (group-frames group)))
-    (if (eq (length frames) 2)
-        (progn (if (or (neighbour :left cur-frame frames)
-                       (neighbour :right cur-frame frames))
-                   (progn
-                     (only)
-                     (vsplit))
-		   (progn
-		     (only)
-		     (hsplit))))
-	(message "Works only with 2 frames"))))
+	    "toggle between vertical split and horizontal split"
+	    (let* ((group (current-group))
+		   (cur-frame (tile-group-current-frame group))
+		   (frames (group-frames group)))
+	      (cond
+		((eq (length frames) 2)
+		 (progn (if (or (neighbour :left cur-frame frames)
+				(neighbour :right cur-frame frames))
+			    (progn (only)
+				   (vsplit))
+			    (progn (only)
+				   (hsplit)))))
+		((eq (length frames) 1)
+		 (hsplit))
+		(t (message "Works only with 2 frames")))))
 
 (defcommand group-move () ()
-  (let* ((group-format "MOVE TO:     [%n] %t                ")
-	 (current-window (current-window))
-	 (group
-	  (second (select-from-menu
-		   (current-screen)
-		   (mapcar (lambda (g)
-			     (list (format-expand *group-formatters* group-format g) g))
-			   (screen-groups (current-screen)))))))
-    (when (and group current-window)
-      (move-window-to-group current-window group)
-      (message "Move successful ...."))))
+	    (let* ((group-format "MOVE TO:     [%n] %t                ")
+		   (current-window (current-window))
+		   (group
+		    (second (select-from-menu
+			     (current-screen)
+			     (mapcar (lambda (g)
+				       (list (format-expand *group-formatters* group-format g) g))
+				     (screen-groups (current-screen)))))))
+	      (when (and group current-window)
+		(move-window-to-group current-window group)
+		(message "Move successful ...."))))
 
 (defcommand (frame-pull-hidden-next tile-group) (frame-number) ((:frame t))
-  (let* ((group (current-group))
-	 (frame (tile-group-current-frame group)))
-    (focus-frame group frame-number)
-    (pull-hidden-next)
-    (fselect frame)))
+	    (let* ((group (current-group))
+		   (frame (tile-group-current-frame group)))
+	      (focus-frame group frame-number)
+	      (pull-hidden-next)
+	      (fselect frame)))
 
 (defcommand (frame-pull-hidden-previous tile-group) (frame-number) ((:frame t))
-  (let* ((group (current-group))
-	 (frame (tile-group-current-frame group)))
-    (focus-frame group frame-number)
-    (pull-hidden-previous)
-    (fselect frame)))
+	    (let* ((group (current-group))
+		   (frame (tile-group-current-frame group)))
+	      (focus-frame group frame-number)
+	      (pull-hidden-previous)
+	      (fselect frame)))
 
 (defcommand (resize-master-frame tile-group) (width height) ((:number "+ Width: ")
 							     (:number "+ Height: "))
-    (let* ((group (current-group))
-	   (frame (tile-group-current-frame group)))
-      (run-commands "fselect 1")
-      (resize width height)
-      (fselect frame)))
+	    (let* ((group (current-group))
+		   (cur-frame (tile-group-current-frame group))
+		   (frames (group-frames group))
+		   (frame (tile-group-current-frame group)))
+	      (cond
+		((eq (length frames) 2)
+		 (progn
+		   (run-commands "fselect 1")
+		   (resize width height)
+		   (fselect frame)))
+		((eq (length frames) 1)
+		 (hsplit))
+		(t (message "Works only with 2 frames")))))
 
 ;; keybindings for split frame
-(define-key *root-map* (kbd "1") "hsplit")
-(define-key *root-map* (kbd "2") "vsplit")
-(define-key *root-map* (kbd "0") "only")
+(define-key *top-map* (kbd "F11")  "only")
+(define-key *root-map* (kbd "C-0") "only")
+(define-key *root-map* (kbd "C-1") "hsplit")
+(define-key *root-map* (kbd "C-2") "vsplit")
+(define-key *top-map* (kbd "F12")  "toggle-split")
 
 ;; push the window in the adjacent frame
 (define-key *root-map* (kbd "C-Up") "move-window up")
