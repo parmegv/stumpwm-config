@@ -414,10 +414,32 @@
       (move-window-to-group current-window group)
       (message "Move successful ...."))))
 
+(defcommand (frame-pull-hidden-next tile-group) (frame-number) ((:frame t))
+  (let* ((group (current-group))
+	 (frame (tile-group-current-frame group)))
+    (focus-frame group frame-number)
+    (pull-hidden-next)
+    (fselect frame)))
+
+(defcommand (frame-pull-hidden-previous tile-group) (frame-number) ((:frame t))
+  (let* ((group (current-group))
+	 (frame (tile-group-current-frame group)))
+    (focus-frame group frame-number)
+    (pull-hidden-previous)
+    (fselect frame)))
+
+(defcommand (resize-master-frame tile-group) (width height) ((:number "+ Width: ")
+							     (:number "+ Height: "))
+    (let* ((group (current-group))
+	   (frame (tile-group-current-frame group)))
+      (run-commands "fselect 1")
+      (resize width height)
+      (fselect frame)))
+
 ;; keybindings for split frame
-(define-key *root-map* (kbd "C-1") "hsplit")
-(define-key *root-map* (kbd "C-2") "vsplit")
-(define-key *root-map* (kbd "C-0") "only")
+(define-key *root-map* (kbd "1") "hsplit")
+(define-key *root-map* (kbd "2") "vsplit")
+(define-key *root-map* (kbd "0") "only")
 
 ;; push the window in the adjacent frame
 (define-key *root-map* (kbd "C-Up") "move-window up")
@@ -430,8 +452,11 @@
 (define-key *root-map* (kbd "|") "toggle-split")
 
 ;; keybinding for Fn + F1...F12
-(define-key *top-map* (kbd "F1")  "pull-hidden-next")
-(define-key *top-map* (kbd "F2")  "pull-hidden-previous")
+(define-key *top-map* (kbd "F1")  "frame-pull-hidden-next 1")
+(define-key *top-map* (kbd "F2")  "frame-pull-hidden-next 2")
+(define-key *top-map* (kbd "F3")  "resize-master-frame -100 -100")
+(define-key *top-map* (kbd "F4")  "resize-master-frame 100 100")
+
 (define-key *top-map* (kbd "XF86Mail")   "gnus")
 (define-key *top-map* (kbd "XF86MyComputer") "file-manager")
 (define-key *top-map* (kbd "XF86AudioNext")  "emms-next")
