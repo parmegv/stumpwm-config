@@ -390,17 +390,18 @@
 (defcommand toggle-simple-split () ()
   "toggle between vertical split, horizontal split and none split"
   (let* ((group (current-group))
+	 (group-name (group-name group))
 	 (cur-frame (tile-group-current-frame group))
 	 (frames (group-frames group))
 	 (horizontal-split-dumpfile
 	  (make-pathname
 	   :directory (pathname-directory (concat stumpwm-dumpfile-dir "/"))
-	   :name "horizontal-split"
+	   :name (concat group-name "-" "horizontal-split")
 	   :type "dumpfile"))
 	 (vertical-split-dumpfile
 	  (make-pathname
 	   :directory (pathname-directory (concat stumpwm-dumpfile-dir "/"))
-	   :name "vertical-split"
+	   :name (concat group-name "-" "vertical-split")
 	   :type "dumpfile")))
     (if (< (length frames) 3)
 	(cond
@@ -431,12 +432,13 @@
 (defcommand toggle-complex-split () ()
   "toggle between complex split and none split"
   (let* ((group (current-group))
+	 (group-name (group-name group))
 	 (cur-frame (tile-group-current-frame group))
 	 (frames (group-frames group))
 	 (complex-split-dumpfile
 	  (make-pathname
 	   :directory (pathname-directory (concat stumpwm-dumpfile-dir "/"))
-	   :name "complex-split"
+	   :name (concat group-name "-" "complex-split")
 	   :type "dumpfile")))
     (if (> (length frames) 2)
 	(progn
