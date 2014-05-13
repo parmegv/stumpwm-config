@@ -486,7 +486,7 @@
 	 (resize width height)
 	 (fselect frame)))
       ((eq (length frames) 1)
-       (hsplit))
+       (toggle-simple-split))
       (t (message "Works only with 2 frames")))))
 
 ;; keybindings for split frame
