@@ -145,6 +145,18 @@
   "Start nautilus"
   (run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
 
+(defcommand qq () ()
+  "Start QQ with crossover"
+  (run-shell-command
+   (concat
+    "/opt/cxoffice/bin/wine  "
+    "--bottle \"腾讯_TM_2013\" "
+    "--check  "
+    "--wait-children  "
+    "--start \"C:/users/Public/Start Menu/Programs/腾讯软件/TM2013/腾讯TM.lnk\" "
+    "\"$@\""
+    )))
+
 (defcommand winxp () ()
   "Start winxp with virtualbox"
   (run-or-raise
@@ -154,7 +166,7 @@
 (defcommand jabref () ()
   "Start jabref"
   (run-or-raise
-   "java -jar ~/bin/JabRef-2.9.2.jar"
+   "java -jar ~/bin/JabRef-2.10.jar"
    '(:class "net-sf-jabref-JabRefMain")))
 
 (setf emacs-daemon-start-command "x-terminal-emulator -T emacs-daemon-start -e emacs --daemon=default")
@@ -325,7 +337,6 @@
     ("Dia"    "流程图" "/usr/bin/dia-normal")
     ("PS"     "The GIMP" "/usr/bin/gimp")
     ("---------------------------------------------------")
-    ("WPS"    "金山WPS"  "/opt/kingsoft/wps-office/office6/wps")
     ("Word"   "LibreOffice Writer"  "/usr/bin/libreoffice --writer")
     ("Excel"  "LibreOffice Calc"  "/usr/bin/libreoffice --calc")
     ("PPT"    "LibreOffice Impress"  "/usr/bin/libreoffice --impress")
@@ -696,7 +707,6 @@
 (run-shell-command "nm-applet")
 (run-shell-command "volti")
 (run-shell-command "xmodmap -e 'keycode 135 = Super_R'")
-(run-commands "pidgin")
 (run-commands "emacs-daemon-restart-hard")
 
 ;; Local Variables:
