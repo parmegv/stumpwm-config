@@ -302,7 +302,7 @@
 
 (defcommand x-terminal-emulator () ()
   (run-or-pull "x-terminal-emulator -t default-terminal"
-		'(:title "default-terminal")))
+	       '(:title "default-terminal")))
 
 (defcommand launch-new-terminal () ()
   (run-shell-command "x-terminal-emulator"))
@@ -312,7 +312,7 @@
 
 (defcommand goagent () ()
   (run-or-pull "python ~/project/goagent/local/goagent-gtk.py"
-		'(:title "goagent-gtk.py")))
+	       '(:title "goagent-gtk.py")))
 
 (defcommand lock-screen () ()
   (run-shell-command "exec xscreensaver-command -lock"))
