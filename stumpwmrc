@@ -29,17 +29,21 @@
 ;;     这个字体是等宽字体，虽然中英文不能完全对齐，但显示效果很好，
 ;;     类似winxp。
 ;;
-;; 4.  安装其他程序
-;;     1. bmpanel2(这个任务栏软件和stumpwm配合比较好，值得一试)
+;; 4.  安装taskbar或者dock
+;;     1. 使用stumpwm自带的mode-line，配置灵活，但不能使用鼠标切换窗口。
+;;     2. 将lxpanel设置为自动隐藏，配合stumpwm自带的mode-line使用，非常方便。
+;;     3. bmpanel2(好长时间没有更新了)
 ;;        1. bmpanel2 should set panel window type as dock.
 ;;        2. bmpanel2 should launch before stumpwm
 ;;        3. You need use function resize-head to cut a area for bmpanel2
 ;;           for example: (resize-head 0 0  25 1366 740)
-;;     2. xfce4-power-manager(xfce电源管理软件)
-;;     3. xscreensaver(屏幕保护程序)
-;;     4. volti(一个小巧的音量调节器)
-;;     5. xdotool(linux下面的按键精灵，我用这个软件自动拷贝文本)
-;;     6. xsel(命令行程序，用来管理剪切板的内容)
+;；
+;; 5.  安装其他程序
+;;     1. xfce4-power-manager(xfce电源管理软件)
+;;     2. xscreensaver(屏幕保护程序)
+;;     3. volti(一个小巧的音量调节器)
+;;     4. xdotool(linux下面的按键精灵，我用这个软件自动拷贝文本)
+;;     5. xsel(命令行程序，用来管理剪切板的内容)
 ;; 5.  设置debian menu
 ;;     1. cp ./bin/menu-method/stumpwm /etc/menu-method/
 ;;     2. edit /etc/menu-method/stumpwn as appropriate BEFORE using
