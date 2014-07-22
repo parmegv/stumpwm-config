@@ -149,6 +149,12 @@
   "Start crossover"
   (run-or-pull "/opt/cxoffice/bin/crossover" '(:class "Crossover")))
 
+(defcommand foxit () ()
+  (run-or-pull "/opt/cxoffice/bin/wine --bottle Foxit_Reader_6 --cx-app 'foxit reader.exe'" '(:class "Foxit Reader.exe")))
+
+(defcommand cajviewer () ()
+  (run-or-pull "/opt/cxoffice/bin/wine --bottle cajviewer --cx-app cajvieweru.exe" '(:instance "CAJVieweru.exe")))
+
 (defcommand qq () ()
   "Start QQ with crossover"
   (run-shell-command
@@ -290,12 +296,6 @@
 
 (defcommand mplayer () ()
   (run-or-pull "smplayer" '(:class "Smplayer")))
-
-(defcommand pdfreader () ()
-  (run-or-pull "acroread" '(:class "Acroread")))
-
-(defcommand cajviewer () ()
-  (run-or-pull "" '(:instance "CAJVieweru.exe")))
 
 (defcommand top () ()
   (run-or-pull "x-terminal-emulator -t htop -e htop" '(:title "htop")))
