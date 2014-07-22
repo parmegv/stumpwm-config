@@ -85,8 +85,8 @@
 (run-commands "gnewbg Others" "gnewbg-float Float")
 
 ;; Frame preference setting
-(define-frame-preference "Default"
-    (1 t t :create nil  :class "Iceweasel" :instance nil :title nil :role nil))
+;; (define-frame-preference "Default"
+;;    (1 t t :create nil  :class "Iceweasel" :instance nil :title nil :role nil))
 
 (define-frame-preference "Others"
     (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil))
@@ -139,15 +139,15 @@
 
 (defcommand firefox () ()
   "Start Firefox or switch to it, if it is already running."
-  (run-or-raise "iceweasel" '(:class "Iceweasel")))
+  (run-or-pull "iceweasel" '(:class "Iceweasel")))
 
 (defcommand file-manager () ()
   "Start nautilus"
-  (run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
+  (run-or-pull "nautilus --no-desktop" '(:class "Nautilus")))
 
 (defcommand crossover () ()
   "Start crossover"
-  (run-or-raise "/opt/cxoffice/bin/crossover" '(:class "Crossover")))
+  (run-or-pull "/opt/cxoffice/bin/crossover" '(:class "Crossover")))
 
 (defcommand qq () ()
   "Start QQ with crossover"
@@ -171,13 +171,13 @@
 
 (defcommand winxp () ()
   "Start winxp with virtualbox"
-  (run-or-raise
+  (run-or-pull
    "VBoxManage startvm winxp &"
    '(:class "VirtualBox")))
 
 (defcommand jabref () ()
   "Start jabref"
-  (run-or-raise
+  (run-or-pull
    "java -jar ~/bin/JabRef-2.10.jar"
    '(:class "net-sf-jabref-JabRefMain")))
 
@@ -218,7 +218,7 @@
 (defun emacsclient-eval (&optional expression create-frame frame-name file)
   (let ((name (or frame-name
 		  (escape-instance-name expression))))
-    (run-or-raise
+    (run-or-pull
      (concat "emacsclient --server-file=default "
 	     (when create-frame (concat "-c -F '((name . \"" name "\"))' "))
 	     (when expression (concat " --eval '" expression "'"))
@@ -289,19 +289,19 @@
   (run-shell-command "pkill pidgin; pidgin"))
 
 (defcommand mplayer () ()
-  (run-or-raise "smplayer" '(:class "Smplayer")))
+  (run-or-pull "smplayer" '(:class "Smplayer")))
 
 (defcommand pdfreader () ()
-  (run-or-raise "acroread" '(:class "Acroread")))
+  (run-or-pull "acroread" '(:class "Acroread")))
 
 (defcommand cajviewer () ()
-  (run-or-raise "" '(:instance "CAJVieweru.exe")))
+  (run-or-pull "" '(:instance "CAJVieweru.exe")))
 
 (defcommand top () ()
-  (run-or-raise "x-terminal-emulator -t htop -e htop" '(:title "htop")))
+  (run-or-pull "x-terminal-emulator -t htop -e htop" '(:title "htop")))
 
 (defcommand x-terminal-emulator () ()
-  (run-or-raise "x-terminal-emulator -t default-terminal"
+  (run-or-pull "x-terminal-emulator -t default-terminal"
 		'(:title "default-terminal")))
 
 (defcommand launch-new-terminal () ()
@@ -311,7 +311,7 @@
   (run-shell-command "xfce4-power-manager-settings"))
 
 (defcommand goagent () ()
-  (run-or-raise "python ~/project/goagent/local/goagent-gtk.py"
+  (run-or-pull "python ~/project/goagent/local/goagent-gtk.py"
 		'(:title "goagent-gtk.py")))
 
 (defcommand lock-screen () ()
