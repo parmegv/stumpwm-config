@@ -110,6 +110,14 @@
 	(setf *swank-p* t)
 	(message "Starting swank on port 4005."))))
 
+(defun my-run-or-raise (cmd props &optional (all-groups *run-or-raise-all-groups*)
+				 (all-screens *run-or-raise-all-screens*))
+  (let* ((group (current-group))
+	 (frames (group-frames group)))
+    (if (> (length frames) 1)
+	(run-or-pull cmd props all-groups all-screens)
+	(run-or-raise cmd props all-groups all-screens))))
+
 (defcommand suspend-computer () ()
   (run-shell-command
    (concat  "dbus-send --print-reply --system  "
@@ -140,26 +148,26 @@
 
 (defcommand firefox () ()
   "Start Firefox or switch to it, if it is already running."
-  (run-or-pull "iceweasel" '(:class "Iceweasel")))
+  (my-run-or-raise "iceweasel" '(:class "Iceweasel")))
 
 (defcommand file-manager () ()
   "Start nautilus"
-  (run-or-pull "nautilus --no-desktop" '(:class "Nautilus")))
+  (my-run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
 
 (defcommand crossover () ()
   "Start crossover"
-  (run-or-pull "/opt/cxoffice/bin/crossover" '(:class "Crossover")))
+  (my-run-or-raise "/opt/cxoffice/bin/crossover" '(:class "Crossover")))
 
 (defcommand foxit () ()
-  (run-or-pull "/opt/cxoffice/bin/wine --bottle Foxit_Reader_6 --cx-app 'foxit reader.exe'" '(:class "Foxit Reader.exe")))
+  (my-run-or-raise "/opt/cxoffice/bin/wine --bottle Foxit_Reader_6 --cx-app 'foxit reader.exe'" '(:class "Foxit Reader.exe")))
 
 (defcommand cajviewer () ()
-  (run-or-pull "/opt/cxoffice/bin/wine --bottle cajviewer --cx-app cajvieweru.exe" '(:instance "CAJVieweru.exe")))
+  (my-run-or-raise "/opt/cxoffice/bin/wine --bottle cajviewer --cx-app cajvieweru.exe" '(:instance "CAJVieweru.exe")))
 
 (defcommand qq () ()
   "Start QQ with crossover"
-  (run-shell-command
-   "/opt/cxoffice/bin/wine --bottle 腾讯_TM_2013 --cx-app tm.exe"))
+  (my-run-or-raise
+   "/opt/cxoffice/bin/wine --bottle 腾讯_TM_2013 --cx-app tm.exe" '(:instance "TM.exe")))
 
 (defcommand word () ()
   "Start excel with crossover"
@@ -178,13 +186,13 @@
 
 (defcommand winxp () ()
   "Start winxp with virtualbox"
-  (run-or-pull
+  (my-run-or-raise
    "VBoxManage startvm winxp &"
    '(:class "VirtualBox")))
 
 (defcommand jabref () ()
   "Start jabref"
-  (run-or-pull
+  (my-run-or-raise
    "java -jar ~/bin/JabRef-2.10.jar"
    '(:class "net-sf-jabref-JabRefMain")))
 
@@ -225,7 +233,7 @@
 (defun emacsclient-eval (&optional expression create-frame frame-name file)
   (let ((name (or frame-name
 		  (escape-instance-name expression))))
-    (run-or-pull
+    (my-run-or-raise
      (concat "emacsclient --server-file=default "
 	     (when create-frame (concat "-c -F '((name . \"" name "\"))' "))
 	     (when expression (concat " --eval '" expression "'"))
@@ -296,13 +304,13 @@
   (run-shell-command "pkill pidgin; pidgin"))
 
 (defcommand mplayer () ()
-  (run-or-pull "smplayer" '(:class "Smplayer")))
+  (my-run-or-raise "smplayer" '(:class "Smplayer")))
 
 (defcommand top () ()
-  (run-or-pull "x-terminal-emulator -t htop -e htop" '(:title "htop")))
+  (my-run-or-raise "x-terminal-emulator -t htop -e htop" '(:title "htop")))
 
 (defcommand x-terminal-emulator () ()
-  (run-or-pull "x-terminal-emulator -t default-terminal"
+  (my-run-or-raise "x-terminal-emulator -t default-terminal"
 	       '(:title "default-terminal")))
 
 (defcommand launch-new-terminal () ()
@@ -312,7 +320,7 @@
   (run-shell-command "xfce4-power-manager-settings"))
 
 (defcommand goagent () ()
-  (run-or-pull "python ~/project/goagent/local/goagent-gtk.py"
+  (my-run-or-raise "python ~/project/goagent/local/goagent-gtk.py"
 	       '(:title "goagent-gtk.py")))
 
 (defcommand lock-screen () ()
