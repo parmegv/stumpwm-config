@@ -37,7 +37,7 @@
 ;;        2. bmpanel2 should launch before stumpwm
 ;;        3. You need use function resize-head to cut a area for bmpanel2
 ;;           for example: (resize-head 0 0  25 1366 740)
-;；
+;;
 ;; 5.  安装其他程序
 ;;     1. xfce4-power-manager(xfce电源管理软件)
 ;;     2. xscreensaver(屏幕保护程序)
@@ -413,47 +413,27 @@
 	 (win (frame-window (car (last frames)))))
     (shift-windows-forward frames win)))
 
-(setf *frame-split-status* "horizontal")
-(defcommand toggle-simple-split () ()
-  "toggle between vertical split, horizontal split and none split"
+(defcommand toggle-split () ()
+  "toggle frame split"
   (let* ((group (current-group))
 	 (group-name (group-name group))
 	 (cur-frame (tile-group-current-frame group))
 	 (frames (group-frames group))
-	 (horizontal-split-dumpfile
+	 (split-dumpfile
 	  (make-pathname
 	   :directory (pathname-directory (concat stumpwm-dumpfile-dir "/"))
-	   :name (concat group-name "-" "horizontal-split")
-	   :type "dumpfile"))
-	 (vertical-split-dumpfile
-	  (make-pathname
-	   :directory (pathname-directory (concat stumpwm-dumpfile-dir "/"))
-	   :name (concat group-name "-" "vertical-split")
+	   :name (concat group-name "-" "simple-split")
 	   :type "dumpfile")))
     (if (< (length frames) 3)
-	(cond
-	  ((string= *frame-split-status* "horizontal")
-	   (progn
-	     (only)
-	     (hsplit)
-	     (when (probe-file horizontal-split-dumpfile)
-	       (restore-from-file horizontal-split-dumpfile))
-	     (setq *frame-split-status* "vertical")))
-	  ((string= *frame-split-status* "vertical")
-	   (progn
-	     (when (eq (length frames) 2)
-	       (dump-group-to-file horizontal-split-dumpfile))
-	     (only)
-	     (vsplit)
-	     (when (probe-file vertical-split-dumpfile)
-	       (restore-from-file vertical-split-dumpfile))
-	     (setq *frame-split-status* "none")))
-	  ((string= *frame-split-status* "none")
-	   (progn
-	     (when (eq (length frames) 2)
-	       (dump-group-to-file vertical-split-dumpfile))
-	     (only)
-	     (setq *frame-split-status* "horizontal"))))
+	(if (> (length frames) 1)
+	    (progn
+	      (dump-group-to-file split-dumpfile)
+	      (only))
+	    (progn
+	      (only)
+	      (hsplit)
+	      (when (probe-file split-dumpfile)
+		(restore-from-file split-dumpfile))))
 	(message "Works only with 2 frames"))))
 
 (defcommand toggle-complex-split () ()
@@ -513,15 +493,14 @@
 	 (resize width height)
 	 (fselect frame)))
       ((eq (length frames) 1)
-       (toggle-simple-split))
+       (toggle-split))
       (t (message "Works only with 2 frames")))))
 
 ;; keybindings for split frame
 (define-key *root-map* (kbd "C-0") "only")
 (define-key *root-map* (kbd "C-1") "hsplit")
 (define-key *root-map* (kbd "C-2") "vsplit")
-(define-key *top-map* (kbd "F12")  "toggle-simple-split")
-(define-key *top-map* (kbd "F11")  "toggle-complex-split")
+(define-key *top-map* (kbd "F12")  "toggle-split")
 
 ;; push the window in the adjacent frame
 (define-key *root-map* (kbd "C-Up") "move-window up")
