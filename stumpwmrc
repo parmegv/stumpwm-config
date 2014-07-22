@@ -79,7 +79,7 @@
 	  "battery-portable"
 	  "net"
 	  "wifi"
-	  ;;"disk"
+	  "disk"
 	  "app-menu"
 	  "stumptray"
 	  ;;"ttf-fonts"
