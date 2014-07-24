@@ -338,8 +338,8 @@
 (defcommand show-debian-menu () ()
   "show debian menu"
   (setf *app-menu* nil)
-  (load-menu-file debian-menu-file :strip 1)
-  (show-menu))
+  (app-menu:load-menu-file debian-menu-file :strip 1)
+  (app-menu:show-menu))
 
 (defparameter *start-menu*
   '(("---------------------------------------------------")
