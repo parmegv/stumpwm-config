@@ -447,43 +447,45 @@
 
 (defcommand toggle-split () ()
   "toggle frame split"
-  (let* ((group (current-group))
-	 (group-name (group-name group))
-	 (cur-frame (tile-group-current-frame group))
-	 (frames (group-frames group))
-	 (split-dumpfile
-	  (make-pathname
-	   :directory (pathname-directory (concat *stumpwm-dumpfile-dir* "/"))
-	   :name (concat group-name "-" "simple-split")
-	   :type "dumpfile")))
-    (if (< (length frames) 3)
-	(if (> (length frames) 1)
-	    (progn
-	      (dump-group-to-file split-dumpfile)
-	      (only))
-	    (progn
-	      (only)
-	      (hsplit)
-	      (when (probe-file split-dumpfile)
-		(restore-from-file split-dumpfile))))
-	(message "Works only with 2 frames"))))
+  (if (eq (type-of (current-group)) 'float-group)
+      (message "Works only in tile group ...")
+      (let* ((group (current-group))
+	     (group-name (group-name group))
+	     (frames (group-frames group))
+	     (split-dumpfile
+	      (make-pathname
+	       :directory (pathname-directory (concat *stumpwm-dumpfile-dir* "/"))
+	       :name (concat group-name "-" "simple-split")
+	       :type "dumpfile")))
+	(if (< (length frames) 3)
+	    (if (> (length frames) 1)
+		(progn
+		  (dump-group-to-file split-dumpfile)
+		  (only))
+		(progn
+		  (only)
+		  (hsplit)
+		  (when (probe-file split-dumpfile)
+		    (restore-from-file split-dumpfile))))
+	    (message "Works only with 2 frames ... ")))))
 
 (defcommand toggle-complex-split () ()
   "toggle between complex split and none split"
-  (let* ((group (current-group))
-	 (group-name (group-name group))
-	 (cur-frame (tile-group-current-frame group))
-	 (frames (group-frames group))
-	 (complex-split-dumpfile
-	  (make-pathname
-	   :directory (pathname-directory (concat stumpwm-dumpfile-dir "/"))
-	   :name (concat group-name "-" "complex-split")
-	   :type "dumpfile")))
-    (if (> (length frames) 2)
-	(progn
-	  (dump-group-to-file complex-split-dumpfile)
-	  (only))
-	(restore-from-file complex-split-dumpfile))))
+  (if (eq (type-of (current-group)) 'float-group)
+      (message "Works only in tile group ...")
+      (let* ((group (current-group))
+	     (group-name (group-name group))
+	     (frames (group-frames group))
+	     (complex-split-dumpfile
+	      (make-pathname
+	       :directory (pathname-directory (concat stumpwm-dumpfile-dir "/"))
+	       :name (concat group-name "-" "complex-split")
+	       :type "dumpfile")))
+	(if (> (length frames) 2)
+	    (progn
+	      (dump-group-to-file complex-split-dumpfile)
+	      (only))
+	    (restore-from-file complex-split-dumpfile)))))
 
 (defcommand group-move () ()
   (let* ((group-format "MOVE TO:     [%n] %t                ")
