@@ -113,9 +113,8 @@
 (defun my-run-or-raise (cmd props &optional (all-groups *run-or-raise-all-groups*)
 				    (all-screens *run-or-raise-all-screens*))
   (let* ((group (current-group))
-	 (frames
-	  (if (eq (type-of (current-group)) 'tile-group)
-	      (group-frames group))))
+	 (frames (when (eq (type-of group) 'tile-group)
+		   (group-frames group))))
     (if (> (length frames) 1)
 	(run-or-pull cmd props all-groups all-screens)
 	(run-or-raise cmd props all-groups all-screens))))
