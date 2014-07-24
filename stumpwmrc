@@ -60,13 +60,13 @@
 (in-package :stumpwm)
 ;; (run-shell-command "rm .xsession-errors")
 ;; I link stumpwmrc-file to ~/.stumpwmrc
-(setf stumpwmrc-file "~/project/stumpwm-config/stumpwmrc")
+(setq *stumpwmrc-file* "~/project/stumpwm-config/stumpwmrc")
 (set-contrib-dir "/home/feng/project/stumpwm-contrib/")
-(setf swank-loader-file "/home/feng/project/emacs-packages/slime/swank-loader.lisp")
-(setf stumpwm-shell-program "/home/feng/project/stumpwm/contrib/stumpish")
-(setf stumpwm-mode-file "/home/feng/project/stumpwm/contrib/stumpwm-mode.el")
-(setf debian-menu-file "/usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu")
-(setf stumpwm-dumpfile-dir "~/.stumpwm-dumpfile.d")
+(setq *swank-loader-file* "/home/feng/project/emacs-packages/slime/swank-loader.lisp")
+(setq *stumpwm-shell-program* "/home/feng/project/stumpwm/contrib/stumpish")
+(setq *stumpwm-mode-file* "/home/feng/project/stumpwm/contrib/stumpwm-mode.el")
+(setq *debian-menu-file* "/usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu")
+(setq *stumpwm-dumpfile-dir* "~/.stumpwm-dumpfile.d")
 ;; shell program used by `run-shell-command'
 (setq *shell-program* (stumpwm::getenv "SHELL"))
 (setq *ignore-wm-inc-hints* t)
@@ -93,7 +93,7 @@
     (1 nil t :create nil  :class nil :instance nil :title "goagent-gtk.py" :role nil))
 
 ;; load Swank so we can connect with SLIME
-(load swank-loader-file)
+(load *swank-loader-file*)
 (swank-loader:init)
 (defvar *swank-p* nil)
 
@@ -277,7 +277,7 @@
 (defcommand edit-stumpwmrc () ()
   (emacsclient-eval
    (concat
-    "(find-file \"" stumpwmrc-file    "\")")
+    "(find-file \"" *stumpwmrc-file*  "\")")
    t "edit-stumpwmrc"))
 
 (defcommand org-capture-notes () ()
@@ -347,7 +347,7 @@
 (defcommand show-debian-menu () ()
   "Show the application menu"
   (let ((stack (list (load-debian-menu-file
-		      debian-menu-file :strip 1))))
+		      *debian-menu-file* :strip 1))))
     (loop
        (let ((choice
               (cdr (select-from-menu (current-screen)
@@ -449,7 +449,7 @@
 	 (frames (group-frames group))
 	 (split-dumpfile
 	  (make-pathname
-	   :directory (pathname-directory (concat stumpwm-dumpfile-dir "/"))
+	   :directory (pathname-directory (concat *stumpwm-dumpfile-dir* "/"))
 	   :name (concat group-name "-" "simple-split")
 	   :type "dumpfile")))
     (if (< (length frames) 3)
