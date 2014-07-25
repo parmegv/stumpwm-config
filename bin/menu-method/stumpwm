@@ -8,15 +8,15 @@ outputencoding="LOCALE"
 
 genmenu="stumpwm.menu"
 rcfile="stumpwm.menu"
-rootprefix="/usr/share/common-lisp/source/stumpwm/contrib/"
-userprefix="project/stumpwm/contrib/"
+rootprefix="/var/lib/stumpwm/"
+userprefix=".stumpwm.d/"
 
 treewalk="(M)"
 
-startmenu= nstring(level(), "  ") "(\"" $title "\" . (\n"
+startmenu= nstring(level(), "  ") "(\"* " $title "\" . (\n"
 endmenu= nstring(level(), "  ") "))\n"
 
 supported
-    x11=  nstring(level(), "  ") "(\"" title() "\" . \"" esc($command, "\"") "\")\n"
-    text= nstring(level(), "  ") "(\"" title() "\" . \"" esc(term(), "\"") "\")\n"
+    x11=  nstring(level(), "  ") "(\"* " title() "\" . \"" esc($command, "\"") "\")\n"
+    text= nstring(level(), "  ") "(\"* " title() "\" . \"" esc(term(), "\"") "\")\n"
 endsupported

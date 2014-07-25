@@ -65,7 +65,7 @@
 (setq *swank-loader-file* "/home/feng/project/emacs-packages/slime/swank-loader.lisp")
 (setq *stumpwm-shell-program* "/home/feng/project/stumpwm/contrib/stumpish")
 (setq *stumpwm-mode-file* "/home/feng/project/stumpwm/contrib/stumpwm-mode.el")
-(setq *debian-menu-file* "/usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu")
+(setq *debian-menu-file* "/var/lib/stumpwm/stumpwm.menu")
 (setq *stumpwm-dumpfile-dir* "~/.stumpwm-dumpfile.d")
 ;; shell program used by `run-shell-command'
 (setq *shell-program* (stumpwm::getenv "SHELL"))
@@ -355,7 +355,7 @@
                                      (append menu-split-line
 					     (first stack)
 					     menu-split-line
-                                             (list (cons "<<返回上一级菜单>>" :up))
+                                             (list (cons "* 返回上一级菜单" :up))
 					     menu-split-line)))))
          (cond
            ((not choice) (return))
