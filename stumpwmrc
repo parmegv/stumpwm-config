@@ -70,6 +70,7 @@
 ;; shell program used by `run-shell-command'
 (setq *shell-program* (stumpwm::getenv "SHELL"))
 (setq *ignore-wm-inc-hints* t)
+(setq *emacs-daemon-name* "default")
 
 ;; load contrib modules
 (mapcar #'load-module 
@@ -197,14 +198,15 @@
    "java -jar ~/bin/JabRef-2.10.jar"
    '(:class "net-sf-jabref-JabRefMain")))
 
-(setf emacs-daemon-start-command "x-terminal-emulator -T emacs-daemon-start -e emacs --daemon=default")
-(setf emacs-daemon-kill-command "emacsclient --server-file=default --eval '(eh-shutdown-emacs-server)'")
-
 (defcommand emacs-daemon-start () ()
-  (run-shell-command emacs-daemon-start-command))
+  (run-shell-command
+   (concat
+   "x-terminal-emulator -T emacs-daemon-start -e emacs "
+   (if *emacs-daemon-name* (concat "--daemon=" *emacs-daemon-name* " ")
+       "--daemon "))))
 
 (defcommand emacs-daemon-kill-soft () ()
-  (run-shell-command emacs-daemon-kill-command))
+  (emacsclient-eval '(eh-shutdown-emacs-server)))
 
 (defcommand emacs-daemon-kill-hard () ()
   (run-shell-command "pkill -9 emacsclient; pkill -9 emacs"))
@@ -232,74 +234,79 @@
     (coerce (reverse buf) 'string)))
 
 (defun emacsclient-eval (&optional expression create-frame frame-name file)
-  (let ((name (or frame-name
-		  (escape-instance-name expression))))
+  "Eval an emacs lisp expression which emacsclient"
+  (let* ((expression-string
+	   (string-downcase
+	    (cl-ppcre:regex-replace-all
+	     "STUMPWM::" (prin1-to-string expression) "")))
+	  (name (or frame-name
+		    (escape-instance-name expression-string))))
     (my-run-or-raise
-     (concat "emacsclient --server-file=default "
+     (concat "emacsclient "
+	     (when *emacs-daemon-name* (concat "--server-file=" *emacs-daemon-name* " "))
 	     (when create-frame (concat "-c -F '((name . \"" name "\"))' "))
-	     (when expression (concat " --eval '" expression "'"))
+	     (when expression (concat " --eval '" expression-string "'"))
 	     file)
      (list :instance name))))
 
 (defcommand emacs () ()
-  (emacsclient-eval "(recentf-open-files)" t "emacs"))
+  (emacsclient-eval '(recentf-open-files) t "emacs"))
 
 (defcommand emacspeak () ()
   (run-shell-command "emacs --eval '(load-emacspeak)'"))
 
 (defcommand org-agenda () ()
-  (emacsclient-eval "(progn (org-agenda nil \"l\") (delete-other-windows))" t))
+  (emacsclient-eval '(progn (org-agenda nil "l") (delete-other-windows)) t))
 
 (defcommand org-contacts (search)
     ((:string "Search Contacts: "))
   (check-type search string)
   (substitute #\+ #\Space search)
-  (emacsclient-eval (concat "(progn (org-contacts \"" search "\")(delete-other-windows))") t))
+  (emacsclient-eval `(progn (org-contacts ,search) (delete-other-windows)) t))
 
 (defcommand gnus () ()
-  (emacsclient-eval "(gnus)" t))
+  (emacsclient-eval '(gnus) t))
 
 (defcommand emms () ()
-  (emacsclient-eval "(eh-emms)" t))
+  (emacsclient-eval '(eh-emms) t))
 
 (defcommand emms-toggle () ()
-  (emacsclient-eval "(if emms-player-playing-p (emms-pause) (emms-random))"))
+  (emacsclient-eval '(if emms-player-playing-p (emms-pause) (emms-random))))
 
 (defcommand emms-previous () ()
-  (emacsclient-eval "(emms-previous)"))
+  (emacsclient-eval '(emms-previous)))
 
 (defcommand emms-random () ()
-  (emacsclient-eval "(emms-random)"))
+  (emacsclient-eval '(emms-random)))
 
 (defcommand emms-next () ()
-  (emacsclient-eval "(emms-next)"))
+  (emacsclient-eval '(emms-next)))
 
 (defcommand edit-stumpwmrc () ()
   (emacsclient-eval
-   (concat
-    "(find-file \"" *stumpwmrc-file*  "\")")
+   `(find-file ,*stumpwmrc-file*)
    t "edit-stumpwmrc"))
 
 (defcommand org-capture-notes () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"n\"))"))
+  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "n"))))
 
 (defcommand org-capture-simple () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"s\"))"))
+  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "s"))))
 
 (defcommand org-capture-todo () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"t\"))"))
+  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "t"))))
 
 (defcommand org-capture-account () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"a\"))"))
+  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "a"))))
 
 (defcommand org-capture-journal () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"j\"))"))
+  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "j"))))
 
 (defcommand org-capture-schedule () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"s\"))"))
+  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "s"))))
 
 (defcommand org-capture-contacts () ()
-  (emacsclient-eval "(progn (kill-new \"\") (eh-org-capture nil \"c\"))"))
+  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "c"))))
 
 (defcommand pidgin () ()
   (run-shell-command "pkill pidgin; pidgin"))
