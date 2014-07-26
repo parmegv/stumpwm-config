@@ -160,31 +160,28 @@
   "Start crossover"
   (my-run-or-raise "/opt/cxoffice/bin/crossover" '(:class "Crossover")))
 
+(defcommand launch-crossover-app (app bottle) ()
+  (my-run-or-raise
+   (format nil "/opt/cxoffice/bin/wine --bottle ~a --cx-app '~a'" bottle app)
+   `(:instance ,app)))
+
 (defcommand foxit () ()
-  (my-run-or-raise "/opt/cxoffice/bin/wine --bottle Foxit_Reader_6 --cx-app 'foxit reader.exe'" '(:class "Foxit Reader.exe")))
+  (launch-crossover-app "Foxit Reader.exe" "Foxit_Reader_6"))
 
 (defcommand cajviewer () ()
-  (my-run-or-raise "/opt/cxoffice/bin/wine --bottle cajviewer --cx-app cajvieweru.exe" '(:instance "CAJVieweru.exe")))
+  (launch-crossover-app "CAJVieweru.exe" "cajviewer"))
 
 (defcommand qq () ()
-  "Start QQ with crossover"
-  (my-run-or-raise
-   "/opt/cxoffice/bin/wine --bottle 腾讯_TM_2013 --cx-app tm.exe" '(:instance "TM.exe")))
+  (launch-crossover-app "TM.exe" "腾讯_TM_2013"))
 
 (defcommand word () ()
-  "Start excel with crossover"
-  (run-shell-command
-   "/opt/cxoffice/bin/wine --bottle office2003 --cx-app winword.exe"))
+  (launch-crossover-app "WINWORD.EXE" "office2003"))
 
 (defcommand excel () ()
-  "Start excel with crossover"
-  (run-shell-command
-   "/opt/cxoffice/bin/wine --bottle office2003 --cx-app excel.exe"))
+  (launch-crossover-app "EXCEL.EXE" "office2003"))
 
 (defcommand ppt () ()
-  "Start powerpoint with crossover"
-  (run-shell-command
-   "/opt/cxoffice/bin/wine --bottle office2003 --cx-app powerpnt.exe"))
+  (launch-crossover-app "POWERPNT.EXE" "office2003"))
 
 (defcommand winxp () ()
   "Start winxp with virtualbox"
