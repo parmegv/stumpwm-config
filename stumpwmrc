@@ -241,7 +241,7 @@
     (my-run-or-raise
      (concat "emacsclient "
 	     (when *emacs-daemon-name* (concat "--server-file=" *emacs-daemon-name* " "))
-	     (when create-frame (concat "-c -F '((name . \"" name "\"))' "))
+	     (when create-frame (concat " -c -F '((name . \"" name "\"))' "))
 	     (when expression (concat " --eval '" expression-string "'"))
 	     file)
      (list :instance name))))
