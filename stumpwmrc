@@ -200,13 +200,6 @@
    "java -jar ~/bin/JabRef-2.10.jar"
    '(:class "net-sf-jabref-JabRefMain")))
 
-(defcommand emacs-daemon-start () ()
-  (run-shell-command
-   (concat
-   "x-terminal-emulator -T emacs-daemon-start -e emacs "
-   (if *emacs-daemon-name* (concat "--daemon=" *emacs-daemon-name* " ")
-       "--daemon "))))
-
 (defcommand emacs-daemon-kill-soft () ()
   (emacsclient-eval
    '(progn
@@ -221,16 +214,6 @@
 (defcommand emacs-daemon-kill-hard () ()
   (run-shell-command "pkill -9 emacsclient; pkill -9 emacs"))
 
-(defcommand emacs-daemon-restart-soft () ()
-  (run-shell-command
-   (concat emacs-daemon-kill-command
-	   "; "
-	   emacs-daemon-start-command)))
-
-(defcommand emacs-daemon-restart-hard () ()
-  (emacs-daemon-kill-hard)
-  (emacs-daemon-start))
-
 (defun escape-instance-name (str)
   (let (buf)
     (map nil #'(lambda (ch)
@@ -243,6 +226,23 @@
 		     (push ch buf)))
 	 str)
     (coerce (reverse buf) 'string)))
+
+(defun emacs-daemon-run-p ()
+  (string-equal
+   (remove #\Newline
+	   (run-shell-command
+	    (concat
+	     "emacsclient "
+	     "--socket-name=" *emacs-daemon-name*
+	     " --eval 't'") t)) "t"))
+
+(defcommand emacs-daemon-start () ()
+  (when (not (emacs-daemon-run-p))
+    (run-shell-command
+     (concat
+      "x-terminal-emulator -T emacs-daemon-start -e emacs "
+      (if *emacs-daemon-name* (concat "--daemon=" *emacs-daemon-name*)
+	  "--daemon")))))
 
 (defun emacsclient-eval (&optional expression create-frame frame-name file)
   "Eval an emacs lisp expression which emacsclient"
@@ -261,12 +261,18 @@
       (with-standard-io-syntax
 	(format stream "~A" expression-string)))
 
+    ;; start emacs daemon
+    (emacs-daemon-start)
+
+    ;; run emacs client
     (my-run-or-raise
-     (concat "emacsclient "
-	     (when *emacs-daemon-name* (concat "--server-file=" *emacs-daemon-name* " "))
-	     (when create-frame (concat " -c -F '((name . \"" name "\"))' "))
-	     (when expression (concat " --eval '(load \"" *emacsclient-load-file*  "\")'"))
-	     file)
+     (concat
+      "while ! emacsclient --socket-name=" *emacs-daemon-name* " --eval 't'; do sleep 1 ; done;"
+      "emacsclient "
+      (when *emacs-daemon-name* (concat "--socket-name=" *emacs-daemon-name* " "))
+      (when create-frame (concat " -c -F '((name . \"" name "\"))' "))
+      (when expression (concat " --eval '(load \"" *emacsclient-load-file*  "\")'"))
+      file)
      `(:instance ,name))))
 
 (defcommand emacs () ()
@@ -624,8 +630,8 @@
 	(stumpwm:define-key m (stumpwm:kbd "g") "gnus")
 	(stumpwm:define-key m (stumpwm:kbd "a") "org-agenda")
 	(stumpwm:define-key m (stumpwm:kbd "m") "emms")
-	(stumpwm:define-key m (stumpwm:kbd "R") "emacs-daemon-restart-soft")
-	(stumpwm:define-key m (stumpwm:kbd "K") "emacs-daemon-kill-soft")
+	(stumpwm:define-key m (stumpwm:kbd "k") "emacs-daemon-kill-soft")
+	(stumpwm:define-key m (stumpwm:kbd "K") "emacs-daemon-kill-hard")
 	m ; NOTE: this is important
 	))
 
@@ -769,7 +775,7 @@
 (run-shell-command "nm-applet")
 (run-shell-command "volti")
 (run-shell-command "xmodmap -e 'keycode 135 = Super_R'")
-(run-commands "emacs-daemon-restart-hard")
+(run-commands "emacs-daemon-start")
 
 ;; Local Variables:
 ;; coding: utf-8
