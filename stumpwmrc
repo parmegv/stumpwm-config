@@ -71,6 +71,7 @@
 (setq *shell-program* (stumpwm::getenv "SHELL"))
 (setq *ignore-wm-inc-hints* t)
 (setq *emacs-daemon-name* "default")
+(setq *emacsclient-load-file* "~/.stumpwm.d/emacsclient-load-file.el")
 
 ;; load contrib modules
 (mapcar #'load-module 
@@ -224,7 +225,8 @@
 		 (if (or (char= ch #\()
 			 (char= ch #\))
 			 (char= ch #\")
-			 (char= ch #\ ))
+			 (char= ch #\ )
+			 (char= ch #\Newline))
 		     (push #\_ buf)
 		     (push ch buf)))
 	 str)
@@ -235,17 +237,25 @@
   (let* ((expression-string
 	  (cl-ppcre:regex-replace-all
 	   "stumpwm::"
-	   (substitute #\  #\Newline
-		       (write-to-string expression :case :downcase)) ""))
+	   (write-to-string expression :case :downcase) ""))
 	 (name (or frame-name
 		   (escape-instance-name expression-string))))
+    ;; write emacs lisp sexp to a file, all symbol names
+    ;; will be converted to downcase when save.
+    (with-open-file
+	(stream *emacsclient-load-file*
+		:direction :output
+		:if-exists :supersede)
+      (with-standard-io-syntax
+	(format stream "~A" expression-string)))
+
     (my-run-or-raise
      (concat "emacsclient "
 	     (when *emacs-daemon-name* (concat "--server-file=" *emacs-daemon-name* " "))
 	     (when create-frame (concat " -c -F '((name . \"" name "\"))' "))
-	     (when expression (concat " --eval '" expression-string "'"))
+	     (when expression (concat " --eval '(load \"" *emacsclient-load-file*  "\")'"))
 	     file)
-     (list :instance name))))
+     `(:instance ,name))))
 
 (defcommand emacs () ()
   (emacsclient-eval '(recentf-open-files) t "emacs"))
