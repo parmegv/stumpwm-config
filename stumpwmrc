@@ -233,11 +233,12 @@
 (defun emacsclient-eval (&optional expression create-frame frame-name file)
   "Eval an emacs lisp expression which emacsclient"
   (let* ((expression-string
-	   (string-downcase
-	    (cl-ppcre:regex-replace-all
-	     "STUMPWM::" (prin1-to-string expression) "")))
-	  (name (or frame-name
-		    (escape-instance-name expression-string))))
+	  (cl-ppcre:regex-replace-all
+	   "stumpwm::"
+	   (substitute #\  #\Newline
+		       (write-to-string expression :case :downcase)) ""))
+	 (name (or frame-name
+		   (escape-instance-name expression-string))))
     (my-run-or-raise
      (concat "emacsclient "
 	     (when *emacs-daemon-name* (concat "--server-file=" *emacs-daemon-name* " "))
