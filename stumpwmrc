@@ -63,7 +63,7 @@
 (setq *stumpwmrc-file* "~/project/stumpwm-config/stumpwmrc")
 (set-contrib-dir "/home/feng/project/stumpwm-contrib/")
 (setq *swank-loader-file* "/home/feng/project/emacs-packages/slime/swank-loader.lisp")
-(setq *stumpwm-shell-program* "/home/feng/project/stumpwm/contrib/stumpish")
+(setq *stumpwm-shell-program* "/home/feng/project/stumpwm-contrib/util/stumpish/stumpish")
 (setq *stumpwm-mode-file* "/home/feng/project/stumpwm/contrib/stumpwm-mode.el")
 (setq *debian-menu-file* "/var/lib/stumpwm/stumpwm.menu")
 (setq *stumpwm-dumpfile-dir* "~/.stumpwm-dumpfile.d")
@@ -267,6 +267,13 @@
 
 (defcommand emacs () ()
   (emacsclient-eval '(recentf-open-files) t "emacs"))
+
+(defcommand slime () ()
+  (emacsclient-eval
+   `(progn
+      (require 'slime)
+      (shell-command ,(concat *stumpwm-shell-program* " swank"))
+      (slime-connect "127.0.0.1" "4005"))))
 
 (defcommand emacspeak () ()
   (run-shell-command "emacs --eval '(load-emacspeak)'"))
