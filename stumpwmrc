@@ -61,17 +61,14 @@
 ;; (run-shell-command "rm .xsession-errors")
 ;; I link stumpwmrc-file to ~/.stumpwmrc
 (setq *stumpwmrc-file* "~/project/stumpwm-config/stumpwmrc")
-(set-contrib-dir "/home/feng/project/stumpwm-contrib/")
-(setq *swank-loader-file* "/home/feng/project/emacs-packages/slime/swank-loader.lisp")
-(setq *stumpwm-shell-program* "/home/feng/project/stumpwm-contrib/util/stumpish/stumpish")
-(setq *stumpwm-mode-file* "/home/feng/project/stumpwm/contrib/stumpwm-mode.el")
+(set-contrib-dir "~/project/stumpwm-contrib/")
+(setq *swank-loader-file* "~/project/emacs-packages/slime/swank-loader.lisp")
 (setq *debian-menu-file* "/var/lib/stumpwm/stumpwm.menu")
 (setq *stumpwm-dumpfile-dir* "~/.stumpwm-dumpfile.d")
-;; shell program used by `run-shell-command'
-(setq *shell-program* (stumpwm::getenv "SHELL"))
-(setq *ignore-wm-inc-hints* t)
 (setq *emacs-daemon-name* "default")
 (setq *emacsclient-load-file* "~/.stumpwm.d/emacsclient-load-file.el")
+(setq *shell-program* (stumpwm::getenv "SHELL"))
+(setq *ignore-wm-inc-hints* t)
 
 ;; load contrib modules
 (mapcar #'load-module 
@@ -111,6 +108,13 @@
 			     :dont-close t)
 	(setf *swank-p* t)
 	(message "Starting swank on port 4005."))))
+
+(defcommand slime () ()
+  (swank)
+  (emacsclient-eval
+   `(progn
+      (require 'slime)
+      (slime-connect "127.0.0.1" "4005"))))
 
 (defun my-run-or-raise (cmd props &optional (all-groups *run-or-raise-all-groups*)
 				    (all-screens *run-or-raise-all-screens*))
@@ -267,13 +271,6 @@
 
 (defcommand emacs () ()
   (emacsclient-eval '(recentf-open-files) t "emacs"))
-
-(defcommand slime () ()
-  (emacsclient-eval
-   `(progn
-      (require 'slime)
-      (shell-command ,(concat *stumpwm-shell-program* " swank"))
-      (slime-connect "127.0.0.1" "4005"))))
 
 (defcommand emacspeak () ()
   (run-shell-command "emacs --eval '(load-emacspeak)'"))
