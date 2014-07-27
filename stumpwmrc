@@ -204,7 +204,15 @@
        "--daemon "))))
 
 (defcommand emacs-daemon-kill-soft () ()
-  (emacsclient-eval '(eh-shutdown-emacs-server)))
+  (emacsclient-eval
+   '(progn
+     (when (not (eq window-system 'x))
+       (message "Initializing x windows system.")
+       (x-initialize-window-system)
+       (when (not x-display-name) (setq x-display-name (getenv "DISPLAY")))
+       (select-frame (make-frame-on-display x-display-name '((window-system . x)))))
+     (let ((last-nonmenu-event nil)(window-system "x"))(save-buffers-kill-emacs)))
+   t))
 
 (defcommand emacs-daemon-kill-hard () ()
   (run-shell-command "pkill -9 emacsclient; pkill -9 emacs"))
