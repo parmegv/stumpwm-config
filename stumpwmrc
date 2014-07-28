@@ -212,7 +212,10 @@
    t))
 
 (defcommand emacs-daemon-kill-hard () ()
-  (run-shell-command "pkill -9 emacsclient; pkill -9 emacs"))
+  (run-shell-command
+   (format nil "for i in `ps ax | grep emacs | grep =~A |cut -d ' ' -f 1`; do kill -9 $i; done"
+	   *emacs-daemon-name*))
+  (message (format nil "emacs daemon which name is (~A) has been killed" *emacs-daemon-name*)))
 
 (defun escape-instance-name (str)
   (let (buf)
@@ -236,6 +239,16 @@
 	     "--socket-name=" *emacs-daemon-name*
 	     " --eval 't'") t)) "t"))
 
+(defun generate-elisp-expression-string (expression)
+  (cl-ppcre:regex-replace-all
+   "stumpwm::"
+   (write-to-string expression :case :downcase) ""))
+
+(defcommand bare-emacs-run (expression) ()
+  (let ((expression-string
+	 (generate-elisp-expression-string expression)))
+    (run-shell-command (concat "emacs -Q  --eval '" expression-string "'"))))
+
 (defcommand emacs-daemon-start () ()
   (when (not (emacs-daemon-run-p))
     (run-shell-command
@@ -247,9 +260,7 @@
 (defun emacsclient-eval (&optional expression create-frame frame-name file)
   "Eval an emacs lisp expression which emacsclient"
   (let* ((expression-string
-	  (cl-ppcre:regex-replace-all
-	   "stumpwm::"
-	   (write-to-string expression :case :downcase) ""))
+	  (generate-elisp-expression-string expression))
 	 (name (or frame-name
 		   (escape-instance-name expression-string))))
     ;; write emacs lisp sexp to a file, all symbol names
@@ -266,13 +277,20 @@
 
     ;; run emacs client
     (my-run-or-raise
-     (concat
-      "while ! emacsclient --socket-name=" *emacs-daemon-name* " --eval 't'; do sleep 1 ; done;"
-      "emacsclient "
-      (when *emacs-daemon-name* (concat "--socket-name=" *emacs-daemon-name* " "))
-      (when create-frame (concat " -c -F '((name . \"" name "\"))' "))
-      (when expression (concat " --eval '(load \"" *emacsclient-load-file*  "\")'"))
-      file)
+     (format nil
+	     (concat "for i in {1..20};"
+		     "do emacsclient --socket-name=~A --eval 't'  > /dev/null 2>&1 && break;"
+		     "sleep 1;"
+		     "done;"
+		     "emacsclient ~@[--socket-name=~A ~]"
+		     "~:[ ~;-c~] ~@[-F '((name . \"~A\"))' ~]"
+		     "~@[--eval '(load \"~A\")' ~] ~@[~A~]")
+	     *emacs-daemon-name*
+	     *emacs-daemon-name*
+	     create-frame
+	     name
+	     *emacsclient-load-file*
+	     file)
      `(:instance ,name))))
 
 (defcommand emacs () ()
@@ -775,7 +793,8 @@
 (run-shell-command "nm-applet")
 (run-shell-command "volti")
 (run-shell-command "xmodmap -e 'keycode 135 = Super_R'")
-(run-commands "emacs-daemon-start")
+(run-commands "emacs-daemon-kill-hard"
+	      "emacs-daemon-start")
 
 ;; Local Variables:
 ;; coding: utf-8
