@@ -345,7 +345,7 @@
 
 (defcommand x-terminal-emulator () ()
   (my-run-or-raise "x-terminal-emulator -t default-terminal"
-	       '(:title "default-terminal")))
+		   '(:title "default-terminal")))
 
 (defcommand launch-new-terminal () ()
   (run-shell-command "x-terminal-emulator"))
@@ -355,7 +355,7 @@
 
 (defcommand goagent () ()
   (my-run-or-raise "python ~/project/goagent/local/goagent-gtk.py"
-	       '(:title "goagent-gtk.py")))
+		   '(:title "goagent-gtk.py")))
 
 (defcommand lock-screen () ()
   (run-shell-command "exec xscreensaver-command -lock"))
@@ -384,17 +384,17 @@
 	 (list (cons (make-string 60 :initial-element #\-) nil))))
     (loop
        (let ((choice
-              (cdr (select-from-menu (current-screen)
-                                     (append menu-split-line
+	      (cdr (select-from-menu (current-screen)
+				     (append menu-split-line
 					     (first stack)
 					     menu-split-line
-                                             (list (cons "* 返回上一级菜单" :up))
+					     (list (cons "* 返回上一级菜单" :up))
 					     menu-split-line)))))
-         (cond
-           ((not choice) (return))
-           ((eq choice :up) (pop stack) (unless stack (return)))
-           ((stringp choice) (run-shell-command choice) (return))
-           (t (push choice stack)))))))
+	 (cond
+	   ((not choice) (return))
+	   ((eq choice :up) (pop stack) (unless stack (return)))
+	   ((stringp choice) (run-shell-command choice) (return))
+	   (t (push choice stack)))))))
 
 (defparameter *start-menu*
   '(("---------------------------------------------------")
