@@ -262,36 +262,30 @@
   (let* ((expression-string
 	  (generate-elisp-expression-string expression))
 	 (name (or frame-name
-		   (escape-instance-name expression-string))))
+		   (escape-instance-name expression-string)))
+	 (emacsclient-command
+	  (format nil
+		  (concat "emacsclient ~@[--socket-name=~A ~]"
+			  "~:[ ~;-c~] ~@[-F '((name . \"~A\"))' ~]"
+			  "~@[--eval '(load \"~A\")' ~] ~@[~A~]")
+		  *emacs-daemon-name*
+		  create-frame
+		  name
+		  *emacsclient-load-file*
+		  file)))
     ;; write emacs lisp sexp to a file, all symbol names
     ;; will be converted to downcase when save.
     (with-open-file
-	(stream *emacsclient-load-file*
+	(stream (ensure-directories-exist *emacsclient-load-file*)
 		:direction :output
 		:if-exists :supersede)
       (with-standard-io-syntax
 	(format stream "~A" expression-string)))
 
     ;; start emacs daemon
-    (emacs-daemon-start)
-
-    ;; run emacs client
-    (my-run-or-raise
-     (format nil
-	     (concat "for i in {1..20};"
-		     "do emacsclient --socket-name=~A --eval 't'  > /dev/null 2>&1 && break;"
-		     "sleep 1;"
-		     "done;"
-		     "emacsclient ~@[--socket-name=~A ~]"
-		     "~:[ ~;-c~] ~@[-F '((name . \"~A\"))' ~]"
-		     "~@[--eval '(load \"~A\")' ~] ~@[~A~]")
-	     *emacs-daemon-name*
-	     *emacs-daemon-name*
-	     create-frame
-	     name
-	     *emacsclient-load-file*
-	     file)
-     `(:instance ,name))))
+    (if (not (emacs-daemon-run-p))
+	(emacs-daemon-start)
+	(my-run-or-raise emacsclient-command `(:instance ,name)))))
 
 (defcommand emacs () ()
   (emacsclient-eval '(recentf-open-files) t "emacs"))
