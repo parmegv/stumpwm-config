@@ -66,7 +66,7 @@
 (setq *debian-menu-file* "/var/lib/stumpwm/stumpwm.menu")
 (setq *stumpwm-dumpfile-dir* "~/.stumpwm-dumpfile.d")
 (setq *emacs-daemon-name* "default")
-(setq *emacsclient-load-file* "~/.stumpwm.d/emacsclient-load-file.el")
+(setq *stumpwm-temporary-directory* "/tmp/stumpwm")
 (setq *shell-program* (stumpwm::getenv "SHELL"))
 (setq *ignore-wm-inc-hints* t)
 
@@ -211,6 +211,8 @@
      (let ((last-nonmenu-event nil)(window-system "x"))(save-buffers-kill-emacs)))
    t))
 
+(add-hook *quit-hook* #'emacs-daemon-kill-soft)
+
 (defcommand emacs-daemon-kill-hard () ()
   (run-shell-command
    (format nil "for i in `ps ax | grep emacs | grep =~A |cut -d ' ' -f 1`; do kill -9 $i; done"
@@ -250,12 +252,25 @@
     (run-shell-command (concat "emacs -Q  --eval '" expression-string "'"))))
 
 (defcommand emacs-daemon-start () ()
-  (when (not (emacs-daemon-run-p))
+  (if (not (emacs-daemon-run-p))
     (run-shell-command
      (concat
       "x-terminal-emulator -T emacs-daemon-start -e emacs "
       (if *emacs-daemon-name* (concat "--daemon=" *emacs-daemon-name*)
-	  "--daemon")))))
+	  "--daemon")))
+    (message (format nil "emacs-daemon which name is \"~a\" is running ..." *emacs-daemon-name*))))
+
+ (defun random-string (length)
+   "Return a random string with LENGTH characters."
+   (let ((alphabet (concat
+		    "abcdefghijklmnopqrstuvwxyz"
+		    "0123456789"
+		    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+	 (string (make-string length)))
+     (map-into string (lambda (char)
+                        (declare (ignore char))
+                        (aref alphabet (random (length alphabet))))
+               string)))
 
 (defun emacsclient-eval (&optional expression create-frame frame-name file)
   "Eval an emacs lisp expression which emacsclient"
@@ -263,25 +278,30 @@
 	  (generate-elisp-expression-string expression))
 	 (name (or frame-name
 		   (escape-instance-name expression-string)))
+	 (elisp-file
+	  (make-pathname
+	   :directory (pathname-directory (pathname-as-directory  *stumpwm-temporary-directory*))
+	   :name (concat "emacsclient-load-file-" (random-string 10))
+	   :type "el"))
 	 (emacsclient-command
 	  (format nil
 		  (concat "emacsclient ~@[--socket-name=~A ~]"
 			  "~:[ ~;-c~] ~@[-F '((name . \"~A\"))' ~]"
-			  "~@[--eval '(load \"~A\")' ~] ~@[~A~]")
+			  "~@[--eval '(load \"~A\")' ~] ~@[~A~];")
 		  *emacs-daemon-name*
 		  create-frame
 		  name
-		  *emacsclient-load-file*
+		  elisp-file
 		  file)))
     ;; write emacs lisp sexp to a file, all symbol names
     ;; will be converted to downcase when save.
     (with-open-file
-	(stream (ensure-directories-exist *emacsclient-load-file*)
+	(stream (ensure-directories-exist elisp-file)
 		:direction :output
 		:if-exists :supersede)
       (with-standard-io-syntax
 	(format stream "~A" expression-string)))
-
+    
     ;; start emacs daemon
     (if (not (emacs-daemon-run-p))
 	(emacs-daemon-start)
@@ -787,8 +807,7 @@
 (run-shell-command "nm-applet")
 (run-shell-command "volti")
 (run-shell-command "xmodmap -e 'keycode 135 = Super_R'")
-(run-commands "emacs-daemon-kill-hard"
-	      "emacs-daemon-start")
+(run-commands "emacs-daemon-kill-hard" "emacs-daemon-start")
 
 ;; Local Variables:
 ;; coding: utf-8
