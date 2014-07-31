@@ -519,7 +519,8 @@
 	     (frames (group-frames group))
 	     (split-dumpfile
 	      (make-pathname
-	       :directory (pathname-directory (concat *stumpwm-dumpfile-dir* "/"))
+	       :directory (pathname-directory
+			   (pathname-as-directory *stumpwm-dumpfile-dir*))
 	       :name (concat group-name "-" "simple-split")
 	       :type "dumpfile")))
 	(if (< (length frames) 3)
@@ -543,7 +544,7 @@
 	     (frames (group-frames group))
 	     (complex-split-dumpfile
 	      (make-pathname
-	       :directory (pathname-directory (concat stumpwm-dumpfile-dir "/"))
+	       :directory (pathname-directory (pathname-as-directory *stumpwm-dumpfile-dir*))
 	       :name (concat group-name "-" "complex-split")
 	       :type "dumpfile")))
 	(if (> (length frames) 2)
