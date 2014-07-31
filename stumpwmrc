@@ -253,24 +253,24 @@
 
 (defcommand emacs-daemon-start () ()
   (if (not (emacs-daemon-run-p))
-    (run-shell-command
-     (concat
-      "x-terminal-emulator -T emacs-daemon-start -e emacs "
-      (if *emacs-daemon-name* (concat "--daemon=" *emacs-daemon-name*)
-	  "--daemon")))
-    (message (format nil "emacs-daemon which name is \"~a\" is running ..." *emacs-daemon-name*))))
+      (run-shell-command
+       (concat
+	"x-terminal-emulator -T emacs-daemon-start -e emacs "
+	(if *emacs-daemon-name* (concat "--daemon=" *emacs-daemon-name*)
+	    "--daemon")))
+      (message (format nil "emacs-daemon which name is \"~a\" is running ..." *emacs-daemon-name*))))
 
- (defun random-string (length)
-   "Return a random string with LENGTH characters."
-   (let ((alphabet (concat
-		    "abcdefghijklmnopqrstuvwxyz"
-		    "0123456789"
-		    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
-	 (string (make-string length)))
-     (map-into string (lambda (char)
-                        (declare (ignore char))
-                        (aref alphabet (random (length alphabet))))
-               string)))
+(defun random-string (length)
+  "Return a random string with LENGTH characters."
+  (let ((alphabet (concat
+		   "abcdefghijklmnopqrstuvwxyz"
+		   "0123456789"
+		   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+	(string (make-string length)))
+    (map-into string (lambda (char)
+		       (declare (ignore char))
+		       (aref alphabet (random (length alphabet))))
+	      string)))
 
 (defun emacsclient-eval (&optional expression create-frame frame-name file)
   "Eval an emacs lisp expression which emacsclient"
