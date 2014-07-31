@@ -305,7 +305,13 @@
     ;; start emacs daemon
     (if (not (emacs-daemon-run-p))
 	(emacs-daemon-start)
-	(my-run-or-raise emacsclient-command `(:instance ,name)))))
+	(my-run-or-raise emacsclient-command `(:instance ,name)))
+
+    ;; remove temporary elisp file
+    (when (probe-file elisp-file)
+      (run-shell-command
+       (format nil "sleep 3; rm ~A"
+	       (namestring elisp-file))))))
 
 (defcommand emacs () ()
   (emacsclient-eval '(recentf-open-files) t "emacs"))
