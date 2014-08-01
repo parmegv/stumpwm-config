@@ -109,13 +109,6 @@
 	(setf *swank-p* t)
 	(message "Starting swank on port 4005."))))
 
-(defcommand slime () ()
-  (swank)
-  (emacsclient-eval
-   `(progn
-      (require 'slime)
-      (slime-connect "127.0.0.1" "4005"))))
-
 (defun my-run-or-raise (cmd props &optional (all-groups *run-or-raise-all-groups*)
 				    (all-screens *run-or-raise-all-screens*))
   (let* ((group (current-group))
