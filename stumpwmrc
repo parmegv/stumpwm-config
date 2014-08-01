@@ -215,7 +215,7 @@
 
 (defcommand emacs-daemon-kill-hard () ()
   (run-shell-command
-   (format nil "for i in `ps ax | grep emacs | grep =~A |cut -d ' ' -f 1`; do kill -9 $i; done"
+   (format nil "for i in `ps aux | grep emacs | grep =~A | grep -v grep | awk '{print $2}'`; do kill -9 $i; done"
 	   *emacs-daemon-name*))
   (message (format nil "emacs daemon which name is (~A) has been killed" *emacs-daemon-name*)))
 
