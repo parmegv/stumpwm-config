@@ -324,6 +324,9 @@
 (defcommand gnus () ()
   (emacsclient-eval '(gnus) t))
 
+(defcommand calendar () ()
+  (emacsclient-eval '(eh-calendar) t))
+
 (defcommand emms () ()
   (emacsclient-eval '(eh-emms) t))
 
@@ -658,7 +661,8 @@
 (setf *emacs-map*
       (let ((m (stumpwm:make-sparse-keymap)))
 	(stumpwm:define-key m (stumpwm:kbd "e") "emacs")
-	(stumpwm:define-key m (stumpwm:kbd "c") "org-contacts")
+	(stumpwm:define-key m (stumpwm:kbd "i") "org-contacts")
+	(stumpwm:define-key m (stumpwm:kbd "c") "calendar")
 	(stumpwm:define-key m (stumpwm:kbd "g") "gnus")
 	(stumpwm:define-key m (stumpwm:kbd "a") "org-agenda")
 	(stumpwm:define-key m (stumpwm:kbd "m") "emms")
