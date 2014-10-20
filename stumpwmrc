@@ -321,6 +321,12 @@
   (substitute #\+ #\Space search)
   (emacsclient-eval `(progn (org-contacts ,search) (delete-other-windows)) t))
 
+(defcommand multi-term () ()
+  (emacsclient-eval '(multi-term) t))
+
+(defcommand eshell () ()
+  (emacsclient-eval '(eh-eshell) t))
+
 (defcommand gnus () ()
   (emacsclient-eval '(gnus) t))
 
@@ -637,13 +643,13 @@
 
 ;; Applications launched frequentily
 (define-key *root-map* (kbd "v") "file-manager")
-(define-key *root-map* (kbd "RET") "x-terminal-emulator")
+(define-key *root-map* (kbd "RET") "eshell")
 (define-key *root-map* (kbd "a") "org-agenda")
 (define-key *root-map* (kbd "Delete") "exec gksudo halt")
 (define-key *root-map* (kbd "L") "lock-screen")
 (define-key *root-map* (kbd "&") "exec x-terminal-emulator -e aptitude")
 (define-key *root-map* (kbd "x") "exec dmenu_run -i -b -fn '10x20' -p \"shell cmd:\"")
-(define-key *root-map* (kbd "c") "launch-new-terminal")
+(define-key *root-map* (kbd "c") "multi-term")
 (define-key *root-map* (kbd "C-c") "edit-stumpwmrc")
 
 (setf *applications-map*
@@ -663,6 +669,7 @@
 	(stumpwm:define-key m (stumpwm:kbd "e") "emacs")
 	(stumpwm:define-key m (stumpwm:kbd "i") "org-contacts")
 	(stumpwm:define-key m (stumpwm:kbd "c") "calendar")
+	(stumpwm:define-key m (stumpwm:kbd "s") "eshell")
 	(stumpwm:define-key m (stumpwm:kbd "g") "gnus")
 	(stumpwm:define-key m (stumpwm:kbd "a") "org-agenda")
 	(stumpwm:define-key m (stumpwm:kbd "m") "emms")
