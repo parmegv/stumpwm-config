@@ -61,7 +61,7 @@
 ;; (run-shell-command "rm .xsession-errors")
 ;; I link stumpwmrc-file to ~/.stumpwmrc
 (setq *stumpwmrc-file* "~/project/stumpwm-config/stumpwmrc")
-(set-contrib-dir "~/project/stumpwm-contrib/")
+(set-module-dir "~/project/stumpwm-contrib/")
 (setq *swank-loader-file* "~/project/emacs-packages/slime/swank-loader.lisp")
 (setq *debian-menu-file* "/var/lib/stumpwm/stumpwm.menu")
 (setq *stumpwm-dumpfile-dir* "~/.stumpwm-dumpfile.d")
@@ -71,7 +71,7 @@
 (setq *ignore-wm-inc-hints* t)
 
 ;; load contrib modules
-(mapcar #'load-module 
+(mapcar #'load-module
 	'("amixer"
 	  "cpu"
 	  "mem"
@@ -294,7 +294,7 @@
 		:if-exists :supersede)
       (with-standard-io-syntax
 	(format stream "~A" expression-string)))
-    
+
     ;; start emacs daemon
     (if (not (emacs-daemon-run-p))
 	(emacs-daemon-start)
@@ -692,13 +692,13 @@
 
 (setf *help-map*
       (let ((m (make-sparse-keymap)))
-        (define-key m (kbd "m") "man")
-        (define-key m (kbd "i") "info")
-        (define-key m (kbd "v") "describe-variable")
-        (define-key m (kbd "f") "describe-function")
-        (define-key m (kbd "k") "describe-key")
-        (define-key m (kbd "w") "where-is")
-        m))
+	(define-key m (kbd "m") "man")
+	(define-key m (kbd "i") "info")
+	(define-key m (kbd "v") "describe-variable")
+	(define-key m (kbd "f") "describe-function")
+	(define-key m (kbd "k") "describe-key")
+	(define-key m (kbd "w") "where-is")
+	m))
 
 (stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "f") '*applications-map*)
 (stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "e") '*emacs-map*)
@@ -761,8 +761,8 @@
 	(second minute hour date month year day-of-week dst-p tz)
       (get-decoded-time)
     (format nil "~d-~2,'0d-~2,'0d ~a ^B~2,'0d:~2,'0d:~2,'0d^b"
-            year month date (nth day-of-week *chinese-day-names*)
-            hour minute second)))
+	    year month date (nth day-of-week *chinese-day-names*)
+	    hour minute second)))
 
 (setf *group-format* "%s   [%n] %t                        ")
 (setf *screen-mode-line-format*
