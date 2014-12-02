@@ -23,6 +23,9 @@
 ;;
 ;;           # lxpanel &
 ;;           # bmpanel2 &
+;;           if [ -f ~/.bashrc ]; then
+;;                 source ~/.bashrc
+;;           fi
 ;;           exec /your/path/stumpwm
 ;;
 ;; 3.  安装字体： xfont-unifont
