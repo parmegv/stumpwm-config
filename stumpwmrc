@@ -47,13 +47,13 @@
 ;;     3. volti(一个小巧的音量调节器)
 ;;     4. xdotool(linux下面的按键精灵，我用这个软件自动拷贝文本)
 ;;     5. xsel(命令行程序，用来管理剪切板的内容)
-;; 5.  设置debian menu
+;; 6.  设置debian menu
 ;;     1. cp ./bin/menu-method/stumpwm /etc/menu-method/
 ;;     2. edit /etc/menu-method/stumpwn as appropriate BEFORE using
 ;;     3. sudo update-menus
 ;;     4. setf debian-menu-file to rootprefix's value
 ;;        (for example: /usr/share/common-lisp/source/stumpwm/contrib/stumpwm.menu)
-;; 6.  美化Java程序的字体：
+;; 7.  美化Java程序的字体：
 ;;     在/etc/environment文件中添加一行：
 ;;
 ;;        _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
