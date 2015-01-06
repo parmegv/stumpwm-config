@@ -838,7 +838,7 @@
 (run-commands "emacs-daemon-kill-hard" "emacs-daemon-start")
 
 ;; Local Variables:
-;; coding: utf-8
+;; coding: utf-8-unix
 ;; mode: lisp
 ;; End:
 
