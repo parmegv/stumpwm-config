@@ -75,17 +75,17 @@
 
 ;; load contrib modules
 (mapcar #'load-module
-	'("amixer"
-	  "cpu"
-	  "mem"
-	  "battery-portable"
-	  "net"
-	  "wifi"
-	  "disk"
-	  "app-menu"
-	  "stumptray"
-	  ;;"ttf-fonts"
-	  ))
+        '("amixer"
+          "cpu"
+          "mem"
+          "battery-portable"
+          "net"
+          "wifi"
+          "disk"
+          "app-menu"
+          "stumptray"
+          ;;"ttf-fonts"
+          ))
 
 ;; Add Groups
 (run-commands "gnewbg Pools" "gnewbg-float Float")
@@ -101,141 +101,141 @@
 
 ;; define swank command to start swank server on port 4005
 (defcommand swank () ()
-  "Starts a swank server on port 4005 and notifies the user."
-  (setf stumpwm:*top-level-error-action* :break)
-  (if *swank-p*
-      (message "Swank server already running.")
-      (progn
-	(swank:create-server :port 4005
-			     :style swank:*communication-style*
-			     :dont-close t)
-	(setf *swank-p* t)
-	(message "Starting swank on port 4005."))))
+            "Starts a swank server on port 4005 and notifies the user."
+            (setf stumpwm:*top-level-error-action* :break)
+            (if *swank-p*
+                (message "Swank server already running.")
+                (progn
+                  (swank:create-server :port 4005
+                                       :style swank:*communication-style*
+                                       :dont-close t)
+                  (setf *swank-p* t)
+                  (message "Starting swank on port 4005."))))
 
 (defun my-run-or-raise (cmd props &optional (all-groups *run-or-raise-all-groups*)
-				    (all-screens *run-or-raise-all-screens*))
+                                    (all-screens *run-or-raise-all-screens*))
   (let* ((group (current-group))
-	 (frames (when (eq (type-of group) 'tile-group)
-		   (group-frames group))))
+         (frames (when (eq (type-of group) 'tile-group)
+                   (group-frames group))))
     (if (> (length frames) 1)
-	(run-or-pull cmd props all-groups all-screens)
-	(run-or-raise cmd props all-groups all-screens))))
+        (run-or-pull cmd props all-groups all-screens)
+        (run-or-raise cmd props all-groups all-screens))))
 
 (defcommand suspend-computer () ()
-  (run-shell-command
-   (concat  "dbus-send --print-reply --system  "
-	    "--dest=\"org.freedesktop.UPower\"  "
-	    "/org/freedesktop/UPower  "
-	    "org.freedesktop.UPower.Suspend")))
+            (run-shell-command
+             (concat  "dbus-send --print-reply --system  "
+                      "--dest=\"org.freedesktop.UPower\"  "
+                      "/org/freedesktop/UPower  "
+                      "org.freedesktop.UPower.Suspend")))
 
 (defcommand hibernate-computer () ()
-  (run-shell-command
-   (concat "dbus-send --print-reply --system  "
-	   "--dest=\"org.freedesktop.UPower\"  "
-	   "/org/freedesktop/UPower  "
-	   "org.freedesktop.UPower.Hibernate")))
+            (run-shell-command
+             (concat "dbus-send --print-reply --system  "
+                     "--dest=\"org.freedesktop.UPower\"  "
+                     "/org/freedesktop/UPower  "
+                     "org.freedesktop.UPower.Hibernate")))
 
 (defcommand restart-computer () ()
-  (run-shell-command
-   (concat "dbus-send --print-reply --system "
-	   "--dest=\"org.freedesktop.ConsoleKit\" "
-	   "/org/freedesktop/ConsoleKit/Manager "
-	   "org.freedesktop.ConsoleKit.Manager.Restart")))
+            (run-shell-command
+             (concat "dbus-send --print-reply --system "
+                     "--dest=\"org.freedesktop.ConsoleKit\" "
+                     "/org/freedesktop/ConsoleKit/Manager "
+                     "org.freedesktop.ConsoleKit.Manager.Restart")))
 
 (defcommand shutdown-commputer () ()
-  (run-shell-command
-   (concat "dbus-send --print-reply --system  "
-	   "--dest=\"org.freedesktop.ConsoleKit\"  "
-	   "/org/freedesktop/ConsoleKit/Manager "
-	   "org.freedesktop.ConsoleKit.Manager.Stop")))
+            (run-shell-command
+             (concat "dbus-send --print-reply --system  "
+                     "--dest=\"org.freedesktop.ConsoleKit\"  "
+                     "/org/freedesktop/ConsoleKit/Manager "
+                     "org.freedesktop.ConsoleKit.Manager.Stop")))
 
 (defcommand firefox () ()
-  "Start Firefox or switch to it, if it is already running."
-  (my-run-or-raise "iceweasel" '(:class "Iceweasel")))
+            "Start Firefox or switch to it, if it is already running."
+            (my-run-or-raise "iceweasel" '(:class "Iceweasel")))
 
 (defcommand file-manager () ()
-  "Start nautilus"
-  (my-run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
+            "Start nautilus"
+            (my-run-or-raise "nautilus --no-desktop" '(:class "Nautilus")))
 
 (defcommand crossover () ()
-  "Start crossover"
-  (my-run-or-raise "/opt/cxoffice/bin/crossover" '(:class "Crossover")))
+            "Start crossover"
+            (my-run-or-raise "/opt/cxoffice/bin/crossover" '(:class "Crossover")))
 
 (defcommand launch-crossover-app (app bottle) ()
-  (my-run-or-raise
-   (format nil "/opt/cxoffice/bin/wine --bottle ~a --cx-app '~a'" bottle app)
-   `(:instance ,app)))
+            (my-run-or-raise
+             (format nil "/opt/cxoffice/bin/wine --bottle ~a --cx-app '~a'" bottle app)
+             `(:instance ,app)))
 
 (defcommand foxit () ()
-  (launch-crossover-app "Foxit Reader.exe" "Foxit_Reader_6"))
+            (launch-crossover-app "Foxit Reader.exe" "Foxit_Reader_6"))
 
 (defcommand cajviewer () ()
-  (launch-crossover-app "CAJVieweru.exe" "cajviewer"))
+            (launch-crossover-app "CAJVieweru.exe" "cajviewer"))
 
 (defcommand qq () ()
-  (launch-crossover-app "TM.exe" "腾讯_TM_2013"))
+            (launch-crossover-app "TM.exe" "腾讯_TM_2013"))
 
 (defcommand word () ()
-  (launch-crossover-app "WINWORD.EXE" "office2003"))
+            (launch-crossover-app "WINWORD.EXE" "office2003"))
 
 (defcommand excel () ()
-  (launch-crossover-app "EXCEL.EXE" "office2003"))
+            (launch-crossover-app "EXCEL.EXE" "office2003"))
 
 (defcommand ppt () ()
-  (launch-crossover-app "POWERPNT.EXE" "office2003"))
+            (launch-crossover-app "POWERPNT.EXE" "office2003"))
 
 (defcommand winxp () ()
-  "Start winxp with virtualbox"
-  (my-run-or-raise
-   "VBoxManage startvm winxp &"
-   '(:class "VirtualBox")))
+            "Start winxp with virtualbox"
+            (my-run-or-raise
+             "VBoxManage startvm winxp &"
+             '(:class "VirtualBox")))
 
 (defcommand jabref () ()
-  "Start jabref"
-  (my-run-or-raise
-   "java -jar ~/bin/JabRef-2.10.jar"
-   '(:class "net-sf-jabref-JabRefMain")))
+            "Start jabref"
+            (my-run-or-raise
+             "java -jar ~/bin/JabRef-2.10.jar"
+             '(:class "net-sf-jabref-JabRefMain")))
 
 (defcommand emacs-daemon-kill-soft () ()
-  (emacsclient-eval
-   '(progn
-     (when (not (eq window-system 'x))
-       (message "Initializing x windows system.")
-       (x-initialize-window-system)
-       (when (not x-display-name) (setq x-display-name (getenv "DISPLAY")))
-       (select-frame (make-frame-on-display x-display-name '((window-system . x)))))
-     (let ((last-nonmenu-event nil)(window-system "x"))(save-buffers-kill-emacs)))
-   t))
+            (emacsclient-eval
+             '(progn
+               (when (not (eq window-system 'x))
+                 (message "Initializing x windows system.")
+                 (x-initialize-window-system)
+                 (when (not x-display-name) (setq x-display-name (getenv "DISPLAY")))
+                 (select-frame (make-frame-on-display x-display-name '((window-system . x)))))
+               (let ((last-nonmenu-event nil)(window-system "x"))(save-buffers-kill-emacs)))
+             t))
 
 (add-hook *quit-hook* #'emacs-daemon-kill-soft)
 
 (defcommand emacs-daemon-kill-hard () ()
-  (run-shell-command
-   (format nil "for i in `ps aux | grep emacs | grep =~A | grep -v grep | awk '{print $2}'`; do kill -9 $i; done"
-	   *emacs-daemon-name*))
-  (message (format nil "emacs daemon which name is (~A) has been killed" *emacs-daemon-name*)))
+            (run-shell-command
+             (format nil "for i in `ps aux | grep emacs | grep =~A | grep -v grep | awk '{print $2}'`; do kill -9 $i; done"
+                     *emacs-daemon-name*))
+            (message (format nil "emacs daemon which name is (~A) has been killed" *emacs-daemon-name*)))
 
 (defun escape-instance-name (str)
   (let (buf)
     (map nil #'(lambda (ch)
-		 (if (or (char= ch #\()
-			 (char= ch #\))
-			 (char= ch #\")
-			 (char= ch #\ )
-			 (char= ch #\Newline))
-		     (push #\_ buf)
-		     (push ch buf)))
-	 str)
+                 (if (or (char= ch #\()
+                         (char= ch #\))
+                         (char= ch #\")
+                         (char= ch #\ )
+                         (char= ch #\Newline))
+                     (push #\_ buf)
+                     (push ch buf)))
+         str)
     (coerce (reverse buf) 'string)))
 
 (defun emacs-daemon-run-p ()
   (string-equal
    (remove #\Newline
-	   (run-shell-command
-	    (concat
-	     "emacsclient "
-	     "--socket-name=" *emacs-daemon-name*
-	     " --eval 't'") t)) "t"))
+           (run-shell-command
+            (concat
+             "emacsclient "
+             "--socket-name=" *emacs-daemon-name*
+             " --eval 't'") t)) "t"))
 
 (defun generate-elisp-expression-string (expression)
   (cl-ppcre:regex-replace-all
@@ -243,201 +243,201 @@
    (write-to-string expression :case :downcase) ""))
 
 (defcommand bare-emacs-run (expression) ()
-  (let ((expression-string
-	 (generate-elisp-expression-string expression)))
-    (run-shell-command (concat "emacs -Q  --eval '" expression-string "'"))))
+            (let ((expression-string
+                   (generate-elisp-expression-string expression)))
+              (run-shell-command (concat "emacs -Q  --eval '" expression-string "'"))))
 
 (defcommand emacs-daemon-start () ()
-  (if (not (emacs-daemon-run-p))
-      (run-shell-command
-       (concat
-	"x-terminal-emulator -T emacs-daemon-start -e emacs "
-	(if *emacs-daemon-name* (concat "--daemon=" *emacs-daemon-name*)
-	    "--daemon")))
-      (message (format nil "emacs-daemon which name is \"~a\" is running ..." *emacs-daemon-name*))))
+            (if (not (emacs-daemon-run-p))
+                (run-shell-command
+                 (concat
+                  "x-terminal-emulator -T emacs-daemon-start -e emacs "
+                  (if *emacs-daemon-name* (concat "--daemon=" *emacs-daemon-name*)
+                      "--daemon")))
+                (message (format nil "emacs-daemon which name is \"~a\" is running ..." *emacs-daemon-name*))))
 
 (defun random-string (length)
   "Return a random string with LENGTH characters."
   (let ((alphabet (concat
-		   "abcdefghijklmnopqrstuvwxyz"
-		   "0123456789"
-		   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
-	(string (make-string length)))
+                   "abcdefghijklmnopqrstuvwxyz"
+                   "0123456789"
+                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+        (string (make-string length)))
     (map-into string (lambda (char)
-		       (declare (ignore char))
-		       (aref alphabet (random (length alphabet))))
-	      string)))
+                       (declare (ignore char))
+                       (aref alphabet (random (length alphabet))))
+              string)))
 
 (defun emacsclient-eval (&optional expression create-frame frame-name file)
   "Eval an emacs lisp expression which emacsclient"
   (let* ((expression-string
-	  (generate-elisp-expression-string expression))
-	 (name (or frame-name
-		   (escape-instance-name expression-string)))
-	 (elisp-file
-	  (make-pathname
-	   :directory (pathname-directory (pathname-as-directory  *stumpwm-temporary-directory*))
-	   :name (concat "emacsclient-load-file-" (random-string 10))
-	   :type "el"))
-	 (emacsclient-command
-	  (format nil
-		  (concat "emacsclient ~@[--socket-name=~A ~]"
-			  "~:[ ~;-c~] ~@[-F '((name . \"~A\"))' ~]"
-			  "~@[--eval '(load \"~A\")' ~] ~@[~A~];")
-		  *emacs-daemon-name*
-		  create-frame
-		  name
-		  elisp-file
-		  file)))
+          (generate-elisp-expression-string expression))
+         (name (or frame-name
+                   (escape-instance-name expression-string)))
+         (elisp-file
+          (make-pathname
+           :directory (pathname-directory (pathname-as-directory  *stumpwm-temporary-directory*))
+           :name (concat "emacsclient-load-file-" (random-string 10))
+           :type "el"))
+         (emacsclient-command
+          (format nil
+                  (concat "emacsclient ~@[--socket-name=~A ~]"
+                          "~:[ ~;-c~] ~@[-F '((name . \"~A\"))' ~]"
+                          "~@[--eval '(load \"~A\")' ~] ~@[~A~];")
+                  *emacs-daemon-name*
+                  create-frame
+                  name
+                  elisp-file
+                  file)))
     ;; write emacs lisp sexp to a file, all symbol names
     ;; will be converted to downcase when save.
     (with-open-file
-	(stream (ensure-directories-exist elisp-file)
-		:direction :output
-		:if-exists :supersede)
+        (stream (ensure-directories-exist elisp-file)
+                :direction :output
+                :if-exists :supersede)
       (with-standard-io-syntax
-	(format stream "~A" expression-string)))
+        (format stream "~A" expression-string)))
 
     ;; start emacs daemon
     (if (not (emacs-daemon-run-p))
-	(emacs-daemon-start)
-	(my-run-or-raise emacsclient-command `(:instance ,name)))
+        (emacs-daemon-start)
+        (my-run-or-raise emacsclient-command `(:instance ,name)))
 
     ;; remove temporary elisp file
     (when (probe-file elisp-file)
       (run-shell-command
        (format nil "sleep 3; rm ~A"
-	       (namestring elisp-file))))))
+               (namestring elisp-file))))))
 
 (defcommand emacs () ()
-  (emacsclient-eval '(recentf-open-files) t "emacs"))
+            (emacsclient-eval '(recentf-open-files) t "emacs"))
 
 (defcommand emacspeak () ()
-  (run-shell-command "emacs --eval '(load-emacspeak)'"))
+            (run-shell-command "emacs --eval '(load-emacspeak)'"))
 
 (defcommand org-agenda () ()
-  (emacsclient-eval '(progn (org-agenda nil "l") (delete-other-windows)) t))
+            (emacsclient-eval '(progn (org-agenda nil "l") (delete-other-windows)) t))
 
 (defcommand org-contacts (search)
-    ((:string "Search Contacts: "))
+  ((:string "Search Contacts: "))
   (check-type search string)
   (substitute #\+ #\Space search)
   (emacsclient-eval `(progn (org-contacts ,search) (delete-other-windows)) t))
 
 (defcommand multi-term () ()
-  (emacsclient-eval '(multi-term) t))
+            (emacsclient-eval '(multi-term) t))
 
 (defcommand eshell () ()
-  (emacsclient-eval '(eh-eshell) t))
+            (emacsclient-eval '(eh-eshell) t))
 
 (defcommand gnus () ()
-  (emacsclient-eval '(gnus) t))
+            (emacsclient-eval '(gnus) t))
 
 (defcommand calendar () ()
-  (emacsclient-eval '(eh-calendar) t))
+            (emacsclient-eval '(eh-calendar) t))
 
 (defcommand emms () ()
-  (emacsclient-eval '(eh-emms) t))
+            (emacsclient-eval '(eh-emms) t))
 
 (defcommand emms-toggle () ()
-  (emacsclient-eval '(if emms-player-playing-p (emms-pause) (emms-random))))
+            (emacsclient-eval '(if emms-player-playing-p (emms-pause) (emms-random))))
 
 (defcommand emms-previous () ()
-  (emacsclient-eval '(emms-previous)))
+            (emacsclient-eval '(emms-previous)))
 
 (defcommand emms-random () ()
-  (emacsclient-eval '(emms-random)))
+            (emacsclient-eval '(emms-random)))
 
 (defcommand emms-next () ()
-  (emacsclient-eval '(emms-next)))
+            (emacsclient-eval '(emms-next)))
 
 (defcommand edit-stumpwmrc () ()
-  (emacsclient-eval
-   `(find-file ,*stumpwmrc-file*)
-   t "edit-stumpwmrc"))
+            (emacsclient-eval
+             `(find-file ,*stumpwmrc-file*)
+             t "edit-stumpwmrc"))
 
 (defcommand org-capture-notes () ()
-  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "n"))))
+            (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "n"))))
 
 (defcommand org-capture-simple () ()
-  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "s"))))
+            (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "s"))))
 
 (defcommand org-capture-todo () ()
-  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "t"))))
+            (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "t"))))
 
 (defcommand org-capture-account () ()
-  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "a"))))
+            (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "a"))))
 
 (defcommand org-capture-journal () ()
-  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "j"))))
+            (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "j"))))
 
 (defcommand org-capture-schedule () ()
-  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "s"))))
+            (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "s"))))
 
 (defcommand org-capture-contacts () ()
-  (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "c"))))
+            (emacsclient-eval '(progn (kill-new "") (eh-org-capture nil "c"))))
 
 (defcommand pidgin () ()
-  (run-shell-command "pkill pidgin; pidgin"))
+            (run-shell-command "pkill pidgin; pidgin"))
 
 (defcommand mplayer () ()
-  (my-run-or-raise "smplayer" '(:class "Smplayer")))
+            (my-run-or-raise "smplayer" '(:class "Smplayer")))
 
 (defcommand top () ()
-  (my-run-or-raise "x-terminal-emulator -t htop -e htop" '(:title "htop")))
+            (my-run-or-raise "x-terminal-emulator -t htop -e htop" '(:title "htop")))
 
 (defcommand x-terminal-emulator () ()
-  (my-run-or-raise "x-terminal-emulator -t default-terminal"
-		   '(:title "default-terminal")))
+            (my-run-or-raise "x-terminal-emulator -t default-terminal"
+                             '(:title "default-terminal")))
 
 (defcommand launch-new-terminal () ()
-  (run-shell-command "x-terminal-emulator"))
+            (run-shell-command "x-terminal-emulator"))
 
 (defcommand power-manager () ()
-  (run-shell-command "xfce4-power-manager-settings"))
+            (run-shell-command "xfce4-power-manager-settings"))
 
 (defcommand goagent () ()
-  (my-run-or-raise "python ~/project/goagent/local/goagent-gtk.py"
-		   '(:title "goagent-gtk.py")))
+            (my-run-or-raise "python ~/project/goagent/local/goagent-gtk.py"
+                             '(:title "goagent-gtk.py")))
 
 (defcommand lock-screen () ()
-  (run-shell-command "exec xscreensaver-command -lock"))
+            (run-shell-command "exec xscreensaver-command -lock"))
 
 (defcommand reinit () ()
-  "docstring"
-  (run-commands "reload" "loadrc"))
+            "docstring"
+            (run-commands "reload" "loadrc"))
 
 (defcommand gmove-to-pools () ()
-  (run-commands "gmove Pools")
-  (message "Move the window to GROUP: Pools"))
+            (run-commands "gmove Pools")
+            (message "Move the window to GROUP: Pools"))
 
 (defun load-debian-menu-file ()
   (with-open-file (file *debian-menu-file*)
     ;; Hack around the "autogenerated file" comment
     (when (char= #\# (peek-char nil file)) (read-line file))
     (let* ((*read-eval* nil)
-	   (list (list (read file))))
+           (list (list (read file))))
       (dotimes (i 1) (setf list (mapcan #'cdr list)))
       list)))
 
 (defcommand show-debian-menu () ()
-  "Show the application menu"
-  (let ((stack (list (load-debian-menu-file)))
-	(menu-split-line
-	 (list (cons (make-string 60 :initial-element #\-) nil))))
-    (loop
-       (let ((choice
-	      (cdr (select-from-menu (current-screen)
-				     (append menu-split-line
-					     (first stack)
-					     menu-split-line
-					     (list (cons "* 返回上一级菜单" :up))
-					     menu-split-line)))))
-	 (cond
-	   ((not choice) (return))
-	   ((eq choice :up) (pop stack) (unless stack (return)))
-	   ((stringp choice) (run-shell-command choice) (return))
-	   (t (push choice stack)))))))
+            "Show the application menu"
+            (let ((stack (list (load-debian-menu-file)))
+                  (menu-split-line
+                   (list (cons (make-string 60 :initial-element #\-) nil))))
+              (loop
+                 (let ((choice
+                        (cdr (select-from-menu (current-screen)
+                                               (append menu-split-line
+                                                       (first stack)
+                                                       menu-split-line
+                                                       (list (cons "* 返回上一级菜单" :up))
+                                                       menu-split-line)))))
+                   (cond
+                     ((not choice) (return))
+                     ((eq choice :up) (pop stack) (unless stack (return)))
+                     ((stringp choice) (run-shell-command choice) (return))
+                     (t (push choice stack)))))))
 
 (defparameter *start-menu*
   '(("---------------------------------------------------")
@@ -482,130 +482,130 @@
     ("---------------------------------------------------")))
 
 (defcommand show-start-menu () ()
-  "show-start-menu"
-  (labels ((pick (options)
-	     (let ((selection (stumpwm::select-from-menu
-			       (current-screen) options "")))
-	       (cond
-		 ((null selection)
-		  (throw 'stumpwm::error "Abort."))
-		 ((stringp (second selection))
-		  (second selection))
-		 (t
-		  (pick (cdr selection)))))))
-    (let ((choice (pick
-		   (mapcar #'(lambda (x)
-			       (list
-				(if (car (cdr x))
-				    (format nil "~10A | ~30A" (nth 0 x) (concat (nth 1 x) "(" (nth 2 x) ")"))
-				    (make-string 60 :initial-element #\-))
-				(nth 2 x)))
-			   *start-menu*))))
-      ;; If a function can be found, which name is "choice", run this function,
-      ;; otherwise regard "choice" as shell command.
-      (if (find choice (all-commands) :test #'equal)
-	  (run-commands choice)
-	  (run-shell-command choice)))))
+            "show-start-menu"
+            (labels ((pick (options)
+                       (let ((selection (stumpwm::select-from-menu
+                                         (current-screen) options "")))
+                         (cond
+                           ((null selection)
+                            (throw 'stumpwm::error "Abort."))
+                           ((stringp (second selection))
+                            (second selection))
+                           (t
+                            (pick (cdr selection)))))))
+              (let ((choice (pick
+                             (mapcar #'(lambda (x)
+                                         (list
+                                          (if (car (cdr x))
+                                              (format nil "~10A | ~30A" (nth 0 x) (concat (nth 1 x) "(" (nth 2 x) ")"))
+                                              (make-string 60 :initial-element #\-))
+                                          (nth 2 x)))
+                                     *start-menu*))))
+                ;; If a function can be found, which name is "choice", run this function,
+                ;; otherwise regard "choice" as shell command.
+                (if (find choice (all-commands) :test #'equal)
+                    (run-commands choice)
+                    (run-shell-command choice)))))
 
 (defun shift-windows-forward (frames win)
   (when frames
     (let ((frame (car frames)))
       (shift-windows-forward (cdr frames)
-			     (frame-window frame))
+                             (frame-window frame))
       (when win
-	(pull-window win frame)))))
+        (pull-window win frame)))))
 
 (defcommand rotate-windows () ()
-  "swap 2 windows"
-  (let* ((frames (group-frames (current-group)))
-	 (win (frame-window (car (last frames)))))
-    (shift-windows-forward frames win)))
+            "swap 2 windows"
+            (let* ((frames (group-frames (current-group)))
+                   (win (frame-window (car (last frames)))))
+              (shift-windows-forward frames win)))
 
 (defcommand toggle-split () ()
-  "toggle frame split"
-  (if (eq (type-of (current-group)) 'float-group)
-      (message "Works only in tile group ...")
-      (let* ((group (current-group))
-	     (group-name (group-name group))
-	     (frames (group-frames group))
-	     (split-dumpfile
-	      (make-pathname
-	       :directory (pathname-directory
-			   (pathname-as-directory *stumpwm-dumpfile-dir*))
-	       :name (concat group-name "-" "simple-split")
-	       :type "dumpfile")))
-	(if (< (length frames) 3)
-	    (if (> (length frames) 1)
-		(progn
-		  (dump-group-to-file split-dumpfile)
-		  (only))
-		(progn
-		  (only)
-		  (hsplit)
-		  (when (probe-file split-dumpfile)
-		    (restore-from-file split-dumpfile))))
-	    (message "Works only with 2 frames ... ")))))
+            "toggle frame split"
+            (if (eq (type-of (current-group)) 'float-group)
+                (message "Works only in tile group ...")
+                (let* ((group (current-group))
+                       (group-name (group-name group))
+                       (frames (group-frames group))
+                       (split-dumpfile
+                        (make-pathname
+                         :directory (pathname-directory
+                                     (pathname-as-directory *stumpwm-dumpfile-dir*))
+                         :name (concat group-name "-" "simple-split")
+                         :type "dumpfile")))
+                  (if (< (length frames) 3)
+                      (if (> (length frames) 1)
+                          (progn
+                            (dump-group-to-file split-dumpfile)
+                            (only))
+                          (progn
+                            (only)
+                            (hsplit)
+                            (when (probe-file split-dumpfile)
+                              (restore-from-file split-dumpfile))))
+                      (message "Works only with 2 frames ... ")))))
 
 (defcommand toggle-complex-split () ()
-  "toggle between complex split and none split"
-  (if (eq (type-of (current-group)) 'float-group)
-      (message "Works only in tile group ...")
-      (let* ((group (current-group))
-	     (group-name (group-name group))
-	     (frames (group-frames group))
-	     (complex-split-dumpfile
-	      (make-pathname
-	       :directory (pathname-directory (pathname-as-directory *stumpwm-dumpfile-dir*))
-	       :name (concat group-name "-" "complex-split")
-	       :type "dumpfile")))
-	(if (> (length frames) 2)
-	    (progn
-	      (dump-group-to-file complex-split-dumpfile)
-	      (only))
-	    (restore-from-file complex-split-dumpfile)))))
+            "toggle between complex split and none split"
+            (if (eq (type-of (current-group)) 'float-group)
+                (message "Works only in tile group ...")
+                (let* ((group (current-group))
+                       (group-name (group-name group))
+                       (frames (group-frames group))
+                       (complex-split-dumpfile
+                        (make-pathname
+                         :directory (pathname-directory (pathname-as-directory *stumpwm-dumpfile-dir*))
+                         :name (concat group-name "-" "complex-split")
+                         :type "dumpfile")))
+                  (if (> (length frames) 2)
+                      (progn
+                        (dump-group-to-file complex-split-dumpfile)
+                        (only))
+                      (restore-from-file complex-split-dumpfile)))))
 
 (defcommand group-move () ()
-  (let* ((group-format "MOVE TO:     [%n] %t                ")
-	 (current-window (current-window))
-	 (group
-	  (second (select-from-menu
-		   (current-screen)
-		   (mapcar (lambda (g)
-			     (list (format-expand *group-formatters* group-format g) g))
-			   (screen-groups (current-screen)))))))
-    (when (and group current-window)
-      (move-window-to-group current-window group)
-      (message "Move successful ...."))))
+            (let* ((group-format "MOVE TO:     [%n] %t                ")
+                   (current-window (current-window))
+                   (group
+                    (second (select-from-menu
+                             (current-screen)
+                             (mapcar (lambda (g)
+                                       (list (format-expand *group-formatters* group-format g) g))
+                                     (screen-groups (current-screen)))))))
+              (when (and group current-window)
+                (move-window-to-group current-window group)
+                (message "Move successful ...."))))
 
 (defcommand (frame-pull-hidden-next tile-group) (frame-number) ((:frame t))
-  (let* ((group (current-group))
-	 (frame (tile-group-current-frame group)))
-    (focus-frame group frame-number)
-    (pull-hidden-next)
-    (fselect frame)))
+            (let* ((group (current-group))
+                   (frame (tile-group-current-frame group)))
+              (focus-frame group frame-number)
+              (pull-hidden-next)
+              (fselect frame)))
 
 (defcommand (frame-pull-hidden-previous tile-group) (frame-number) ((:frame t))
-  (let* ((group (current-group))
-	 (frame (tile-group-current-frame group)))
-    (focus-frame group frame-number)
-    (pull-hidden-previous)
-    (fselect frame)))
+            (let* ((group (current-group))
+                   (frame (tile-group-current-frame group)))
+              (focus-frame group frame-number)
+              (pull-hidden-previous)
+              (fselect frame)))
 
 (defcommand (resize-master-frame tile-group) (width height) ((:number "+ Width: ")
-							     (:number "+ Height: "))
-  (let* ((group (current-group))
-	 (cur-frame (tile-group-current-frame group))
-	 (frames (group-frames group))
-	 (frame (tile-group-current-frame group)))
-    (cond
-      ((eq (length frames) 2)
-       (progn
-	 (run-commands "fselect 1")
-	 (resize width height)
-	 (fselect frame)))
-      ((eq (length frames) 1)
-       (toggle-split))
-      (t (message "Works only with 2 frames")))))
+                                                             (:number "+ Height: "))
+            (let* ((group (current-group))
+                   (cur-frame (tile-group-current-frame group))
+                   (frames (group-frames group))
+                   (frame (tile-group-current-frame group)))
+              (cond
+                ((eq (length frames) 2)
+                 (progn
+                   (run-commands "fselect 1")
+                   (resize width height)
+                   (fselect frame)))
+                ((eq (length frames) 1)
+                 (toggle-split))
+                (t (message "Works only with 2 frames")))))
 
 ;; keybindings for split frame
 (define-key *root-map* (kbd "C-0") "only")
@@ -657,51 +657,51 @@
 
 (setf *applications-map*
       (let ((m (stumpwm:make-sparse-keymap)))
-	(stumpwm:define-key m (stumpwm:kbd "g") "goagent")
-	(stumpwm:define-key m (stumpwm:kbd "f") "firefox")
-	(stumpwm:define-key m (stumpwm:kbd "q") "qq")
-	(stumpwm:define-key m (stumpwm:kbd "j") "jabref")
-	(stumpwm:define-key m (stumpwm:kbd "c") "cajviewer")
-	(stumpwm:define-key m (stumpwm:kbd "p") "pdfreader")
-	(stumpwm:define-key m (stumpwm:kbd "w") "winxp")
-	m ; NOTE: this is important
-	))
+        (stumpwm:define-key m (stumpwm:kbd "g") "goagent")
+        (stumpwm:define-key m (stumpwm:kbd "f") "firefox")
+        (stumpwm:define-key m (stumpwm:kbd "q") "qq")
+        (stumpwm:define-key m (stumpwm:kbd "j") "jabref")
+        (stumpwm:define-key m (stumpwm:kbd "c") "cajviewer")
+        (stumpwm:define-key m (stumpwm:kbd "p") "pdfreader")
+        (stumpwm:define-key m (stumpwm:kbd "w") "winxp")
+        m ; NOTE: this is important
+        ))
 
 (setf *emacs-map*
       (let ((m (stumpwm:make-sparse-keymap)))
-	(stumpwm:define-key m (stumpwm:kbd "e") "emacs")
-	(stumpwm:define-key m (stumpwm:kbd "i") "org-contacts")
-	(stumpwm:define-key m (stumpwm:kbd "c") "calendar")
-	(stumpwm:define-key m (stumpwm:kbd "s") "eshell")
-	(stumpwm:define-key m (stumpwm:kbd "g") "gnus")
-	(stumpwm:define-key m (stumpwm:kbd "a") "org-agenda")
-	(stumpwm:define-key m (stumpwm:kbd "m") "emms")
-	(stumpwm:define-key m (stumpwm:kbd "k") "emacs-daemon-kill-soft")
-	(stumpwm:define-key m (stumpwm:kbd "K") "emacs-daemon-kill-hard")
-	m ; NOTE: this is important
-	))
+        (stumpwm:define-key m (stumpwm:kbd "e") "emacs")
+        (stumpwm:define-key m (stumpwm:kbd "i") "org-contacts")
+        (stumpwm:define-key m (stumpwm:kbd "c") "calendar")
+        (stumpwm:define-key m (stumpwm:kbd "s") "eshell")
+        (stumpwm:define-key m (stumpwm:kbd "g") "gnus")
+        (stumpwm:define-key m (stumpwm:kbd "a") "org-agenda")
+        (stumpwm:define-key m (stumpwm:kbd "m") "emms")
+        (stumpwm:define-key m (stumpwm:kbd "k") "emacs-daemon-kill-soft")
+        (stumpwm:define-key m (stumpwm:kbd "K") "emacs-daemon-kill-soft")
+        m ; NOTE: this is important
+        ))
 
 (setf *org-capture-map*
       (let ((m (stumpwm:make-sparse-keymap)))
-	(stumpwm:define-key m (stumpwm:kbd "d") "org-capture-notes")
-	(stumpwm:define-key m (stumpwm:kbd "e") "org-capture-simple")
-	(stumpwm:define-key m (stumpwm:kbd "c") "org-capture-contacts")
-	(stumpwm:define-key m (stumpwm:kbd "a") "org-capture-account")
-	(stumpwm:define-key m (stumpwm:kbd "j") "org-capture-journal")
-	(stumpwm:define-key m (stumpwm:kbd "t") "org-capture-todo")
-	(stumpwm:define-key m (stumpwm:kbd "s") "org-capture-schedule")
-	m ; NOTE: this is important
-	))
+        (stumpwm:define-key m (stumpwm:kbd "d") "org-capture-notes")
+        (stumpwm:define-key m (stumpwm:kbd "e") "org-capture-simple")
+        (stumpwm:define-key m (stumpwm:kbd "c") "org-capture-contacts")
+        (stumpwm:define-key m (stumpwm:kbd "a") "org-capture-account")
+        (stumpwm:define-key m (stumpwm:kbd "j") "org-capture-journal")
+        (stumpwm:define-key m (stumpwm:kbd "t") "org-capture-todo")
+        (stumpwm:define-key m (stumpwm:kbd "s") "org-capture-schedule")
+        m ; NOTE: this is important
+        ))
 
 (setf *help-map*
       (let ((m (make-sparse-keymap)))
-	(define-key m (kbd "m") "man")
-	(define-key m (kbd "i") "info")
-	(define-key m (kbd "v") "describe-variable")
-	(define-key m (kbd "f") "describe-function")
-	(define-key m (kbd "k") "describe-key")
-	(define-key m (kbd "w") "where-is")
-	m))
+        (define-key m (kbd "m") "man")
+        (define-key m (kbd "i") "info")
+        (define-key m (kbd "v") "describe-variable")
+        (define-key m (kbd "f") "describe-function")
+        (define-key m (kbd "k") "describe-key")
+        (define-key m (kbd "w") "where-is")
+        m))
 
 (stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "f") '*applications-map*)
 (stumpwm:define-key stumpwm:*root-map* (stumpwm:kbd "e") '*emacs-map*)
@@ -761,11 +761,11 @@
 (defun current-date ()
   "Returns the date formatted as `2009-11-16 一 11:34:03'."
   (multiple-value-bind
-	(second minute hour date month year day-of-week dst-p tz)
+        (second minute hour date month year day-of-week dst-p tz)
       (get-decoded-time)
     (format nil "~d-~2,'0d-~2,'0d ~a ^B~2,'0d:~2,'0d:~2,'0d^b"
-	    year month date (nth day-of-week *chinese-day-names*)
-	    hour minute second)))
+            year month date (nth day-of-week *chinese-day-names*)
+            hour minute second)))
 
 (setf *group-format* "%s   [%n] %t                        ")
 (setf *screen-mode-line-format*
