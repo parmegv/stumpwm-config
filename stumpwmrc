@@ -74,18 +74,27 @@
 ;; ```
 
 ;;; Code:
+
+;; stumpwm float-group 相关设置
+(in-package :stumpwm.floating-group)
+
+;; width in pixels given to the borders of float windows
+(setf *float-window-border* 0)
+(setf *float-window-title-height* 15)
+
+;; stumpwm 其它设置
 (in-package :stumpwm)
 ;; (run-shell-command "rm .xsession-errors")
 ;; I link stumpwmrc-file to ~/.stumpwmrc
-(setq *stumpwmrc-file* "~/project/stumpwm-config/stumpwmrc")
+(defvar *stumpwmrc-file* "~/project/stumpwm-config/stumpwmrc")
 (set-module-dir "~/project/stumpwm-contrib/")
-(setq *swank-loader-file* "~/project/emacs-packages/slime/swank-loader.lisp")
-(setq *debian-menu-file* "/var/lib/stumpwm/stumpwm.menu")
-(setq *stumpwm-dumpfile-dir* "~/.stumpwm-dumpfile.d")
-(setq *emacs-daemon-name* "default")
-(setq *stumpwm-temporary-directory* "/tmp/stumpwm")
-(setq *shell-program* (stumpwm::getenv "SHELL"))
-(setq *ignore-wm-inc-hints* t)
+(defvar *swank-loader-file* "~/project/emacs-packages/slime/swank-loader.lisp")
+(defvar *debian-menu-file* "/var/lib/stumpwm/stumpwm.menu")
+(defvar *stumpwm-dumpfile-dir* "~/.stumpwm-dumpfile.d")
+(defvar *emacs-daemon-name* "default")
+(defvar *stumpwm-temporary-directory* "/tmp/stumpwm")
+(setf *shell-program* (stumpwm::getenv "SHELL"))
+(setf *ignore-wm-inc-hints* t)
 
 ;; load contrib modules
 (mapcar #'load-module
@@ -210,19 +219,6 @@
              "java -jar ~/bin/JabRef-2.10.jar"
              '(:class "net-sf-jabref-JabRefMain")))
 
-(defcommand emacs-daemon-kill-soft () ()
-            (emacsclient-eval
-             '(progn
-               (when (not (eq window-system 'x))
-                 (message "Initializing x windows system.")
-                 (x-initialize-window-system)
-                 (when (not x-display-name) (setq x-display-name (getenv "DISPLAY")))
-                 (select-frame (make-frame-on-display x-display-name '((window-system . x)))))
-               (let ((last-nonmenu-event nil)(window-system "x"))(save-buffers-kill-emacs)))
-             t))
-
-(add-hook *quit-hook* #'emacs-daemon-kill-soft)
-
 (defcommand emacs-daemon-kill-hard () ()
             (run-shell-command
              (format nil "for i in `ps aux | grep emacs | grep =~A | grep -v grep | awk '{print $2}'`; do kill -9 $i; done"
@@ -326,6 +322,19 @@
 (defcommand emacs () ()
             (emacsclient-eval '(recentf-open-files) t "emacs"))
 
+(defcommand emacs-daemon-kill-soft () ()
+            (emacsclient-eval
+             '(progn
+               (when (not (eq window-system 'x))
+                 (message "Initializing x windows system.")
+                 (x-initialize-window-system)
+                 (when (not x-display-name) (setq x-display-name (getenv "DISPLAY")))
+                 (select-frame (make-frame-on-display x-display-name '((window-system . x)))))
+               (let ((last-nonmenu-event nil)(window-system "x"))(save-buffers-kill-emacs)))
+             t))
+
+(add-hook *quit-hook* #'emacs-daemon-kill-soft)
+
 (defcommand emacspeak () ()
             (run-shell-command "emacs --eval '(load-emacspeak)'"))
 
@@ -397,7 +406,7 @@
 (defcommand mplayer () ()
             (my-run-or-raise "smplayer" '(:class "Smplayer")))
 
-(defcommand top () ()
+(defcommand htop () ()
             (my-run-or-raise "x-terminal-emulator -t htop -e htop" '(:title "htop")))
 
 (defcommand x-terminal-emulator () ()
@@ -486,7 +495,7 @@
     (""       "WinXP"       "VirtualBox")
     ("BJPZ"   "编辑配置"  "edit-stumpwmrc")
     ("---------------------------------------------------")
-    ("XTJK"   "系统监控" "top")
+    ("XTJK"   "系统监控" "htop")
     ("ZX"     "注销"  "quit")
     ("SP"     "锁屏"  "lock-screen")
     ("GQ"     "挂起"  "suspend-computer")
@@ -608,7 +617,6 @@
 (defcommand (resize-master-frame tile-group) (width height) ((:number "+ Width: ")
                                                              (:number "+ Height: "))
             (let* ((group (current-group))
-                   (cur-frame (tile-group-current-frame group))
                    (frames (group-frames group))
                    (frame (tile-group-current-frame group)))
               (cond
@@ -669,19 +677,19 @@
 (define-key *root-map* (kbd "c") "multi-term")
 (define-key *root-map* (kbd "C-c") "edit-stumpwmrc")
 
-(setf *applications-map*
-      (let ((m (stumpwm:make-sparse-keymap)))
-        (stumpwm:define-key m (stumpwm:kbd "g") "goagent")
-        (stumpwm:define-key m (stumpwm:kbd "f") "firefox")
-        (stumpwm:define-key m (stumpwm:kbd "q") "qq")
-        (stumpwm:define-key m (stumpwm:kbd "j") "jabref")
-        (stumpwm:define-key m (stumpwm:kbd "c") "cajviewer")
-        (stumpwm:define-key m (stumpwm:kbd "p") "pdfreader")
-        (stumpwm:define-key m (stumpwm:kbd "w") "winxp")
-        m ; NOTE: this is important
-        ))
+(defvar *applications-map*
+  (let ((m (stumpwm:make-sparse-keymap)))
+    (stumpwm:define-key m (stumpwm:kbd "g") "goagent")
+    (stumpwm:define-key m (stumpwm:kbd "f") "firefox")
+    (stumpwm:define-key m (stumpwm:kbd "q") "qq")
+    (stumpwm:define-key m (stumpwm:kbd "j") "jabref")
+    (stumpwm:define-key m (stumpwm:kbd "c") "cajviewer")
+    (stumpwm:define-key m (stumpwm:kbd "p") "pdfreader")
+    (stumpwm:define-key m (stumpwm:kbd "w") "winxp")
+    m ; NOTE: this is important
+    ))
 
-(setf *emacs-map*
+(defvar *emacs-map*
       (let ((m (stumpwm:make-sparse-keymap)))
         (stumpwm:define-key m (stumpwm:kbd "e") "emacs")
         (stumpwm:define-key m (stumpwm:kbd "i") "org-contacts")
@@ -695,7 +703,7 @@
         m ; NOTE: this is important
         ))
 
-(setf *org-capture-map*
+(defvar *org-capture-map*
       (let ((m (stumpwm:make-sparse-keymap)))
         (stumpwm:define-key m (stumpwm:kbd "d") "org-capture-notes")
         (stumpwm:define-key m (stumpwm:kbd "e") "org-capture-simple")
@@ -707,7 +715,7 @@
         m ; NOTE: this is important
         ))
 
-(setf *help-map*
+(defvar *help-map*
       (let ((m (make-sparse-keymap)))
         (define-key m (kbd "m") "man")
         (define-key m (kbd "i") "info")
@@ -735,10 +743,6 @@
 
 ;; width in pixels given to the borders of regular windows
 (setf *normal-border-width* 1)
-
-;; width in pixels given to the borders of float windows
-(setf *float-window-border* 1)
-(setf *float-window-title-height* 10)
 
 ;; set the border color for focused windows
 (set-focus-color "orange")  ; `white' by default
@@ -769,13 +773,13 @@
 ;; modeline border color
 (setf *mode-line-border-color* "palegreen3")
 
-(setf *chinese-day-names*
-      '("一" "二" "三" "四" "五" "六" "日"))
+(defvar *chinese-day-names*
+  '("一" "二" "三" "四" "五" "六" "日"))
 
 (defun current-date ()
   "Returns the date formatted as `2009-11-16 一 11:34:03'."
   (multiple-value-bind
-        (second minute hour date month year day-of-week dst-p tz)
+        (second minute hour date month year day-of-week)
       (get-decoded-time)
     (format nil "~d-~2,'0d-~2,'0d ~a ^B~2,'0d:~2,'0d:~2,'0d^b"
             year month date (nth day-of-week *chinese-day-names*)
