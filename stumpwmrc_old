@@ -1,0 +1,58 @@
+;; -*-lisp-*-
+;;
+
+(in-package :stumpwm)
+
+(setq *shell-program* (stumpwm::getenv "SHELL"))
+
+;; prompt the user for an interactive command. The first arg is an
+;; optional initial contents.
+(defcommand colon1 (&optional (initial "")) (:rest)
+  (let ((cmd (read-one-line (current-screen) ": " :initial-input initial)))
+    (when cmd
+      (eval-command cmd t))))
+
+;; Message window font
+(set-font "-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso8859-15")
+
+;;; Define window placement policy...
+
+;; Clear rules
+(clear-window-placement-rules)
+
+;; Last rule to match takes precedence!
+;; TIP: if the argument to :title or :role begins with an ellipsis, a substring
+;; match is performed.
+;; TIP: if the :create flag is set then a missing group will be created and
+;; restored from *data-dir*/create file.
+;; TIP: if the :restore flag is set then group dump is restored even for an
+;; existing group using *data-dir*/restore file.
+(define-frame-preference "Default"
+  ;; frame raise lock (lock AND raise == jumpto)
+  (0 t nil :class "XTerm"))
+
+(define-frame-preference "Emacs"
+  (0 t t :class "Emacs")
+  (1 t nil :class "Firefox" :role "...firefox"))
+
+;;;; The Mode Line
+(setf
+    *mode-line-background-color* "black"
+         *mode-line-foreground-color* "SkyBlue"
+         *mode-line-border-color*     "SkyBlue"
+	 *mode-line-border-width*     1
+         *mode-line-timeout*          5
+	 *mode-line-pad-x* 1
+	 *mode-line-pad-y* 1
+         *mode-line-screen-position* :top
+         *window-format* "%n %s %t"
+         *screen-mode-line-format*  
+	 (list (list "Groups: %g ||  Windows: %w || " '(:eval (stumpwm:run-shell-command "date" t))))
+	 )
+(enable-mode-line (current-screen) (current-head) t)
+;; Swap caps and ctrl
+(run-shell-command "setxkbmap -option ctrl:swapcaps")
+;debian=sbcl
+
+;; Commands
+
