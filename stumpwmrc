@@ -74,16 +74,8 @@
 ;; ```
 
 ;;; Code:
-
-;; stumpwm float-group 相关设置
-(in-package :stumpwm.floating-group)
-
-;; width in pixels given to the borders of float windows
-(setf *float-window-border* 0)
-(setf *float-window-title-height* 15)
-
-;; stumpwm 其它设置
 (in-package :stumpwm)
+
 ;; (run-shell-command "rm .xsession-errors")
 ;; I link stumpwmrc-file to ~/.stumpwmrc
 (defvar *stumpwmrc-file* "~/project/stumpwm-config/stumpwmrc")
@@ -111,7 +103,7 @@
           ))
 
 ;; Add Groups
-(run-commands "gnewbg Pools" "gnewbg-float Float")
+(run-commands "gnewbg-float Float")
 
 ;; Frame preference setting
 (define-frame-preference "Pools"
@@ -743,6 +735,10 @@
 
 ;; width in pixels given to the borders of regular windows
 (setf *normal-border-width* 1)
+
+;; width in pixels given to the borders of float windows
+(setf stumpwm.floating-group::*float-window-border* 0)
+(setf stumpwm.floating-group::*float-window-title-height* 15)
 
 ;; set the border color for focused windows
 (set-focus-color "orange")  ; `white' by default
